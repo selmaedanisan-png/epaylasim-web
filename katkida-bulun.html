@@ -1,0 +1,1049 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Katkıda Bulun — e.paylaşım</title>
+  <meta name="description" content="İstek listesinden hediye seç, katkıda bulun. Birlikte hediyeleş."/>
+  <link rel="icon" type="image/png" href="logo.png"/>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet"/>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --brand: #C4175A;
+      --brand-dark: #9E1248;
+      --brand-light: #FCE8F0;
+      --accent: #891AAE;
+      --gold: #DFA020;
+      --text: #1a1a2e;
+      --text-soft: #64748b;
+      --text-muted: #94a3b8;
+      --bg: #fafafa;
+      --card: #ffffff;
+      --border: #f1f5f9;
+      --radius: 12px;
+      --radius-lg: 24px;
+      --shadow-sm: 0 1px 3px rgba(0,0,0,.04);
+      --shadow-md: 0 4px 20px rgba(0,0,0,.06);
+      --shadow-brand: 0 4px 16px rgba(196,23,90,.18);
+    }
+
+    body {
+      font-family: 'Inter', system-ui, -apple-system, sans-serif;
+      color: var(--text);
+      background: var(--bg);
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    a { color: inherit; text-decoration: none; }
+    img { max-width: 100%; display: block; }
+
+    .container { max-width: 1120px; margin: 0 auto; padding: 0 24px; }
+    @media (min-width: 640px) { .container { padding: 0 32px; } }
+
+    /* --- Buttons --- */
+    .btn {
+      display: inline-flex; align-items: center; gap: 8px;
+      font-weight: 600; font-size: 15px; border: none; cursor: pointer;
+      border-radius: var(--radius); transition: all .25s ease;
+      text-decoration: none;
+    }
+    .btn-primary {
+      background: var(--brand); color: #fff;
+      padding: 14px 28px;
+      box-shadow: var(--shadow-brand);
+    }
+    .btn-primary:hover { background: var(--brand-dark); transform: translateY(-2px); box-shadow: 0 8px 24px rgba(196,23,90,.25); }
+    .btn-outline {
+      background: var(--card); color: var(--text);
+      padding: 14px 28px;
+      border: 1.5px solid var(--border);
+    }
+    .btn-outline:hover { border-color: var(--brand); color: var(--brand); transform: translateY(-2px); }
+    .btn-sm { padding: 10px 20px; font-size: 13px; }
+    .btn-gold {
+      background: linear-gradient(135deg, #DFA020, #c78d15); color: #fff;
+      padding: 14px 28px;
+      box-shadow: 0 4px 16px rgba(223,160,32,.3);
+    }
+    .btn-gold:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(223,160,32,.4); }
+
+    .arrow-icon { width: 18px; height: 18px; }
+
+    /* --- Nav --- */
+    .epnav{position:sticky;top:0;z-index:100;background:rgba(255,255,255,.92);backdrop-filter:blur(16px);border-bottom:1px solid var(--border)}
+    .epnav-inner{max-width:1120px;margin:0 auto;padding:0 24px;display:flex;align-items:center;justify-content:space-between;height:72px}
+    @media(min-width:640px){.epnav-inner{padding:0 32px}}
+    .epnav-logo{white-space:nowrap;text-decoration:none;color:var(--text)}
+    .epnav-logo .bn{font-weight:900;font-size:26px;letter-spacing:-.5px}
+    .epnav-logo .dt{color:var(--gold)}
+    .epnav-logo .bt{display:block;font-size:10.5px;font-weight:500;color:var(--text-soft);letter-spacing:.2px;margin-top:1px}
+    .epnav-links{display:flex;align-items:center;gap:32px}
+    .epnav-links a{font-size:14px;font-weight:500;color:var(--text-soft);text-decoration:none;transition:color .15s}
+    .epnav-links a:hover{color:var(--text)}
+    .epnav-acts{display:flex;align-items:center;gap:12px}
+    .epnav-acts .gl{font-size:14px;font-weight:600;color:var(--text-soft);padding:8px 12px;text-decoration:none}
+    .epnav-acts .gl:hover{color:var(--brand)}
+    .epnav-acts .hb{display:inline-flex;align-items:center;gap:8px;background:var(--brand);color:#fff;padding:10px 20px;font-size:13px;font-weight:600;border-radius:12px;text-decoration:none;border:none;cursor:pointer;box-shadow:0 4px 16px rgba(196,23,90,.18);transition:all .2s}
+    .epnav-acts .hb:hover{background:#9E1248;transform:translateY(-1px)}
+    .epnav-acts .hb svg{width:18px;height:18px}
+    .epnav-mt{display:none;background:none;border:none;cursor:pointer;width:40px;height:40px;border-radius:10px;color:var(--text-soft);align-items:center;justify-content:center}
+    .epnav-mm{display:none;padding:16px 0;border-top:1px solid var(--border)}
+    .epnav-mm a{display:block;padding:10px 0;font-size:15px;font-weight:500;color:var(--text-soft);text-decoration:none}
+    .epnav-mm .mb{display:flex;gap:8px;margin-top:12px}
+    .epnav-mm .mb a{flex:1;text-align:center;padding:10px 20px;font-size:13px;font-weight:600;border-radius:12px}
+    .epnav-mm .mb .ob{background:#fff;color:var(--text);border:1.5px solid var(--border)}
+    .epnav-mm .mb .pb{background:var(--brand);color:#fff}
+    @media(max-width:768px){.epnav-links,.epnav-acts .gl{display:none}.epnav-mt{display:flex}.epnav-mm.open{display:block}}
+
+    /* --- Footer --- */
+    .epft{background:#0f172a;color:#94a3b8;padding:64px 0 32px}
+    .epft-inner{max-width:1120px;margin:0 auto;padding:0 24px}
+    @media(min-width:640px){.epft-inner{padding:0 32px}}
+    .epft-grid{display:grid;grid-template-columns:1.5fr 1fr 1fr 1fr;gap:40px;margin-bottom:40px}
+    .epft-brand{display:flex;flex-direction:column;align-items:flex-start;gap:2px;margin-bottom:16px}
+    .epft-brand span:first-child{font-weight:800;font-size:20px;color:#fff}
+    .epft-brand .dt{color:var(--gold)}
+    .epft-brand span:last-child{font-size:9px;font-weight:500;opacity:.7;letter-spacing:.5px;text-transform:uppercase}
+    .epft p.tl{font-size:14px;margin-bottom:16px}
+    .epft-soc{display:flex;gap:6px}
+    .epft-soc a{width:36px;height:36px;border-radius:10px;background:#1e293b;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:600;color:#94a3b8;text-decoration:none;transition:background .15s,color .15s}
+    .epft-soc a:hover{background:#334155;color:#fff}
+    .epft-col h5{color:#fff;font-size:13px;font-weight:600;margin-bottom:14px}
+    .epft-col ul{list-style:none;padding:0;margin:0}
+    .epft-col li{margin-bottom:10px}
+    .epft-col a{font-size:14px;color:#94a3b8;text-decoration:none;transition:color .15s}
+    .epft-col a:hover{color:#fff}
+    .epft-bot{border-top:1px solid #1e293b;padding-top:24px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px}
+    .epft-bot p{font-size:12px;color:#64748b;margin:0}
+    .epft-badges{display:flex;gap:16px}
+    .epft-badges span{display:flex;align-items:center;gap:6px;font-size:12px;color:#64748b}
+    .epft-badges .dg{width:6px;height:6px;border-radius:50%;background:#22c55e}
+    @media(max-width:768px){.epft-grid{grid-template-columns:1fr 1fr}}
+    @media(max-width:540px){.epft-grid{grid-template-columns:1fr}.epft-bot{flex-direction:column;text-align:center}}
+
+    .epft-nl{background:linear-gradient(135deg,rgba(139,92,246,.08),rgba(236,72,153,.08));border:1px solid rgba(139,92,246,.15);border-radius:16px;padding:28px 32px;margin-bottom:32px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:16px}
+    .epft-nl-text h5{margin:0 0 4px;font-size:15px;font-weight:600;color:#e2e8f0}
+    .epft-nl-text p{margin:0;font-size:13px;color:#94a3b8}
+    .epft-nl-form{display:flex;gap:8px}
+    .epft-nl-form input{padding:10px 16px;border-radius:10px;border:1px solid #334155;background:#0f172a;color:#e2e8f0;font-size:13px;width:260px;outline:none;transition:border-color .2s}
+    .epft-nl-form input:focus{border-color:#8b5cf6}
+    .epft-nl-form input::placeholder{color:#64748b}
+    .epft-nl-form button{padding:10px 22px;border-radius:10px;border:none;background:linear-gradient(135deg,#8b5cf6,#ec4899);color:#fff;font-size:13px;font-weight:600;cursor:pointer;transition:opacity .2s,transform .2s;white-space:nowrap}
+    .epft-nl-form button:hover{opacity:.9;transform:translateY(-1px)}
+    .epft-nl-form button:disabled{opacity:.6;cursor:not-allowed;transform:none}
+    @media(max-width:640px){.epft-nl{flex-direction:column;text-align:center}.epft-nl-form{flex-direction:column;width:100%}.epft-nl-form input{width:100%}}
+
+    /* --- Page Hero (Dark Cinematic) --- */
+    .page-hero {
+      position: relative; overflow: hidden;
+      padding: 80px 0 100px;
+      background: linear-gradient(160deg,#0f172a 0%,#1e1040 40%,#3b0d2b 70%,#1a0a1e 100%);
+      text-align: center;
+    }
+    .page-hero::before {
+      content:''; position:absolute; inset:0; opacity:.25;
+      background:radial-gradient(ellipse 80% 60% at 30% 80%,#C4175A,transparent),radial-gradient(ellipse 60% 50% at 70% 20%,#891AAE,transparent),radial-gradient(ellipse 40% 40% at 50% 60%,#DFA020,transparent);
+    }
+    .page-hero .container { position: relative; z-index: 2; }
+    .page-hero h1 {
+      font-size: clamp(32px, 5vw, 52px); font-weight: 800;
+      line-height: 1.1; margin-bottom: 16px; color: #fff;
+      letter-spacing: -.02em;
+    }
+    .page-hero h1 em {
+      font-style: normal;
+      background: linear-gradient(90deg, #F472B6, #C084FC, #DFA020);
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .page-hero p { color: rgba(255,255,255,.5); font-size: 17px; max-width: 560px; margin: 0 auto; line-height: 1.7; }
+    .page-hero .tag {
+      display: inline-flex; align-items: center; gap: 8px;
+      background: rgba(255,255,255,.06); border: 1px solid rgba(255,255,255,.10);
+      backdrop-filter: blur(8px);
+      border-radius: 100px; padding: 8px 18px; margin-bottom: 24px;
+      font-size: 12px; font-weight: 600; color: rgba(255,255,255,.7);
+    }
+    .page-hero .tag::before {
+      content: ''; width: 6px; height: 6px; border-radius: 50%;
+      background: #22c55e; animation: pulse 2s ease infinite;
+    }
+    @keyframes pulse { 0%,100%{opacity:1}50%{opacity:.3} }
+
+    /* --- Hero Stats Strip --- */
+    .hero-stats {
+      position: relative; z-index: 10; margin-top: -48px; padding: 0 0 20px;
+    }
+    .hero-stats .container {
+      display: grid; grid-template-columns: repeat(4,1fr); gap: 16px;
+    }
+    .hero-stat-card {
+      background: var(--card); border-radius: var(--radius-lg); padding: 24px;
+      text-align: center; box-shadow: 0 8px 32px rgba(0,0,0,.08);
+      border: 1px solid var(--border);
+      transition: transform .25s ease, box-shadow .25s ease;
+    }
+    .hero-stat-card:hover { transform: translateY(-4px); box-shadow: 0 12px 40px rgba(0,0,0,.12); }
+    .hero-stat-card .stat-number {
+      font-size: 28px; font-weight: 800; letter-spacing: -.02em;
+      background: linear-gradient(135deg, var(--brand), var(--accent));
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+      background-clip: text; margin-bottom: 4px;
+    }
+    .hero-stat-card .stat-label { font-size: 12px; color: var(--text-muted); font-weight: 500; }
+    @media(max-width:768px){
+      .hero-stats .container { grid-template-columns: repeat(2,1fr); gap: 12px; }
+      .hero-stat-card { padding: 18px; }
+      .hero-stat-card .stat-number { font-size: 22px; }
+    }
+
+    /* --- Section --- */
+    .section { padding: 64px 0; }
+    .section-header { text-align: center; max-width: 560px; margin: 0 auto 48px; }
+    .section-header h2 {
+      font-size: clamp(26px, 3.5vw, 40px); font-weight: 800;
+      line-height: 1.15; margin-bottom: 12px; letter-spacing: -.02em;
+    }
+    .section-header h2 em {
+      font-style: normal;
+      background: linear-gradient(135deg, var(--brand), var(--accent));
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .section-header p { color: var(--text-soft); font-size: 15px; line-height: 1.7; }
+    .section-tag {
+      display: inline-flex; align-items: center; gap: 8px;
+      font-size: 11px; font-weight: 700;
+      text-transform: uppercase; letter-spacing: 1.5px;
+      padding: 6px 16px; border-radius: 100px; margin-bottom: 14px;
+    }
+
+    /* --- Wish List --- */
+    .wishlist-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 20px; }
+    .wish-card {
+      background: var(--card); border: 1px solid var(--border);
+      border-radius: var(--radius-lg); padding: 28px;
+      transition: all .3s ease;
+      box-shadow: 0 2px 12px rgba(0,0,0,.03);
+    }
+    .wish-card:hover { border-color: rgba(196,23,90,.2); box-shadow: 0 12px 40px rgba(196,23,90,.08); transform: translateY(-4px); }
+    .wish-card .wish-top { display: flex; align-items: center; gap: 14px; margin-bottom: 18px; }
+    .wish-card .wish-emoji {
+      width: 56px; height: 56px; border-radius: 16px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 28px; flex-shrink: 0;
+      box-shadow: 0 4px 12px rgba(0,0,0,.06);
+    }
+    .wish-card .wish-info { flex: 1; min-width: 0; }
+    .wish-card .wish-info h3 { font-size: 16px; font-weight: 700; margin-bottom: 3px; }
+    .wish-card .wish-info .wish-price { font-size: 13px; color: var(--text-muted); }
+    .wish-card .wish-status { font-size: 10px; font-weight: 700; padding: 5px 12px; border-radius: 100px; flex-shrink: 0; }
+    .wish-card .progress-wrap { margin-bottom: 16px; }
+    .wish-card .progress-labels { display: flex; justify-content: space-between; font-size: 13px; color: var(--text-muted); margin-bottom: 6px; }
+    .wish-card .progress-labels strong { color: var(--brand); font-weight: 700; }
+    .wish-card .progress-bar { height: 6px; background: var(--brand-light); border-radius: 6px; overflow: hidden; }
+    .wish-card .progress-fill { height: 100%; border-radius: 6px; background: linear-gradient(90deg, var(--brand), var(--accent)); transition: width .6s ease; }
+    .wish-card .wish-bottom { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
+    .wish-card .wish-contribs { font-size: 12px; color: var(--text-muted); display: flex; align-items: center; gap: 6px; }
+    .wish-card .wish-contribs svg { width: 14px; height: 14px; }
+    .wish-card.completed { opacity: .7; }
+    .wish-card.completed .progress-fill { background: linear-gradient(90deg, #22c55e, #16a34a); }
+    .wish-card.completed .wish-status { background: #dcfce7; color: #16a34a; }
+
+    /* --- MJ Section --- */
+    .mj-section {
+      background: var(--card); border: 1px solid var(--border);
+      border-radius: var(--radius-lg); overflow: hidden;
+      box-shadow: 0 4px 24px rgba(0,0,0,.04);
+    }
+    .mj-toggle {
+      width: 100%; display: flex; align-items: center; justify-content: space-between;
+      padding: 22px 28px; background: none; border: none; cursor: pointer;
+      font-family: inherit; transition: background .15s;
+    }
+    .mj-toggle:hover { background: rgba(196,23,90,.03); }
+    .mj-toggle .mj-toggle-left { display: flex; align-items: center; gap: 14px; }
+    .mj-toggle .mj-toggle-left .mj-icon {
+      width: 44px; height: 44px; border-radius: 12px;
+      background: linear-gradient(135deg, #fbbf24, #f59e0b);
+      display: flex; align-items: center; justify-content: center; font-size: 22px;
+      box-shadow: 0 4px 12px rgba(251,191,36,.25);
+    }
+    .mj-toggle .mj-toggle-left h3 { font-size: 16px; font-weight: 700; color: var(--text); }
+    .mj-toggle .mj-toggle-left span { font-size: 12px; color: var(--text-muted); }
+    .mj-chevron { width: 24px; height: 24px; color: var(--text-soft); transition: transform .3s ease; }
+    .mj-chevron.open { transform: rotate(180deg); }
+    .mj-body { max-height: 0; overflow: hidden; transition: max-height .4s ease; }
+    .mj-body.open { max-height: 2000px; }
+    .mj-body-inner { padding: 0 28px 28px; }
+    .mj-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 12px; }
+    .mj-card {
+      display: flex; align-items: flex-start; gap: 12px; padding: 16px;
+      border: 1.5px solid var(--border); border-radius: var(--radius);
+      cursor: pointer; transition: all .25s; background: var(--bg);
+    }
+    .mj-card:hover { border-color: var(--brand); background: var(--brand-light); transform: translateY(-2px); }
+    .mj-card.selected { border-color: var(--brand); background: var(--brand-light); box-shadow: 0 0 0 3px rgba(196,23,90,.12); }
+    .mj-card .mj-emoji { font-size: 28px; flex-shrink: 0; line-height: 1; }
+    .mj-card .mj-text { font-size: 13px; color: var(--text-soft); line-height: 1.5; }
+    .mj-card .mj-text strong { color: var(--text); font-weight: 600; display: block; margin-bottom: 2px; font-size: 14px; }
+    .mj-custom { margin-top: 16px; display: flex; gap: 10px; }
+    .mj-custom textarea {
+      flex: 1; border: 1.5px solid var(--border); border-radius: var(--radius);
+      padding: 14px; font-size: 13px; font-family: inherit; resize: none;
+      outline: none; min-height: 60px; transition: border-color .2s;
+    }
+    .mj-custom textarea:focus { border-color: var(--brand); box-shadow: 0 0 0 3px rgba(196,23,90,.08); }
+
+    /* --- Payment Modal --- */
+    .modal-overlay {
+      position: fixed; inset: 0; background: rgba(15,23,42,.6); backdrop-filter: blur(4px); z-index: 300;
+      display: none; align-items: center; justify-content: center; padding: 16px;
+    }
+    .modal-overlay.show { display: flex; }
+    .modal {
+      background: var(--card); border-radius: var(--radius-lg);
+      width: 100%; max-width: 480px; max-height: 90vh; overflow-y: auto;
+      box-shadow: 0 24px 80px rgba(0,0,0,.25); animation: modalIn .35s ease;
+    }
+    @keyframes modalIn { from { opacity:0; transform:scale(.95) translateY(16px); } to { opacity:1; transform:scale(1) translateY(0); } }
+    .modal-head { padding: 28px 28px 0; display: flex; align-items: center; justify-content: space-between; }
+    .modal-head h3 { font-size: 20px; font-weight: 800; letter-spacing: -.02em; }
+    .modal-close {
+      width: 36px; height: 36px; border-radius: 10px; border: none;
+      background: var(--bg); cursor: pointer; font-size: 16px;
+      display: flex; align-items: center; justify-content: center;
+      color: var(--text-soft); transition: all .15s;
+    }
+    .modal-close:hover { background: #e2e8f0; color: var(--text); }
+    .modal-body { padding: 24px 28px 28px; }
+    .modal-item { display: flex; align-items: center; gap: 14px; padding: 18px; background: var(--bg); border-radius: var(--radius-lg); margin-bottom: 24px; border: 1px solid var(--border); }
+    .modal-item .m-emoji { font-size: 36px; }
+    .modal-item .m-info h4 { font-size: 16px; font-weight: 700; }
+    .modal-item .m-info span { font-size: 12px; color: var(--text-muted); }
+    .form-group { margin-bottom: 18px; }
+    .form-group label { display: block; font-size: 13px; font-weight: 600; margin-bottom: 8px; color: var(--text); }
+    .form-group input, .form-group select {
+      width: 100%; padding: 13px 16px; border: 1.5px solid var(--border);
+      border-radius: var(--radius); font-size: 14px; font-family: inherit;
+      outline: none; transition: all .2s;
+    }
+    .form-group input:focus, .form-group select:focus { border-color: var(--brand); box-shadow: 0 0 0 3px rgba(196,23,90,.08); }
+    .amount-presets { display: flex; gap: 8px; margin-bottom: 10px; flex-wrap: wrap; }
+    .amount-presets button {
+      padding: 10px 18px; border: 1.5px solid var(--border); border-radius: 100px;
+      background: var(--card); font-size: 13px; font-weight: 600; cursor: pointer;
+      transition: all .2s;
+    }
+    .amount-presets button:hover, .amount-presets button.active { border-color: var(--brand); background: var(--brand-light); color: var(--brand); transform: translateY(-1px); }
+    .mj-preview { padding: 16px; background: #fef3c7; border: 1px solid #fde68a; border-radius: var(--radius); margin-bottom: 18px; font-size: 13px; color: #92400e; }
+    .mj-preview strong { display: block; margin-bottom: 4px; }
+    .pay-total { display: flex; align-items: center; justify-content: space-between; padding: 18px 20px; background: var(--brand-light); border-radius: var(--radius-lg); margin-bottom: 18px; }
+    .pay-total .label { font-size: 14px; font-weight: 600; color: var(--text); }
+    .pay-total .amount { font-size: 24px; font-weight: 800; color: var(--brand); }
+
+    .btn-pay-submit {
+      width: 100%; justify-content: center; padding: 16px;
+      background: linear-gradient(135deg, var(--brand), var(--accent));
+      color: #fff; border: none; border-radius: var(--radius); font-size: 15px;
+      font-weight: 700; cursor: pointer; display: inline-flex; align-items: center; gap: 8px;
+      transition: all .25s; box-shadow: 0 4px 20px rgba(196,23,90,.25);
+    }
+    .btn-pay-submit:hover { transform: translateY(-2px); box-shadow: 0 8px 32px rgba(196,23,90,.35); }
+
+    /* --- Coupon Section (Dark Cinematic) --- */
+    .coupon-section {
+      position: relative; overflow: hidden;
+      background: linear-gradient(160deg,#0f172a,#1e1040,#3b0d2b,#1a0a1e);
+      border-radius: 32px; padding: 48px 40px; margin-top: 48px;
+    }
+    .coupon-section::before {
+      content:''; position:absolute; inset:0; opacity:.20;
+      background:radial-gradient(ellipse 60% 50% at 20% 80%,#DFA020,transparent),radial-gradient(ellipse 50% 50% at 80% 20%,#C4175A,transparent);
+    }
+    .coupon-section > * { position: relative; z-index: 2; }
+    .coupon-section h3 { font-size: 24px; font-weight: 800; margin-bottom: 8px; color: #fff; letter-spacing: -.02em; }
+    .coupon-section h3 em { font-style: normal; background: linear-gradient(90deg,#fbbf24,#DFA020); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; }
+    .coupon-section > p { font-size: 14px; color: rgba(255,255,255,.5); margin-bottom: 28px; line-height: 1.7; }
+    .coupon-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 14px; margin-bottom: 24px; }
+    .coupon-card {
+      background: rgba(255,255,255,.06); border: 1px solid rgba(255,255,255,.08);
+      backdrop-filter: blur(12px);
+      border-radius: var(--radius-lg); padding: 22px; text-align: center;
+      transition: all .3s; cursor: pointer;
+    }
+    .coupon-card:hover { border-color: rgba(223,160,32,.4); background: rgba(255,255,255,.10); transform: translateY(-4px); box-shadow: 0 8px 32px rgba(223,160,32,.15); }
+    .coupon-card .c-logo { font-size: 32px; margin-bottom: 10px; }
+    .coupon-card .c-name { font-size: 14px; font-weight: 700; margin-bottom: 6px; color: #fff; }
+    .coupon-card .c-discount { font-size: 12px; color: #fbbf24; font-weight: 700; background: rgba(251,191,36,.12); padding: 4px 12px; border-radius: 100px; display: inline-block; margin-bottom: 8px; }
+    .coupon-card .c-desc { font-size: 11px; color: rgba(255,255,255,.4); }
+    .coupon-summary {
+      background: rgba(255,255,255,.06); border: 1px solid rgba(255,255,255,.10);
+      backdrop-filter: blur(12px);
+      border-radius: var(--radius-lg); padding: 24px 28px;
+      display: flex; align-items: center; justify-content: space-between; gap: 16px; flex-wrap: wrap;
+    }
+    .coupon-summary .cs-left h4 { font-size: 16px; font-weight: 700; margin-bottom: 4px; color: #fff; }
+    .coupon-summary .cs-left p { font-size: 13px; color: rgba(255,255,255,.45); }
+    .coupon-summary .cs-amount { font-size: 28px; font-weight: 800; background: linear-gradient(90deg,#fbbf24,#DFA020); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; }
+
+    /* --- Success --- */
+    .success-overlay {
+      position: fixed; inset: 0; background: rgba(15,23,42,.6); backdrop-filter: blur(4px); z-index: 400;
+      display: none; align-items: center; justify-content: center; padding: 16px;
+    }
+    .success-overlay.show { display: flex; }
+    .success-box {
+      background: var(--card); border-radius: var(--radius-lg);
+      padding: 44px; text-align: center; max-width: 420px;
+      animation: modalIn .35s ease; box-shadow: 0 24px 80px rgba(0,0,0,.2);
+    }
+    .success-box .s-icon {
+      width: 72px; height: 72px; border-radius: 50%;
+      background: linear-gradient(135deg,#dcfce7,#bbf7d0);
+      display: flex; align-items: center; justify-content: center;
+      margin: 0 auto 20px; font-size: 36px;
+      box-shadow: 0 8px 24px rgba(34,197,94,.2);
+    }
+    .success-box h3 { font-size: 22px; font-weight: 800; margin-bottom: 8px; letter-spacing: -.02em; }
+    .success-box p { font-size: 14px; color: var(--text-soft); margin-bottom: 24px; line-height: 1.6; }
+    .success-box .s-details { background: var(--bg); border-radius: var(--radius); padding: 16px; margin-bottom: 24px; font-size: 13px; text-align: left; border: 1px solid var(--border); }
+    .success-box .s-details div { display: flex; justify-content: space-between; padding: 5px 0; }
+    .success-box .s-details div span:last-child { font-weight: 700; }
+
+    /* --- How It Works (mini-steps) --- */
+    .how-strip { padding: 48px 0; background: var(--card); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); }
+    .how-strip .container { display: grid; grid-template-columns: repeat(3,1fr); gap: 32px; }
+    .how-step { text-align: center; padding: 8px; }
+    .how-step .step-num {
+      width: 48px; height: 48px; border-radius: 14px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 20px; font-weight: 800; margin: 0 auto 14px;
+      background: var(--brand-light); color: var(--brand);
+      box-shadow: 0 4px 12px rgba(196,23,90,.1);
+    }
+    .how-step h4 { font-size: 15px; font-weight: 700; margin-bottom: 4px; }
+    .how-step p { font-size: 13px; color: var(--text-muted); line-height: 1.5; }
+    @media(max-width:640px){ .how-strip .container { grid-template-columns: 1fr; gap: 24px; } }
+
+    /* --- CTA Section --- */
+    .cta-wrap {
+      padding: 64px 0;
+    }
+    .cta-card {
+      position: relative; overflow: hidden;
+      background: linear-gradient(160deg,#0f172a,#1e1040,#3b0d2b,#1a0a1e);
+      border-radius: 32px; padding: 56px 40px; text-align: center;
+    }
+    .cta-card::before {
+      content:''; position:absolute; inset:0; opacity:.20;
+      background:radial-gradient(ellipse 70% 50% at 50% 80%,#C4175A,transparent),radial-gradient(ellipse 50% 50% at 50% 20%,#891AAE,transparent);
+    }
+    .cta-card > * { position: relative; z-index: 2; }
+    .cta-card h2 { font-size: clamp(24px,3vw,36px); font-weight: 800; color: #fff; margin-bottom: 12px; letter-spacing: -.02em; }
+    .cta-card h2 em { font-style: normal; background: linear-gradient(90deg,#F472B6,#C084FC); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; }
+    .cta-card p { color: rgba(255,255,255,.5); font-size: 16px; margin-bottom: 28px; max-width: 480px; margin-left: auto; margin-right: auto; }
+    .cta-card .btn-white {
+      display: inline-flex; align-items: center; gap: 8px;
+      background: #fff; color: #0f172a; padding: 16px 32px;
+      border-radius: var(--radius); font-weight: 700; font-size: 15px;
+      border: none; cursor: pointer; transition: all .25s;
+      box-shadow: 0 4px 20px rgba(255,255,255,.1);
+    }
+    .cta-card .btn-white:hover { transform: translateY(-2px); box-shadow: 0 8px 32px rgba(255,255,255,.15); }
+
+    @media (max-width: 540px) {
+      .wishlist-grid { grid-template-columns: 1fr; }
+      .mj-grid { grid-template-columns: 1fr; }
+      .coupon-grid { grid-template-columns: 1fr 1fr; }
+      .coupon-summary { flex-direction: column; text-align: center; }
+      .coupon-section { padding: 32px 20px; border-radius: 24px; }
+      .cta-card { padding: 40px 24px; border-radius: 24px; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- NAV -->
+<header class="epnav">
+  <div class="epnav-inner">
+    <a href="index.html" class="epnav-logo">
+      <span class="bn">e<span class="dt">.</span>paylaşım</span>
+      <span class="bt">Türkiye'nin Sosyal Hediyeleşme Altyapısı</span>
+    </a>
+    <nav class="epnav-links">
+      <a href="index.html#nasil-calisir">Nasıl Çalışır</a>
+      <a href="index.html#kampanyalar">Kampanyalar</a>
+      <a href="katkida-bulun.html">Katkıda Bulun</a>
+      <a href="index.html#guven">Güvenlik</a>
+      <a href="index.html#yorumlar">Yorumlar</a>
+    </nav>
+    <div class="epnav-acts">
+      <a href="login.html" class="gl">Giriş</a>
+      <a href="register.html" class="hb">Hemen Başla
+        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M13 7l5 5m0 0l-5 5m5-5H6"/></svg>
+      </a>
+      <button class="epnav-mt" onclick="document.getElementById('epMM').classList.toggle('open')" aria-label="Menu">
+        <svg width="22" height="22" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" d="M4 6h16M4 12h16M4 18h16"/></svg>
+      </button>
+    </div>
+  </div>
+  <div id="epMM" class="epnav-mm" style="max-width:1120px;margin:0 auto;padding-left:24px;padding-right:24px">
+    <a href="index.html#nasil-calisir">Nasıl Çalışır</a>
+    <a href="index.html#kampanyalar">Kampanyalar</a>
+    <a href="katkida-bulun.html">Katkıda Bulun</a>
+    <a href="index.html#guven">Güvenlik</a>
+    <a href="index.html#yorumlar">Yorumlar</a>
+    <div class="mb">
+      <a href="login.html" class="ob">Giriş</a>
+      <a href="register.html" class="pb">Hemen Başla</a>
+    </div>
+  </div>
+</header>
+
+<!-- PAGE HERO (Dark Cinematic) -->
+<section class="page-hero">
+  <div class="container">
+    <div class="tag">Katkıda Bulun</div>
+    <h1>İstek Listesinden <em>Hediye Seç</em></h1>
+    <p>Listeden bir ürün seç, istediğin miktarda katkıda bulun. Her katkı hediyeye bir adım daha yaklaştırır.</p>
+  </div>
+</section>
+
+<!-- HERO STATS -->
+<section class="hero-stats">
+  <div class="container">
+    <div class="hero-stat-card">
+      <div class="stat-number">8</div>
+      <div class="stat-label">Aktif Ürün</div>
+    </div>
+    <div class="hero-stat-card">
+      <div class="stat-number">₺75K+</div>
+      <div class="stat-label">Toplanan Katkı</div>
+    </div>
+    <div class="hero-stat-card">
+      <div class="stat-number">52</div>
+      <div class="stat-label">Katkıcı</div>
+    </div>
+    <div class="hero-stat-card">
+      <div class="stat-number">%68</div>
+      <div class="stat-label">Ort. Tamamlanma</div>
+    </div>
+  </div>
+</section>
+
+<!-- HOW IT WORKS STRIP -->
+<section class="how-strip">
+  <div class="container">
+    <div class="how-step">
+      <div class="step-num">1</div>
+      <h4>Ürün Seç</h4>
+      <p>İstek listesinden katkıda bulunmak istediğin ürünü seç</p>
+    </div>
+    <div class="how-step">
+      <div class="step-num">2</div>
+      <h4>Tutar Belirle</h4>
+      <p>İstediğin miktarda katkıda bulun, en az ₺10</p>
+    </div>
+    <div class="how-step">
+      <div class="step-num">3</div>
+      <h4>Hediyeyi Tamamla</h4>
+      <p>Katkınız hediyeye bir adım daha yaklaştırır</p>
+    </div>
+  </div>
+</section>
+
+<!-- MJ SECTION -->
+<section class="section" style="padding-bottom:0">
+  <div class="container">
+    <div class="mj-section">
+      <button class="mj-toggle" onclick="toggleMJ()" id="mjToggle">
+        <div class="mj-toggle-left">
+          <div class="mj-icon">💌</div>
+          <div>
+            <h3>Mesaj & Dilek Ekle</h3>
+            <span>Hazır mesajlardan seç veya kendi dileklerini yaz</span>
+          </div>
+        </div>
+        <svg class="mj-chevron" id="mjChevron" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/></svg>
+      </button>
+      <div class="mj-body" id="mjBody">
+        <div class="mj-body-inner">
+          <div class="mj-grid" id="mjGrid"></div>
+          <div class="mj-custom">
+            <textarea id="mjCustom" placeholder="Kendi mesajını yaz... (opsiyonel)"></textarea>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- WISH LIST -->
+<section class="section">
+  <div class="container">
+    <div class="section-header">
+      <span class="section-tag" style="background:var(--brand-light);color:var(--brand)">İstek Listesi</span>
+      <h2>Hediye <em>İstek Listesi</em></h2>
+      <p>Aşağıdaki ürünlerden birini seçip katkıda bulunabilirsiniz. Her katkı hediyeye bir adım daha yaklaştırır.</p>
+    </div>
+
+    <div class="wishlist-grid" id="wishlistGrid"></div>
+
+    <!-- COUPON SECTION -->
+    <div class="coupon-section" id="couponSection">
+      <h3>Katkılarını <em>Kupona Dönüştür</em></h3>
+      <p>Toplam katkıların isteğe bağlı olarak anlaşmalı firmaların alışveriş kuponlarına dönüştürülebilir. Kuponlar anında hesabına tanımlanır.</p>
+
+      <div class="coupon-grid" id="couponGrid"></div>
+
+      <div class="coupon-summary">
+        <div class="cs-left">
+          <h4>Toplam Kupon Bakiyeniz</h4>
+          <p>Katkılarınız kupon bakiyesine dönüştürülebilir</p>
+        </div>
+        <div class="cs-amount" id="couponTotal">₺0</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA SECTION -->
+<section class="cta-wrap">
+  <div class="container">
+    <div class="cta-card">
+      <h2>Kendi Hediye Kampanyanı <em>Oluştur</em></h2>
+      <p>Sevdiklerin için bir kampanya oluştur, linki paylaş ve birlikte hediye almanın keyfini çıkar.</p>
+      <a href="register.html" class="btn-white">
+        Hemen Başla
+        <svg style="width:18px;height:18px" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M13 7l5 5m0 0l-5 5m5-5H6"/></svg>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- PAYMENT MODAL -->
+<div class="modal-overlay" id="payModal">
+  <div class="modal">
+    <div class="modal-head">
+      <h3>Katkıda Bulun</h3>
+      <button class="modal-close" onclick="closePayModal()">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="modal-item" id="payItem">
+        <div class="m-emoji" id="payEmoji"></div>
+        <div class="m-info">
+          <h4 id="payName"></h4>
+          <span id="payTarget"></span>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label>Katkı Tutarı</label>
+        <div class="amount-presets" id="amountPresets"></div>
+        <input type="number" id="payAmount" placeholder="Tutarı girin (₺)" min="10" step="10"/>
+      </div>
+
+      <div class="form-group">
+        <label>Adınız <span style="color:#C4175A">*</span></label>
+        <input type="text" id="payFirstName" placeholder="Adınız" required/>
+        <p id="errFirstName" style="color:#EF4444;font-size:11px;margin-top:4px;display:none">Ad alanı zorunludur.</p>
+      </div>
+
+      <div class="form-group">
+        <label>Soyadınız <span style="color:#C4175A">*</span></label>
+        <input type="text" id="payLastName" placeholder="Soyadınız" required/>
+        <p id="errLastName" style="color:#EF4444;font-size:11px;margin-top:4px;display:none">Soyad alanı zorunludur.</p>
+      </div>
+
+      <div class="form-group">
+        <label>E-posta <span style="color:#C4175A">*</span></label>
+        <input type="email" id="payEmail" placeholder="ornek@email.com" required/>
+        <p id="errEmail" style="color:#EF4444;font-size:11px;margin-top:4px;display:none">Geçerli bir e-posta adresi girin.</p>
+      </div>
+
+      <div id="payMjPreview" class="mj-preview" style="display:none">
+        <strong>Mesajınız:</strong>
+        <span id="payMjText"></span>
+      </div>
+
+      <div class="pay-total">
+        <span class="label">Toplam Katkı</span>
+        <span class="amount" id="payTotalAmount">₺0</span>
+      </div>
+
+      <button class="btn-pay-submit" onclick="processPayment()">
+        Ödeme Sayfasına Git
+        <svg style="width:18px;height:18px" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M13 7l5 5m0 0l-5 5m5-5H6"/></svg>
+      </button>
+      <p style="text-align:center;font-size:11px;color:var(--text-muted);margin-top:12px">🔒 256-bit SSL ile korunmaktadır. Kart bilgileriniz saklanmaz.</p>
+    </div>
+  </div>
+</div>
+
+<!-- SUCCESS OVERLAY -->
+<div class="success-overlay" id="successOverlay">
+  <div class="success-box">
+    <div class="s-icon">🎉</div>
+    <h3>Katkınız Alındı!</h3>
+    <p>Hediyeye bir adım daha yaklaştınız. Teşekkürler!</p>
+    <div class="s-details" id="successDetails"></div>
+    <div style="display:flex;gap:10px">
+      <button class="btn btn-outline" style="flex:1;justify-content:center" onclick="closeSuccess()">Listeye Dön</button>
+      <button class="btn btn-gold" style="flex:1;justify-content:center" onclick="showCouponConvert()">Kupona Dönüştür</button>
+    </div>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<footer class="epft">
+  <div class="epft-inner">
+    <div class="epft-nl">
+      <div class="epft-nl-text"><h5>📬 Bültene Abone Ol</h5><p>Kampanya haberleri ve özel fırsatlardan ilk sen haberdar ol.</p></div>
+      <form class="epft-nl-form" onsubmit="subscribeNL(event)">
+        <input type="email" id="nlEmail" placeholder="E-posta adresiniz" required/>
+        <button type="submit" id="nlBtn">Abone Ol</button>
+      </form>
+      <p id="nlOk" style="display:none;color:#4ade80;font-size:12px;margin-top:8px">✅ Bültene abone oldunuz!</p>
+      <p id="nlErr" style="display:none;color:#f87171;font-size:12px;margin-top:8px">❌ Bir hata oluştu.</p>
+    </div>
+    <div class="epft-grid">
+      <div>
+        <div class="epft-brand"><span>e<span class="dt">.</span>paylaşım</span><span>Türkiye'nin Sosyal Hediyeleşme Altyapısı</span></div>
+        <p class="tl">Sevdiklerin için birlikte hediyeleş.</p>
+        <div class="epft-soc"><a href="#">X</a><a href="#">in</a><a href="#">ig</a></div>
+      </div>
+      <div class="epft-col"><h5>Platform</h5><ul><li><a href="index.html#nasil-calisir">Nasıl Çalışır</a></li><li><a href="index.html#kampanyalar">Kampanyalar</a></li><li><a href="fiyatlar.html">Fiyatlar</a></li><li><a href="blog.html">Blog</a></li></ul></div>
+      <div class="epft-col"><h5>Şirket</h5><ul><li><a href="hakkimizda.html">Hakkımızda</a></li><li><a href="iletisim.html">İletişim</a></li><li><a href="kariyer.html">Kariyer</a></li><li><a href="basin.html">Basın</a></li></ul></div>
+      <div class="epft-col"><h5>Yasal</h5><ul><li><a href="kvkk.html">KVKK</a></li><li><a href="gizlilik.html">Gizlilik</a></li><li><a href="kullanim-sartlari.html">Kullanım Şartları</a></li><li><a href="cerez-politikasi.html">Çerez Politikası</a></li></ul></div>
+    </div>
+    <div class="epft-bot">
+      <p>&copy; 2026 e.paylaşım. Tüm hakları saklıdır.</p>
+      <div class="epft-badges"><span><span class="dg"></span>SSL</span><span><span class="dg"></span>KVKK</span><span><span class="dg"></span>PCI DSS</span></div>
+    </div>
+  </div>
+</footer>
+
+<script>
+const API_BASE = 'http://localhost:3001/api/v1';
+
+async function subscribeNL(e) {
+  e.preventDefault();
+  const btn = document.getElementById('nlBtn');
+  const okEl = document.getElementById('nlOk');
+  const errEl = document.getElementById('nlErr');
+  const emailInput = document.getElementById('nlEmail');
+  okEl.style.display = 'none';
+  errEl.style.display = 'none';
+  btn.disabled = true;
+  btn.textContent = 'Gönderiliyor...';
+  try {
+    const res = await fetch(API_BASE + '/newsletter/subscribe', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email: emailInput.value.trim() })
+    });
+    if (!res.ok) throw new Error();
+    okEl.style.display = 'block';
+    emailInput.value = '';
+  } catch {
+    errEl.style.display = 'block';
+  } finally {
+    btn.disabled = false;
+    btn.textContent = 'Abone Ol';
+  }
+}
+
+const WISH_LIST = [
+  { id:'w1', emoji:'🧺', name:'Çamaşır Makinesi', brand:'Bosch Serie 4', price:22000, bg:'#dbeafe', collected:8500, contribs:6 },
+  { id:'w2', emoji:'🍽️', name:'Bulaşık Makinesi', brand:'Beko 6 Program', price:15000, bg:'#dcfce7', collected:15000, contribs:10 },
+  { id:'w3', emoji:'📺', name:'Smart TV 55"', brand:'Samsung Crystal UHD', price:28000, bg:'#ede9fe', collected:12000, contribs:8 },
+  { id:'w4', emoji:'🛋️', name:'Köşe Koltuk Takımı', brand:'Bellona Modern', price:35000, bg:'#fef3c7', collected:5000, contribs:3 },
+  { id:'w5', emoji:'🧹', name:'Robot Süpürge', brand:'Roborock S8', price:18000, bg:'#fce7f3', collected:9200, contribs:7 },
+  { id:'w6', emoji:'🍳', name:'Tencere Seti', brand:'Karaca Bio Diamond', price:6500, bg:'#e0f2fe', collected:3800, contribs:5 },
+  { id:'w7', emoji:'🛏️', name:'Yatak & Baza Set', brand:'Yataş Sleepy', price:20000, bg:'#fff7ed', collected:14000, contribs:9 },
+  { id:'w8', emoji:'❄️', name:'Buzdolabı', brand:'Arçelik No Frost', price:25000, bg:'#f0fdf4', collected:7500, contribs:4 }
+];
+
+const MJ_MESSAGES = [
+  { emoji:'🎉', title:'Tebrikler!', text:'Yeni yuvanız/hediyeniz hayırlı olsun! Mutluluklar dileriz.' },
+  { emoji:'💕', title:'Sevgiyle', text:'Bu hediyeye katkıda bulunmaktan mutluluk duyuyorum. Hep mutlu olun!' },
+  { emoji:'🏠', title:'Ev Hediyesi', text:'Yeni evinize hayırlı olsun! Sağlık ve huzur dolu günler dileriz.' },
+  { emoji:'👶', title:'Hoş Geldin Bebek', text:'Minik bebeğinize sağlıklı, neşeli bir ömür diliyoruz!' },
+  { emoji:'💍', title:'Düğün Tebriği', text:'Ömür boyu mutluluklar! Bu özel gününüzde yanınızda olmak güzel.' },
+  { emoji:'🎂', title:'Doğum Günü', text:'Nice mutlu yıllara! Hayallerinin gerçekleşmesi dileğiyle.' },
+  { emoji:'🌟', title:'Başarılar', text:'Yeni başlangıçlar için en iyisini diliyorum. Başarılar!' },
+  { emoji:'🤗', title:'Gönülden', text:'Küçük katkılar, büyük mutluluklar yaratır. Gönülden geldi!' },
+  { emoji:'☀️', title:'Güzel Günler', text:'Güzel günlerinizin başlangıcı olsun! Her şey gönlünüzce olsun.' },
+  { emoji:'🫶', title:'Dostlukla', text:'Dostluğumuzun küçük bir hediyesi olsun. Sevgiyle kalın!' }
+];
+
+const PARTNER_COUPONS = [
+  { name:'Trendyol', logo:'🛍️', discount:'%10 İndirim', desc:'Tüm kategorilerde geçerli', rate:1.0 },
+  { name:'Hepsiburada', logo:'🏪', discount:'%8 İndirim', desc:'Ev & Yaşam ürünlerinde', rate:1.0 },
+  { name:'Migros', logo:'🛒', discount:'%5 İndirim', desc:'Market alışverişlerinde', rate:1.0 },
+  { name:'MediaMarkt', logo:'📱', discount:'%7 İndirim', desc:'Elektronik ürünlerde', rate:1.0 },
+  { name:'LC Waikiki', logo:'👕', discount:'%15 İndirim', desc:'Tüm giyim ürünlerinde', rate:1.0 },
+  { name:'Koçtaş', logo:'🔨', discount:'%10 İndirim', desc:'Ev dekorasyon ürünlerinde', rate:1.0 }
+];
+
+let selectedMJ = null;
+let currentWish = null;
+let userContributions = JSON.parse(localStorage.getItem('ep_user_contribs') || '[]');
+
+function loadWishData() {
+  WISH_LIST.forEach(w => {
+    const stored = localStorage.getItem('ep_wish_' + w.id);
+    if (stored) {
+      const d = JSON.parse(stored);
+      w.collected = d.collected;
+      w.contribs = d.contribs;
+    }
+  });
+}
+
+function renderWishlist() {
+  const grid = document.getElementById('wishlistGrid');
+  grid.innerHTML = '';
+  WISH_LIST.forEach(w => {
+    const pct = Math.min(100, Math.round((w.collected / w.price) * 100));
+    const done = w.collected >= w.price;
+    const card = document.createElement('div');
+    card.className = 'wish-card' + (done ? ' completed' : '');
+    card.innerHTML = `
+      <div class="wish-top">
+        <div class="wish-emoji" style="background:${w.bg}">${w.emoji}</div>
+        <div class="wish-info">
+          <h3>${w.name}</h3>
+          <span class="wish-price">${w.brand} — ₺${w.price.toLocaleString('tr-TR')}</span>
+        </div>
+        <span class="wish-status" style="background:${done?'#dcfce7':'var(--brand-light)'};color:${done?'#16a34a':'var(--brand)'}">${done?'Tamamlandı':'%'+pct}</span>
+      </div>
+      <div class="progress-wrap">
+        <div class="progress-labels"><span>₺${w.collected.toLocaleString('tr-TR')} / ₺${w.price.toLocaleString('tr-TR')}</span><strong>${pct}%</strong></div>
+        <div class="progress-bar"><div class="progress-fill" style="width:${pct}%"></div></div>
+      </div>
+      <div class="wish-bottom">
+        <span class="wish-contribs">
+          <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"/></svg>
+          ${w.contribs} katkıcı
+        </span>
+        ${done
+          ? '<span style="font-size:12px;font-weight:700;color:#16a34a">Hediye Alındı</span>'
+          : `<button class="btn btn-primary btn-sm" onclick="openPayModal('${w.id}')">Katkıda Bulun</button>`
+        }
+      </div>
+    `;
+    grid.appendChild(card);
+  });
+}
+
+function renderMJ() {
+  const grid = document.getElementById('mjGrid');
+  grid.innerHTML = '';
+  MJ_MESSAGES.forEach((m, i) => {
+    const card = document.createElement('div');
+    card.className = 'mj-card';
+    card.id = 'mj-' + i;
+    card.innerHTML = `<div class="mj-emoji">${m.emoji}</div><div class="mj-text"><strong>${m.title}</strong>${m.text}</div>`;
+    card.onclick = () => selectMJ(i);
+    grid.appendChild(card);
+  });
+}
+
+function renderCoupons() {
+  const grid = document.getElementById('couponGrid');
+  grid.innerHTML = '';
+  PARTNER_COUPONS.forEach(c => {
+    const card = document.createElement('div');
+    card.className = 'coupon-card';
+    card.innerHTML = `<div class="c-logo">${c.logo}</div><div class="c-name">${c.name}</div><div class="c-discount">${c.discount}</div><div class="c-desc">${c.desc}</div>`;
+    grid.appendChild(card);
+  });
+  updateCouponTotal();
+}
+
+function updateCouponTotal() {
+  const total = userContributions.reduce((s, c) => s + c.amount, 0);
+  document.getElementById('couponTotal').textContent = '₺' + total.toLocaleString('tr-TR');
+}
+
+function toggleMJ() {
+  const body = document.getElementById('mjBody');
+  const chev = document.getElementById('mjChevron');
+  body.classList.toggle('open');
+  chev.classList.toggle('open');
+}
+
+function selectMJ(idx) {
+  document.querySelectorAll('.mj-card').forEach(c => c.classList.remove('selected'));
+  if (selectedMJ === idx) { selectedMJ = null; return; }
+  selectedMJ = idx;
+  document.getElementById('mj-' + idx).classList.add('selected');
+  document.getElementById('mjCustom').value = '';
+}
+
+function getSelectedMessage() {
+  const custom = document.getElementById('mjCustom').value.trim();
+  if (custom) return custom;
+  if (selectedMJ !== null) return MJ_MESSAGES[selectedMJ].emoji + ' ' + MJ_MESSAGES[selectedMJ].text;
+  return '';
+}
+
+function openPayModal(wishId) {
+  currentWish = WISH_LIST.find(w => w.id === wishId);
+  if (!currentWish) return;
+
+  document.getElementById('payEmoji').textContent = currentWish.emoji;
+  document.getElementById('payName').textContent = currentWish.name;
+  const remaining = currentWish.price - currentWish.collected;
+  document.getElementById('payTarget').textContent = 'Kalan: ₺' + remaining.toLocaleString('tr-TR') + ' / Hedef: ₺' + currentWish.price.toLocaleString('tr-TR');
+
+  const presets = document.getElementById('amountPresets');
+  presets.innerHTML = '';
+  [50, 100, 250, 500, 1000].forEach(a => {
+    const btn = document.createElement('button');
+    btn.textContent = '₺' + a;
+    btn.onclick = () => {
+      document.getElementById('payAmount').value = a;
+      presets.querySelectorAll('button').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      updatePayTotal();
+    };
+    presets.appendChild(btn);
+  });
+
+  document.getElementById('payAmount').value = '';
+  document.getElementById('payFirstName').value = '';
+  document.getElementById('payLastName').value = '';
+  document.getElementById('payEmail').value = '';
+  updatePayTotal();
+
+  const msg = getSelectedMessage();
+  const preview = document.getElementById('payMjPreview');
+  if (msg) {
+    preview.style.display = 'block';
+    document.getElementById('payMjText').textContent = msg;
+  } else {
+    preview.style.display = 'none';
+  }
+
+  document.getElementById('payModal').classList.add('show');
+  document.body.style.overflow = 'hidden';
+}
+
+function closePayModal() {
+  document.getElementById('payModal').classList.remove('show');
+  document.body.style.overflow = '';
+}
+
+function updatePayTotal() {
+  const val = parseInt(document.getElementById('payAmount').value) || 0;
+  document.getElementById('payTotalAmount').textContent = '₺' + val.toLocaleString('tr-TR');
+}
+
+document.getElementById('payAmount').addEventListener('input', function() {
+  document.getElementById('amountPresets').querySelectorAll('button').forEach(b => b.classList.remove('active'));
+  updatePayTotal();
+});
+
+function processPayment() {
+  const amount = parseInt(document.getElementById('payAmount').value);
+  const firstName = document.getElementById('payFirstName').value.trim();
+  const lastName = document.getElementById('payLastName').value.trim();
+  const email = document.getElementById('payEmail').value.trim();
+
+  ['errFirstName','errLastName','errEmail'].forEach(id => document.getElementById(id).style.display='none');
+  ['payFirstName','payLastName','payEmail'].forEach(id => document.getElementById(id).style.borderColor='');
+
+  let hasError = false;
+
+  if (!firstName) {
+    document.getElementById('errFirstName').style.display='block';
+    document.getElementById('payFirstName').style.borderColor='#EF4444';
+    hasError = true;
+  }
+  if (!lastName) {
+    document.getElementById('errLastName').style.display='block';
+    document.getElementById('payLastName').style.borderColor='#EF4444';
+    hasError = true;
+  }
+  if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+    document.getElementById('errEmail').style.display='block';
+    document.getElementById('payEmail').style.borderColor='#EF4444';
+    hasError = true;
+  }
+  if (!amount || amount < 10) { alert('Lütfen en az ₺10 katkı tutarı girin.'); return; }
+  if (hasError) return;
+
+  const name = firstName + ' ' + lastName;
+
+  currentWish.collected = Math.min(currentWish.price, currentWish.collected + amount);
+  currentWish.contribs += 1;
+
+  localStorage.setItem('ep_wish_' + currentWish.id, JSON.stringify({
+    collected: currentWish.collected,
+    contribs: currentWish.contribs
+  }));
+
+  const contrib = {
+    wishId: currentWish.id, wishName: currentWish.name, amount: amount,
+    name: name, email: email,
+    message: getSelectedMessage(),
+    date: new Date().toLocaleDateString('tr-TR'),
+    time: new Date().toLocaleTimeString('tr-TR', { hour:'2-digit', minute:'2-digit' })
+  };
+  userContributions.push(contrib);
+  localStorage.setItem('ep_user_contribs', JSON.stringify(userContributions));
+
+  // API'ye katkı bildir
+  fetch(API_BASE + '/contributions', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      firstName, lastName, email, amount,
+      wishItemId: currentWish.id,
+      wishItemName: currentWish.name,
+      message: getSelectedMessage() || undefined
+    })
+  }).catch(() => {});
+
+  closePayModal();
+
+  document.getElementById('successDetails').innerHTML = `
+    <div><span>Ürün:</span><span>${currentWish.emoji} ${currentWish.name}</span></div>
+    <div><span>Katkı:</span><span>₺${amount.toLocaleString('tr-TR')}</span></div>
+    <div><span>Ad:</span><span>${name}</span></div>
+    <div><span>E-posta:</span><span>${email}</span></div>
+    ${contrib.message ? `<div><span>Mesaj:</span><span style="max-width:200px;text-align:right">${contrib.message.substring(0,60)}${contrib.message.length>60?'...':''}</span></div>` : ''}
+    <div><span>Tarih:</span><span>${contrib.date} ${contrib.time}</span></div>
+  `;
+
+  document.getElementById('successOverlay').classList.add('show');
+  renderWishlist();
+  updateCouponTotal();
+}
+
+function closeSuccess() {
+  document.getElementById('successOverlay').classList.remove('show');
+  document.body.style.overflow = '';
+}
+
+function showCouponConvert() {
+  closeSuccess();
+  document.getElementById('couponSection').scrollIntoView({ behavior:'smooth', block:'start' });
+}
+
+loadWishData();
+renderWishlist();
+renderMJ();
+renderCoupons();
+</script>
+
+<script src="chat-widget.js"></script>
+</body>
+</html>

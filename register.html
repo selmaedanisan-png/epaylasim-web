@@ -1,0 +1,867 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>Kayıt Ol – E-Paylaşım</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet"/>
+<script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+<style>
+*{font-family:'Inter',sans-serif;box-sizing:border-box;}
+.grad-tri{background:linear-gradient(135deg,#C4175A 0%,#891AAE 50%,#DFA020 100%);}
+.text-tri{background:linear-gradient(135deg,#C4175A,#891AAE,#DFA020);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+.btn-tri{background:linear-gradient(135deg,#C4175A 0%,#891AAE 50%,#DFA020 100%);transition:all .2s;box-shadow:0 4px 20px rgba(196,23,90,.25);}
+.btn-tri:hover{opacity:.92;transform:translateY(-1px);}
+.btn-tri:disabled{opacity:.5;cursor:not-allowed;transform:none;}
+.btn-out{border:1.5px solid #E2E8F0;background:#fff;transition:all .2s;}
+.btn-out:hover{border-color:#C4175A;color:#C4175A;}
+
+.inp{border:1.5px solid #E2E8F0;border-radius:12px;padding:11px 14px;width:100%;outline:none;transition:all .2s;font-size:14px;background:#FAFAFA;color:#0F172A;}
+.inp:focus{border-color:#C4175A;box-shadow:0 0 0 3px rgba(196,23,90,.09);background:#fff;}
+.inp.ok {border-color:#22C55E;background:#F0FDF4;}
+.inp.err{border-color:#EF4444;box-shadow:0 0 0 3px rgba(239,68,68,.09);}
+.inp:disabled{opacity:.55;cursor:not-allowed;}
+
+.field-err{font-size:11.5px;color:#EF4444;margin-top:4px;display:none;align-items:center;gap:4px;}
+.field-err.show{display:flex;}
+
+.otp-box{width:48px;height:56px;text-align:center;font-size:20px;font-weight:800;border:2px solid #E2E8F0;border-radius:12px;outline:none;transition:all .2s;color:#0F172A;}
+.otp-box:focus{border-color:#C4175A;box-shadow:0 0 0 3px rgba(196,23,90,.12);}
+.otp-box.filled{border-color:#891AAE;background:#FBE8F4;}
+.otp-box.wrong{border-color:#EF4444;background:#FEF2F2;animation:shake .4s ease;}
+
+/* Adım göstergesi */
+.step-dot{width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;transition:all .3s;flex-shrink:0;}
+.step-dot.done{background:linear-gradient(135deg,#C4175A,#891AAE);color:#fff;}
+.step-dot.active{background:linear-gradient(135deg,#C4175A,#891AAE);color:#fff;box-shadow:0 0 0 4px rgba(196,23,90,.2);}
+.step-dot.pending{background:#F1F5F9;color:#94A3B8;}
+.step-line{flex:1;height:2px;background:#E2E8F0;transition:background .3s;}
+.step-line.done{background:linear-gradient(90deg,#C4175A,#891AAE);}
+
+/* Ekran geçişi */
+.screen{display:none;animation:fadeUp .28s ease;}
+.screen.active{display:block;}
+@keyframes fadeUp{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:translateY(0)}}
+@keyframes shake{0%,100%{transform:translateX(0)}20%{transform:translateX(-7px)}40%{transform:translateX(7px)}60%{transform:translateX(-4px)}80%{transform:translateX(4px)}}
+@keyframes popIn{from{opacity:0;transform:scale(.5)}to{opacity:1;transform:scale(1)}}
+
+/* Şifre gücü */
+.pwd-bar{height:4px;border-radius:4px;transition:width .35s,background .35s;}
+
+/* Spinner */
+.spin{width:18px;height:18px;border:2.5px solid rgba(255,255,255,.35);border-top-color:#fff;border-radius:50%;animation:rot .65s linear infinite;display:inline-block;vertical-align:middle;}
+@keyframes rot{to{transform:rotate(360deg)}}
+
+/* Toast */
+#toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%) translateY(70px);background:#0F172A;color:#fff;padding:9px 18px;border-radius:100px;font-size:13px;font-weight:500;transition:transform .3s cubic-bezier(.34,1.56,.64,1);z-index:9999;white-space:nowrap;pointer-events:none;}
+#toast.show{transform:translateX(-50%) translateY(0);}
+
+/* Hata kutusu */
+.err-box{background:#FEF2F2;border:1px solid #FECACA;border-radius:12px;padding:12px 14px;display:none;}
+.err-box.show{display:flex;align-items:flex-start;gap:10px;}
+
+/* Şifre input içinde göster/gizle */
+.pwd-wrap{position:relative;}
+.pwd-wrap .eye{position:absolute;right:12px;top:50%;transform:translateY(-50%);cursor:pointer;color:#94A3B8;background:none;border:none;padding:2px;}
+</style>
+</head>
+<body class="bg-[#FDF5F9] min-h-screen" style="display:flex;flex-direction:column">
+
+<style>
+.epnav{position:sticky;top:0;z-index:100;background:rgba(255,255,255,.92);backdrop-filter:blur(16px);border-bottom:1px solid #f1f5f9}
+.epnav-inner{max-width:1120px;margin:0 auto;padding:0 24px;display:flex;align-items:center;justify-content:space-between;height:72px}
+@media(min-width:640px){.epnav-inner{padding:0 32px}}
+.epnav-logo{white-space:nowrap;text-decoration:none;color:#1a1a2e}
+.epnav-logo .bn{font-weight:900;font-size:26px;letter-spacing:-.5px}
+.epnav-logo .dt{color:#DFA020}
+.epnav-logo .bt{display:block;font-size:10.5px;font-weight:500;color:#64748b;letter-spacing:.2px;margin-top:1px}
+.epnav-links{display:flex;align-items:center;gap:32px}
+.epnav-links a{font-size:14px;font-weight:500;color:#64748b;text-decoration:none;transition:color .15s}
+.epnav-links a:hover{color:#1a1a2e}
+.epnav-acts{display:flex;align-items:center;gap:12px}
+.epnav-acts .gl{font-size:14px;font-weight:600;color:#64748b;padding:8px 12px;text-decoration:none}
+.epnav-acts .gl:hover{color:#C4175A}
+.epnav-acts .hb{display:inline-flex;align-items:center;gap:8px;background:#C4175A;color:#fff;padding:10px 20px;font-size:13px;font-weight:600;border-radius:12px;text-decoration:none;border:none;cursor:pointer;box-shadow:0 4px 16px rgba(196,23,90,.18);transition:all .2s}
+.epnav-acts .hb:hover{background:#9E1248;transform:translateY(-1px)}.epnav-acts .hb svg{width:18px;height:18px}
+.epnav-mt{display:none;background:none;border:none;cursor:pointer;width:40px;height:40px;border-radius:10px;color:#64748b;align-items:center;justify-content:center}
+.epnav-mm{display:none;padding:16px 0;border-top:1px solid #f1f5f9}
+.epnav-mm a{display:block;padding:10px 0;font-size:15px;font-weight:500;color:#64748b;text-decoration:none}
+.epnav-mm .mb{display:flex;gap:8px;margin-top:12px}
+.epnav-mm .mb a{flex:1;text-align:center;padding:10px 20px;font-size:13px;font-weight:600;border-radius:12px}
+.epnav-mm .mb .ob{background:#fff;color:#1a1a2e;border:1.5px solid #f1f5f9}
+.epnav-mm .mb .pb{background:#C4175A;color:#fff}
+@media(max-width:768px){.epnav-links,.epnav-acts .gl{display:none}.epnav-mt{display:flex}.epnav-mm.open{display:block}}
+.epft{background:#0f172a;color:#94a3b8;padding:64px 0 32px}
+.epft-inner{max-width:1120px;margin:0 auto;padding:0 24px}
+@media(min-width:640px){.epft-inner{padding:0 32px}}
+.epft-grid{display:grid;grid-template-columns:1.5fr 1fr 1fr 1fr;gap:40px;margin-bottom:40px}
+.epft-brand{display:flex;flex-direction:column;align-items:flex-start;gap:2px;margin-bottom:16px}
+.epft-brand span:first-child{font-weight:800;font-size:20px;color:#fff}
+.epft-brand .dt{color:#DFA020}
+.epft-brand span:last-child{font-size:9px;font-weight:500;opacity:.7;letter-spacing:.5px;text-transform:uppercase}
+.epft p.tl{font-size:14px;margin-bottom:16px}
+.epft-soc{display:flex;gap:6px}
+.epft-soc a{width:36px;height:36px;border-radius:10px;background:#1e293b;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:600;color:#94a3b8;text-decoration:none;transition:background .15s,color .15s}
+.epft-soc a:hover{background:#334155;color:#fff}
+.epft-col h5{color:#fff;font-size:13px;font-weight:600;margin-bottom:14px}
+.epft-col ul{list-style:none;padding:0;margin:0}
+.epft-col li{margin-bottom:10px}
+.epft-col a{font-size:14px;color:#94a3b8;text-decoration:none;transition:color .15s}
+.epft-col a:hover{color:#fff}
+.epft-bot{border-top:1px solid #1e293b;padding-top:24px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px}
+.epft-bot p{font-size:12px;color:#64748b;margin:0}
+.epft-badges{display:flex;gap:16px}
+.epft-badges span{display:flex;align-items:center;gap:6px;font-size:12px;color:#64748b}
+.epft-badges .dg{width:6px;height:6px;border-radius:50%;background:#22c55e}
+@media(max-width:768px){.epft-grid{grid-template-columns:1fr 1fr}}
+@media(max-width:540px){.epft-grid{grid-template-columns:1fr}.epft-bot{flex-direction:column;text-align:center}}
+.epft-nl{background:linear-gradient(135deg,rgba(139,92,246,.08),rgba(236,72,153,.08));border:1px solid rgba(139,92,246,.15);border-radius:16px;padding:28px 32px;margin-bottom:32px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:16px}
+.epft-nl-text h5{margin:0 0 4px;font-size:15px;font-weight:600;color:#e2e8f0}
+.epft-nl-text p{margin:0;font-size:13px;color:#94a3b8}
+.epft-nl-form{display:flex;gap:8px}
+.epft-nl-form input{padding:10px 16px;border-radius:10px;border:1px solid #334155;background:#0f172a;color:#e2e8f0;font-size:13px;width:260px;outline:none;transition:border-color .2s}
+.epft-nl-form input:focus{border-color:#8b5cf6}
+.epft-nl-form input::placeholder{color:#64748b}
+.epft-nl-form button{padding:10px 22px;border-radius:10px;border:none;background:linear-gradient(135deg,#8b5cf6,#ec4899);color:#fff;font-size:13px;font-weight:600;cursor:pointer;transition:opacity .2s,transform .2s;white-space:nowrap}
+.epft-nl-form button:hover{opacity:.9;transform:translateY(-1px)}
+.epft-nl-form button:disabled{opacity:.6;cursor:not-allowed;transform:none}
+@media(max-width:640px){.epft-nl{flex-direction:column;text-align:center}.epft-nl-form{flex-direction:column;width:100%}.epft-nl-form input{width:100%}}
+</style>
+
+<header class="epnav">
+  <div class="epnav-inner">
+    <a href="index.html" class="epnav-logo"><span class="bn">e<span class="dt">.</span>paylaşım</span><span class="bt">Türkiye'nin Sosyal Hediyeleşme Altyapısı</span></a>
+    <nav class="epnav-links">
+      <a href="index.html#nasil-calisir">Nasıl Çalışır</a>
+      <a href="index.html#kampanyalar">Kampanyalar</a>
+      <a href="katkida-bulun.html">Katkıda Bulun</a>
+      <a href="index.html#guven">Güvenlik</a>
+      <a href="index.html#yorumlar">Yorumlar</a>
+    </nav>
+    <div class="epnav-acts">
+      <a href="login.html" class="gl">Giriş</a>
+      <a href="register.html" class="hb">Hemen Başla <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M13 7l5 5m0 0l-5 5m5-5H6"/></svg></a>
+      <button class="epnav-mt" onclick="document.getElementById('epMM').classList.toggle('open')" aria-label="Menu">
+        <svg width="22" height="22" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" d="M4 6h16M4 12h16M4 18h16"/></svg>
+      </button>
+    </div>
+  </div>
+  <div id="epMM" class="epnav-mm" style="max-width:1120px;margin:0 auto;padding-left:24px;padding-right:24px">
+    <a href="index.html#nasil-calisir">Nasıl Çalışır</a>
+    <a href="index.html#kampanyalar">Kampanyalar</a>
+    <a href="katkida-bulun.html">Katkıda Bulun</a>
+    <a href="index.html#guven">Güvenlik</a>
+    <a href="index.html#yorumlar">Yorumlar</a>
+    <div class="mb"><a href="login.html" class="ob">Giriş</a><a href="register.html" class="pb">Hemen Başla</a></div>
+  </div>
+</header>
+
+<div style="flex:1;padding:24px 16px;display:flex;justify-content:center">
+<div id="toast"></div>
+
+<div class="w-full max-w-lg mx-auto">
+
+  <!-- Logo -->
+  <div class="text-center mb-6">
+    <a href="index.html" class="inline-block mb-4">
+      <span class="text-4xl font-black text-[#0F172A]" style="letter-spacing:-0.5px;">e<span class="text-[#DFA020]">.</span>paylaşım</span>
+    </a>
+    <h1 id="pageTitle" class="text-2xl font-black text-[#0F172A] mb-1">Ücretsiz Hesap Oluştur</h1>
+    <p id="pageSubtitle" class="text-slate-500 text-sm">Tüm alanları eksiksiz doldurun</p>
+  </div>
+
+  <!-- Adım göstergesi -->
+  <div id="stepBar" class="flex items-center gap-0 mb-6 px-2">
+    <div class="step-dot active" id="sd1">1</div>
+    <div class="step-line" id="sl1"></div>
+    <div class="step-dot pending" id="sd2">2</div>
+    <div class="step-line" id="sl2"></div>
+    <div class="step-dot pending" id="sd3">✉</div>
+    <div class="step-line" id="sl3"></div>
+    <div class="step-dot pending" id="sd4">🔑</div>
+    <div class="step-line" id="sl4"></div>
+    <div class="step-dot pending" id="sd5">✓</div>
+  </div>
+
+  <div class="bg-white rounded-3xl shadow-sm border border-slate-100 overflow-hidden">
+
+    <!-- ══════════════════════════════════
+         ADIM 1 — KİŞİSEL BİLGİLER
+    ══════════════════════════════════ -->
+    <div id="screen1" class="screen active p-7">
+      <p class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-5">1 / 4 — Kişisel Bilgiler</p>
+
+      <!-- Hata kutusu -->
+      <div id="err1" class="err-box mb-4">
+        <span class="text-red-500 text-lg flex-shrink-0">⚠️</span>
+        <div><p id="err1code" class="text-xs font-bold text-red-600 mb-0.5"></p><p id="err1msg" class="text-sm text-red-700"></p></div>
+      </div>
+
+      <div class="grid grid-cols-2 gap-3 mb-3">
+        <div>
+          <label class="label">Ad <span class="text-red-400">*</span></label>
+          <input id="f_ad" class="inp" type="text" placeholder="Adınız" oninput="liveCheck('f_ad','E_001')"/>
+          <p class="field-err" id="fe_ad"><span>⚠</span><span></span></p>
+        </div>
+        <div>
+          <label class="label">Soyad <span class="text-red-400">*</span></label>
+          <input id="f_soyad" class="inp" type="text" placeholder="Soyadınız" oninput="liveCheck('f_soyad','E_002')"/>
+          <p class="field-err" id="fe_soyad"><span>⚠</span><span></span></p>
+        </div>
+      </div>
+
+      <div class="mb-3">
+        <label class="label">E-posta Adresi <span class="text-red-400">*</span></label>
+        <div class="relative">
+          <input id="f_email" class="inp pr-9" type="email" placeholder="ornek@email.com" oninput="liveCheck('f_email','E_003')"/>
+          <span id="emailCheck" class="absolute right-3 top-1/2 -translate-y-1/2 text-base hidden"></span>
+        </div>
+        <p class="field-err" id="fe_email"><span>⚠</span><span></span></p>
+      </div>
+
+      <div class="mb-3">
+        <label class="label">Telefon <span class="text-red-400">*</span></label>
+        <div class="flex gap-2">
+          <div class="inp w-[72px] text-center font-semibold text-slate-500 flex-shrink-0 flex items-center justify-center text-sm">🇹🇷 +90</div>
+          <input id="f_tel" class="inp" type="tel" placeholder="5XX XXX XX XX" maxlength="10"
+                 oninput="this.value=this.value.replace(/\D/g,'').slice(0,10);liveCheck('f_tel','E_004')"/>
+        </div>
+        <p class="field-err" id="fe_tel"><span>⚠</span><span></span></p>
+      </div>
+
+      <button onclick="step1Next()" class="btn-tri w-full text-white font-bold py-3.5 rounded-2xl text-sm mt-4">
+        Devam Et →
+      </button>
+      <p class="text-center text-sm text-slate-500 mt-4">
+        Hesabınız var mı? <a href="login.html" class="text-[#C4175A] font-semibold hover:underline">Giriş Yap</a>
+      </p>
+    </div>
+
+    <!-- ══════════════════════════════════
+         ADIM 2 — ADRES & IBAN
+    ══════════════════════════════════ -->
+    <div id="screen2" class="screen p-7">
+      <p class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-5">2 / 4 — Adres &amp; Banka Bilgileri</p>
+
+      <div id="err2" class="err-box mb-4">
+        <span class="text-red-500 text-lg flex-shrink-0">⚠️</span>
+        <div><p id="err2code" class="text-xs font-bold text-red-600 mb-0.5"></p><p id="err2msg" class="text-sm text-red-700"></p></div>
+      </div>
+
+      <div class="mb-3">
+        <label class="label">Açık Adres <span class="text-red-400">*</span></label>
+        <textarea id="f_adres" class="inp resize-none" rows="3" placeholder="Mahalle, sokak, bina no, daire..."
+                  oninput="liveCheck('f_adres','E_005')"></textarea>
+        <p class="field-err" id="fe_adres"><span>⚠</span><span></span></p>
+      </div>
+
+      <div class="mb-3">
+        <label class="label">İl / İlçe</label>
+        <div class="grid grid-cols-2 gap-2">
+          <select id="f_il" class="inp text-sm text-slate-600">
+            <option value="">İl seçin</option>
+            <option>İstanbul</option><option>Ankara</option><option>İzmir</option><option>Bursa</option>
+            <option>Antalya</option><option>Adana</option><option>Konya</option><option>Gaziantep</option>
+            <option>Diğer</option>
+          </select>
+          <input id="f_ilce" class="inp" type="text" placeholder="İlçe"/>
+        </div>
+      </div>
+
+      <div class="mb-3">
+        <label class="label">IBAN <span class="text-red-400">*</span></label>
+        <input id="f_iban" class="inp font-mono tracking-wide" type="text" placeholder="TR00 0000 0000 0000 0000 0000 00"
+               maxlength="32" oninput="formatIban(this)"/>
+        <p class="field-err" id="fe_iban"><span>⚠</span><span></span></p>
+        <p class="text-xs text-slate-400 mt-1">Katkı ödemelerinin aktarılacağı hesap. TR ile başlar, 26 karakter.</p>
+      </div>
+
+      <!-- KVKK -->
+      <div class="flex items-start gap-2 mb-5 bg-slate-50 rounded-2xl p-3 border border-slate-100">
+        <input type="checkbox" id="kvkk" class="w-4 h-4 mt-0.5 accent-[#C4175A] flex-shrink-0"/>
+        <label for="kvkk" class="text-xs text-slate-500 leading-relaxed">
+          <a href="kullanim-sartlari.html" class="text-[#C4175A] font-medium hover:underline">Kullanım Şartları</a>'nı,
+          <a href="kvkk.html" class="text-[#C4175A] font-medium hover:underline">KVKK Aydınlatma Metni</a>'ni ve
+          <a href="gizlilik.html" class="text-[#C4175A] font-medium hover:underline">Gizlilik Politikası</a>'nı okudum, kabul ediyorum.
+        </label>
+      </div>
+
+      <div class="flex gap-2">
+        <button onclick="goScreen(1)" class="btn-out flex-1 text-slate-600 font-semibold py-3.5 rounded-2xl text-sm">← Geri</button>
+        <button onclick="step2Next()" id="btn2" class="btn-tri flex-[2] text-white font-bold py-3.5 rounded-2xl text-sm">Kodu Gönder ✉️</button>
+      </div>
+    </div>
+
+    <!-- ══════════════════════════════════
+         ADIM 3 — E-POSTA DOĞRULAMA
+    ══════════════════════════════════ -->
+    <div id="screen3" class="screen p-7">
+      <button onclick="goScreen(2)" class="flex items-center gap-1.5 text-slate-400 text-sm font-medium hover:text-[#C4175A] transition-colors mb-5">
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.3"><path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7"/></svg>
+        Geri
+      </button>
+
+      <div class="text-center mb-6">
+        <div class="w-16 h-16 grad-tri rounded-2xl flex items-center justify-center text-3xl mx-auto mb-4" style="box-shadow:0 6px 24px rgba(196,23,90,.25);">✉️</div>
+        <h2 class="text-xl font-black text-[#0F172A] mb-2">E-postanı Doğrula</h2>
+        <p class="text-slate-400 text-sm leading-relaxed">
+          <span id="maskedEmail" class="font-semibold text-slate-600"></span> adresine<br/>
+          6 haneli doğrulama kodu gönderdik.
+        </p>
+      </div>
+
+      <!-- OTP Kutuları -->
+      <div class="flex justify-center gap-2 mb-2" id="otpBoxes">
+        <input class="otp-box" type="text" inputmode="numeric" maxlength="1" data-idx="0"/>
+        <input class="otp-box" type="text" inputmode="numeric" maxlength="1" data-idx="1"/>
+        <input class="otp-box" type="text" inputmode="numeric" maxlength="1" data-idx="2"/>
+        <input class="otp-box" type="text" inputmode="numeric" maxlength="1" data-idx="3"/>
+        <input class="otp-box" type="text" inputmode="numeric" maxlength="1" data-idx="4"/>
+        <input class="otp-box" type="text" inputmode="numeric" maxlength="1" data-idx="5"/>
+      </div>
+      <p id="otpErr" class="text-center text-xs text-red-500 mb-4 min-h-[18px]"></p>
+
+      <button onclick="verifyOtp()" id="btnVerify"
+              class="btn-tri w-full text-white font-bold py-3.5 rounded-2xl text-sm mb-3">
+        Kodu Doğrula
+      </button>
+
+      <p class="text-center text-sm text-slate-500">
+        Kod gelmedi mi?
+        <button id="resendBtn" onclick="resendOtp()" disabled
+                class="text-[#C4175A] font-semibold hover:underline ml-1 disabled:opacity-40 disabled:cursor-not-allowed">
+          Tekrar Gönder <span id="cd" class="text-slate-400 font-normal">(60s)</span>
+        </button>
+      </p>
+    </div>
+
+    <!-- ══════════════════════════════════
+         ADIM 4 — ŞİFRE DOĞRULAMA
+    ══════════════════════════════════ -->
+    <div id="screen4" class="screen p-7">
+      <div class="text-center mb-6">
+        <div class="w-16 h-16 grad-tri rounded-2xl flex items-center justify-center text-3xl mx-auto mb-4" style="box-shadow:0 6px 24px rgba(196,23,90,.25);">🔑</div>
+        <h2 class="text-xl font-black text-[#0F172A] mb-2">Şifreni Belirle</h2>
+        <p class="text-slate-400 text-sm leading-relaxed">
+          E-postan doğrulandı! Şimdi hesabın için<br/>
+          <span class="font-semibold text-slate-600">güçlü bir şifre oluştur.</span>
+        </p>
+      </div>
+
+      <div id="err4" class="err-box mb-4">
+        <span class="text-red-500 text-lg flex-shrink-0">⚠️</span>
+        <div><p id="err4code" class="text-xs font-bold text-red-600 mb-0.5"></p><p id="err4msg" class="text-sm text-red-700"></p></div>
+      </div>
+
+      <div class="bg-emerald-50 border border-emerald-200 rounded-2xl p-4 mb-5 flex items-start gap-3">
+        <span class="text-xl flex-shrink-0">✅</span>
+        <div>
+          <p class="text-sm font-bold text-emerald-800 mb-0.5">E-posta Doğrulandı</p>
+          <p class="text-xs text-emerald-700 leading-relaxed">
+            <span id="pwdEmailHint"></span> adresi başarıyla doğrulandı.
+            Şifreniz en az 8 karakter, 1 büyük harf, 1 küçük harf ve 1 rakam içermelidir.
+          </p>
+        </div>
+      </div>
+
+      <div class="mb-3">
+        <label class="label">Şifre <span class="text-red-400">*</span></label>
+        <div class="pwd-wrap">
+          <input id="f_pwd" class="inp pr-10" type="password"
+                 placeholder="En az 8 karakter" oninput="checkPwd()"/>
+          <button class="eye" onclick="toggleEye('f_pwd',this)" type="button">👁</button>
+        </div>
+        <div class="mt-2 flex gap-1">
+          <div id="pwdBar1" class="pwd-bar bg-slate-200 flex-1" style="width:0"></div>
+          <div id="pwdBar2" class="pwd-bar bg-slate-200 flex-1" style="width:0"></div>
+          <div id="pwdBar3" class="pwd-bar bg-slate-200 flex-1" style="width:0"></div>
+          <div id="pwdBar4" class="pwd-bar bg-slate-200 flex-1" style="width:0"></div>
+        </div>
+        <p id="pwdHint" class="text-xs text-slate-400 mt-1"></p>
+        <p class="field-err" id="fe_pwd"><span>⚠</span><span></span></p>
+      </div>
+
+      <div class="mb-5">
+        <label class="label">Şifre Tekrar <span class="text-red-400">*</span></label>
+        <div class="pwd-wrap">
+          <input id="f_pwd2" class="inp pr-10" type="password"
+                 placeholder="Şifrenizi tekrar girin" oninput="checkPwd2()"/>
+          <button class="eye" onclick="toggleEye('f_pwd2',this)" type="button">👁</button>
+        </div>
+        <p class="field-err" id="fe_pwd2"><span>⚠</span><span></span></p>
+      </div>
+
+      <button onclick="step4Finish()" id="btn4"
+              class="btn-tri w-full text-white font-bold py-3.5 rounded-2xl text-sm">
+        Hesabı Oluştur
+      </button>
+    </div>
+
+    <!-- ══════════════════════════════════
+         ADIM 5 — BAŞARI
+    ══════════════════════════════════ -->
+    <div id="screen5" class="screen p-7 text-center">
+      <div class="flex justify-center mb-5">
+        <div style="width:72px;height:72px;border-radius:50%;background:linear-gradient(135deg,#C4175A,#891AAE,#DFA020);display:flex;align-items:center;justify-content:center;box-shadow:0 8px 28px rgba(196,23,90,.30);animation:popIn .45s cubic-bezier(.34,1.56,.64,1);">
+          <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.8"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
+        </div>
+      </div>
+      <h2 class="text-2xl font-black text-[#0F172A] mb-2">Hesabınız Oluşturuldu!</h2>
+      <p id="successName" class="text-slate-500 text-sm mb-6">Kampanya panelinize yönlendiriliyorsunuz…</p>
+      <div class="flex justify-center mb-6">
+        <div class="w-8 h-8 rounded-full border-[3px] border-pink-200 border-t-[#C4175A] animate-spin"></div>
+      </div>
+      <div class="bg-[#FDF5F9] rounded-2xl p-4 text-left space-y-2" id="summaryBox"></div>
+    </div>
+
+  </div><!-- /card -->
+
+  <div class="flex items-center justify-center gap-4 mt-5 text-slate-400 text-xs">
+    <span>🔒 SSL</span><span>🛡️ KVKK</span><span>🏦 PCI DSS</span><span>🇹🇷 TR Sunucu</span>
+  </div>
+</div><!-- /container -->
+
+<style>
+.label{display:block;font-size:13px;font-weight:600;color:#0F172A;margin-bottom:5px;}
+</style>
+
+<script>
+const API_BASE = 'http://localhost:3001/api/v1';
+async function subscribeNL(e) {
+  e.preventDefault();
+  var btn = document.getElementById('nlBtn');
+  var okEl = document.getElementById('nlOk');
+  var errEl = document.getElementById('nlErr');
+  var emailInput = document.getElementById('nlEmail');
+  okEl.style.display = 'none';
+  errEl.style.display = 'none';
+  btn.disabled = true;
+  btn.textContent = 'Gönderiliyor...';
+  try {
+    var res = await fetch(API_BASE + '/newsletter/subscribe', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email: emailInput.value.trim() })
+    });
+    if (!res.ok) throw new Error();
+    okEl.style.display = 'block';
+    emailInput.value = '';
+  } catch(err) {
+    errEl.style.display = 'block';
+  } finally {
+    btn.disabled = false;
+    btn.textContent = 'Abone Ol';
+  }
+}
+/* ══════════════════════════════════════════════════════════════
+   YAPILANDIRMA — EmailJS
+
+   Kurulum (1 kez yapılır):
+   1. https://www.emailjs.com adresinden ücretsiz hesap aç
+   2. Email Services → Add New Service → Gmail → Connect Account
+   3. Email Templates → Create New Template:
+      Subject: E-Paylaşım Doğrulama Kodunuz: {{otp_code}}
+      Body:
+        Merhaba {{to_name}},
+        E-posta doğrulama kodunuz: {{otp_code}}
+        Bu kod 10 dakika boyunca geçerlidir.
+      To Email: {{to_email}}
+   4. Aşağıdaki 3 değeri doldur:
+══════════════════════════════════════════════════════════════ */
+const CFG = {
+  EMAILJS_PUBLIC_KEY : 'BURAYA_PUBLIC_KEY',       // Account → API Keys → Public Key
+  EMAILJS_SERVICE_ID : 'BURAYA_SERVICE_ID',       // Email Services → Service ID
+  EMAILJS_TEMPLATE_ID: 'BURAYA_TEMPLATE_ID',      // Email Templates → Template ID
+  REDIRECT           : 'index.html',
+  OTP_EXPIRE_SEC     : 600,
+};
+
+emailjs.init({ publicKey: CFG.EMAILJS_PUBLIC_KEY });
+
+/* ── Hata Kodları ── */
+const ERRORS = {
+  E_001: 'Ad alanı boş bırakılamaz.',
+  E_002: 'Soyad alanı boş bırakılamaz.',
+  E_003: 'Geçerli bir e-posta adresi girin. (örn: ad@alan.com)',
+  E_004: 'Geçerli bir Türk cep telefonu girin. (05XXXXXXXXX)',
+  E_005: 'Adres alanı boş bırakılamaz.',
+  E_006: 'Geçerli bir TR IBAN girin. (TR ile başlayan 26 karakter)',
+  E_007: 'Kullanım şartlarını kabul etmeniz zorunludur.',
+  E_008: 'Girdiğiniz kod hatalı. Lütfen tekrar deneyin.',
+  E_009: 'Kodun süresi doldu. Lütfen yeniden gönderin.',
+  E_010: 'Bu e-posta adresi zaten kayıtlı. Giriş yapmayı deneyin.',
+  E_011: 'Şifre en az 8 karakter, 1 büyük harf, 1 küçük harf ve 1 rakam içermelidir.',
+  E_012: 'Şifreler eşleşmiyor.',
+  E_013: 'Şifre alanı boş bırakılamaz.',
+  E_014: 'EmailJS yapılandırması eksik. CFG değerlerini doldurun.',
+};
+
+/* ── Durum ── */
+let state = {
+  ad:'', soyad:'', email:'', tel:'',
+  adres:'', il:'', ilce:'', iban:'',
+  otp:'', otpExp:0, emailVerified: false,
+};
+let cdTimer = null;
+
+/* ════════════════════════════════
+   ADIM 1 — KİŞİSEL BİLGİLER
+════════════════════════════════ */
+function step1Next() {
+  const ad    = v('f_ad').trim();
+  const soyad = v('f_soyad').trim();
+  const email = v('f_email').trim();
+  const tel   = v('f_tel').trim();
+
+  if (!ad)               return showErr(1,'E_001','f_ad','fe_ad');
+  if (!soyad)            return showErr(1,'E_002','f_soyad','fe_soyad');
+  if (!validEmail(email))return showErr(1,'E_003','f_email','fe_email');
+  if (!validTel(tel))    return showErr(1,'E_004','f_tel','fe_tel');
+
+  const reg = getRegistered();
+  if (reg[email]) return showErr(1,'E_010','f_email','fe_email');
+
+  state.ad=ad; state.soyad=soyad; state.email=email; state.tel=tel;
+  hideErr(1);
+  goScreen(2);
+}
+
+/* ════════════════════════════════
+   ADIM 2 — ADRES & OTP GÖNDER
+════════════════════════════════ */
+async function step2Next() {
+  const adres = v('f_adres').trim();
+  const iban  = v('f_iban').replace(/\s/g,'').toUpperCase();
+
+  if (!adres)          return showErr(2,'E_005','f_adres','fe_adres');
+  if (!validIban(iban))return showErr(2,'E_006','f_iban','fe_iban');
+  if (!document.getElementById('kvkk').checked) return showErr(2,'E_007');
+
+  if (CFG.EMAILJS_PUBLIC_KEY === 'BURAYA_PUBLIC_KEY') {
+    toast('❌ EmailJS ayarları yapılmamış! register.html içindeki CFG değerlerini doldurun.');
+    return;
+  }
+
+  state.adres=adres; state.il=v('f_il'); state.ilce=v('f_ilce'); state.iban=iban;
+  hideErr(2);
+
+  const btn = document.getElementById('btn2');
+  setLoad(btn, true, 'Gönderiliyor…');
+
+  state.otp    = genOtp();
+  state.otpExp = Date.now() + CFG.OTP_EXPIRE_SEC * 1000;
+
+  try {
+    await emailjs.send(CFG.EMAILJS_SERVICE_ID, CFG.EMAILJS_TEMPLATE_ID, {
+      to_email : state.email,
+      to_name  : state.ad,
+      otp_code : state.otp,
+    });
+
+    goScreen(3);
+    document.getElementById('maskedEmail').textContent = maskEmail(state.email);
+    resetOtpBoxes();
+    startCd(60);
+    setTimeout(()=>document.querySelector('.otp-box').focus(), 350);
+    toast('✅ Doğrulama kodu gönderildi!');
+  } catch(e) {
+    console.error('EmailJS hata:', e);
+    if (e.text && e.text.includes('publicKey')) {
+      toast('❌ EmailJS Public Key hatalı. Kontrol edin.');
+    } else if (e.text && e.text.includes('service')) {
+      toast('❌ EmailJS Service ID hatalı. Kontrol edin.');
+    } else if (e.text && e.text.includes('template')) {
+      toast('❌ EmailJS Template ID hatalı. Kontrol edin.');
+    } else {
+      toast('❌ E-posta gönderilemedi: ' + (e.text || e.message || 'Bilinmeyen hata'));
+    }
+  }
+  setLoad(btn, false, 'Kodu Gönder ✉️');
+}
+
+/* ════════════════════════════════
+   ADIM 3 — OTP DOĞRULAMA
+════════════════════════════════ */
+function verifyOtp() {
+  const entered = getOtp();
+  if (entered.length < 6) { setOtpErr('6 haneli kodu eksiksiz girin.'); return; }
+
+  if (Date.now() > state.otpExp) {
+    setOtpErr(ERRORS.E_009);
+    shakeOtp();
+    return;
+  }
+
+  if (entered !== state.otp) {
+    setOtpErr(ERRORS.E_008);
+    shakeOtp();
+    return;
+  }
+
+  clearOtpErr();
+  state.emailVerified = true;
+  document.getElementById('pwdEmailHint').textContent = maskEmail(state.email);
+  goScreen(4);
+  toast('✅ E-posta doğrulandı!');
+}
+
+async function resendOtp() {
+  document.getElementById('resendBtn').disabled = true;
+
+  state.otp    = genOtp();
+  state.otpExp = Date.now() + CFG.OTP_EXPIRE_SEC * 1000;
+
+  try {
+    await emailjs.send(CFG.EMAILJS_SERVICE_ID, CFG.EMAILJS_TEMPLATE_ID, {
+      to_email : state.email,
+      to_name  : state.ad,
+      otp_code : state.otp,
+    });
+    resetOtpBoxes();
+    startCd(60);
+    toast('✅ Kod tekrar gönderildi.');
+  } catch(e) {
+    toast('❌ Gönderilemedi: ' + (e.text || e.message));
+    document.getElementById('resendBtn').disabled = false;
+  }
+}
+
+/* ════════════════════════════════
+   ADIM 4 — ŞİFRE & KAYIT
+════════════════════════════════ */
+function step4Finish() {
+  const pwd  = v('f_pwd');
+  const pwd2 = v('f_pwd2');
+
+  if (!pwd)              return showErr(4,'E_013','f_pwd','fe_pwd');
+  if (!validPwd(pwd))    return showErr(4,'E_011','f_pwd','fe_pwd');
+  if (pwd !== pwd2)      return showErr(4,'E_012','f_pwd2','fe_pwd2');
+
+  if (!state.emailVerified) {
+    toast('❌ E-posta doğrulanmamış. Lütfen 3. adıma dönün.');
+    return;
+  }
+
+  hideErr(4);
+
+  const reg = getRegistered();
+  reg[state.email] = {
+    ad: state.ad, soyad: state.soyad, email: state.email,
+    tel: state.tel, adres: state.adres, il: state.il,
+    ilce: state.ilce, iban: state.iban,
+    pwdHash: btoa(pwd),
+    emailVerified: true,
+    createdAt: new Date().toISOString(),
+    active: true,
+  };
+  localStorage.setItem('ep_registered', JSON.stringify(reg));
+  sessionStorage.setItem('ep_user', JSON.stringify({
+    name : state.ad + ' ' + state.soyad,
+    email: state.email,
+    method: 'register',
+  }));
+
+  document.getElementById('successName').textContent =
+    `Hoş geldiniz, ${state.ad}! Kampanya panelinize yönlendiriliyorsunuz…`;
+  document.getElementById('summaryBox').innerHTML = `
+    <div class="flex justify-between text-sm"><span class="text-slate-400">Ad Soyad</span><span class="font-semibold">${state.ad} ${state.soyad}</span></div>
+    <div class="flex justify-between text-sm"><span class="text-slate-400">E-posta</span><span class="font-semibold">${state.email}</span></div>
+    <div class="flex justify-between text-sm"><span class="text-slate-400">Telefon</span><span class="font-semibold">+90${state.tel}</span></div>
+    <div class="flex justify-between text-sm"><span class="text-slate-400">IBAN</span><span class="font-mono text-xs font-semibold">${formatIbanDisplay(state.iban)}</span></div>
+    <div class="flex justify-between text-sm"><span class="text-slate-400">E-posta Doğrulama</span><span class="font-bold text-green-600">✓ Doğrulandı</span></div>
+    <div class="flex justify-between text-sm"><span class="text-slate-400">Durum</span><span class="font-bold text-green-600">✓ Aktif</span></div>`;
+
+  goScreen(5);
+  setTimeout(()=>{ window.location.href = CFG.REDIRECT; }, 3000);
+}
+
+/* ════════════════════════════════
+   OTP KUTU YÖNETİMİ
+════════════════════════════════ */
+document.addEventListener('DOMContentLoaded', () => {
+  const boxes = document.querySelectorAll('.otp-box');
+  boxes.forEach((box,i) => {
+    box.addEventListener('input', e => {
+      const val = e.target.value.replace(/\D/g,'');
+      e.target.value = val ? val[0] : '';
+      e.target.classList.toggle('filled', !!val);
+      clearOtpErr();
+      if (val && i < boxes.length-1) boxes[i+1].focus();
+      if (getOtp().length === 6) setTimeout(verifyOtp, 300);
+    });
+    box.addEventListener('keydown', e => {
+      if (e.key==='Backspace' && !box.value && i>0){ boxes[i-1].value=''; boxes[i-1].classList.remove('filled'); boxes[i-1].focus(); }
+      if (e.key==='ArrowLeft'  && i>0)              boxes[i-1].focus();
+      if (e.key==='ArrowRight' && i<boxes.length-1) boxes[i+1].focus();
+    });
+    box.addEventListener('paste', e => {
+      e.preventDefault();
+      const txt = (e.clipboardData||window.clipboardData).getData('text').replace(/\D/g,'').slice(0,6);
+      boxes.forEach((b,bi)=>{ b.value=txt[bi]||''; b.classList.toggle('filled',!!txt[bi]); });
+      if (txt.length===6) setTimeout(verifyOtp,300);
+      else boxes[Math.min(txt.length,5)].focus();
+    });
+  });
+});
+
+function resetOtpBoxes(){ document.querySelectorAll('.otp-box').forEach(b=>{ b.value=''; b.classList.remove('filled','wrong'); }); clearOtpErr(); }
+function getOtp(){ return Array.from(document.querySelectorAll('.otp-box')).map(b=>b.value).join(''); }
+function setOtpErr(msg){ document.getElementById('otpErr').textContent=msg; }
+function clearOtpErr(){ document.getElementById('otpErr').textContent=''; }
+function shakeOtp(){ document.querySelectorAll('.otp-box').forEach(b=>b.classList.add('wrong')); setTimeout(()=>document.querySelectorAll('.otp-box').forEach(b=>b.classList.remove('wrong')),600); }
+
+/* ════════════════════════════════
+   GERİ SAYIM
+════════════════════════════════ */
+function startCd(sec) {
+  clearInterval(cdTimer);
+  const btn=document.getElementById('resendBtn'), cd=document.getElementById('cd');
+  btn.disabled=true; let t=sec;
+  cd.textContent=`(${t}s)`;
+  cdTimer=setInterval(()=>{ t--; cd.textContent=t>0?`(${t}s)`:''; if(t<=0){clearInterval(cdTimer);btn.disabled=false;} },1000);
+}
+
+/* ════════════════════════════════
+   ADIM GEÇİŞ
+════════════════════════════════ */
+function goScreen(n) {
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+  document.getElementById('screen'+n).classList.add('active');
+  updateStepBar(n);
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+function updateStepBar(n) {
+  for(let i=1;i<=5;i++){
+    const d=document.getElementById('sd'+i);
+    d.className='step-dot ' + (i<n?'done':i===n?'active':'pending');
+    if(i<5) document.getElementById('sl'+i).className='step-line '+(i<n?'done':'');
+  }
+}
+
+/* ════════════════════════════════
+   CANLI DOĞRULAMA
+════════════════════════════════ */
+function liveCheck(id, code) {
+  const el=document.getElementById(id);
+  const val=el.value.trim();
+  let valid=true;
+  if(code==='E_003') valid=validEmail(val);
+  else if(code==='E_004') valid=validTel(val.replace(/\D/g,''));
+  else if(code==='E_006') valid=validIban(val.replace(/\s/g,''));
+  else valid=val.length>0;
+  el.classList.toggle('ok',valid && val.length>0);
+  el.classList.toggle('err',!valid && val.length>0);
+  if(id==='f_email') document.getElementById('emailCheck').textContent=valid&&val.length>0?'✅':'';
+  document.getElementById('emailCheck')?.classList.toggle('hidden',!(valid&&val.length>0&&id==='f_email'));
+}
+
+function checkPwd() {
+  const val=v('f_pwd');
+  const has = { len: val.length>=8, up: /[A-Z]/.test(val), lo: /[a-z]/.test(val), num: /\d/.test(val) };
+  const score = Object.values(has).filter(Boolean).length;
+  const colors = ['#EF4444','#F59E0B','#3B82F6','#22C55E'];
+  const labels = ['Zayıf','Orta','İyi','Güçlü'];
+  for(let i=1;i<=4;i++){
+    const bar=document.getElementById('pwdBar'+i);
+    bar.style.background = i<=score ? colors[score-1] : '#E2E8F0';
+  }
+  document.getElementById('pwdHint').textContent = val.length>0 ? labels[score-1]||'' : '';
+  document.getElementById('f_pwd').classList.toggle('ok',score===4);
+  document.getElementById('f_pwd').classList.toggle('err',val.length>0&&score<3);
+}
+
+function checkPwd2() {
+  const p1=v('f_pwd'), p2=v('f_pwd2');
+  document.getElementById('f_pwd2').classList.toggle('ok',p1===p2&&p2.length>0);
+  document.getElementById('f_pwd2').classList.toggle('err',p1!==p2&&p2.length>0);
+}
+
+function toggleEye(id, btn) {
+  const inp=document.getElementById(id);
+  inp.type=inp.type==='password'?'text':'password';
+  btn.textContent=inp.type==='password'?'👁':'🙈';
+}
+
+/* ════════════════════════════════
+   HATA YÖNETİMİ
+════════════════════════════════ */
+function showErr(step, code, fieldId, fieldErrId) {
+  const box=document.getElementById('err'+step);
+  if(box){
+    document.getElementById('err'+step+'code').textContent=`[${errCode(code)}]`;
+    document.getElementById('err'+step+'msg').textContent=ERRORS[code];
+    box.classList.add('show');
+    setTimeout(()=>box.classList.remove('show'),6000);
+  }
+  if(fieldId){ document.getElementById(fieldId)?.classList.add('err'); }
+  if(fieldErrId){
+    const fe=document.getElementById(fieldErrId);
+    if(fe){ fe.querySelectorAll('span')[1].textContent=ERRORS[code]; fe.classList.add('show'); }
+  }
+}
+function hideErr(step){ document.getElementById('err'+step)?.classList.remove('show'); }
+function errCode(k){ return k.replace('_','-'); }
+
+/* ════════════════════════════════
+   YARDIMCI
+════════════════════════════════ */
+function v(id){ return document.getElementById(id).value; }
+function validEmail(e){ return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(e); }
+function validTel(t){ return /^[5][0-9]{9}$/.test(t.replace(/\D/g,'')); }
+function validIban(s){ const c=s.replace(/\s/g,'').toUpperCase(); return /^TR[0-9]{24}$/.test(c); }
+function validPwd(p){ return p.length>=8 && /[A-Z]/.test(p) && /[a-z]/.test(p) && /\d/.test(p); }
+function genOtp(){ return String(Math.floor(100000+Math.random()*900000)); }
+
+function formatIban(inp) {
+  let val=inp.value.replace(/\s/g,'').toUpperCase().replace(/[^A-Z0-9]/g,'');
+  if(!val.startsWith('TR')) val='TR'+val.replace(/^TR*/,'');
+  val=val.slice(0,26);
+  inp.value=val.replace(/(.{4})/g,'$1 ').trim();
+  liveCheck('f_iban','E_006');
+}
+function formatIbanDisplay(s){ return s.replace(/(.{4})/g,'$1 ').trim(); }
+function maskEmail(e){ const[u,d]=e.split('@'); return u.slice(0,2)+'***@'+d; }
+function getRegistered(){ try{ return JSON.parse(localStorage.getItem('ep_registered')||'{}'); }catch{ return {}; } }
+
+function setLoad(btn,on,label){
+  btn.disabled=on;
+  btn.innerHTML=on?`<span class="spin"></span> ${label}`:label||btn.textContent;
+}
+function toast(msg,dur=3500){
+  const el=document.getElementById('toast');
+  el.textContent=msg; el.classList.add('show');
+  setTimeout(()=>el.classList.remove('show'),dur);
+}
+</script>
+</div>
+
+<footer class="epft">
+  <div class="epft-inner">
+        <div class="epft-nl">
+      <div class="epft-nl-text"><h5>📬 Bültene Abone Ol</h5><p>Kampanya haberleri ve özel fırsatlardan ilk sen haberdar ol.</p></div>
+      <form class="epft-nl-form" onsubmit="subscribeNL(event)">
+        <input type="email" id="nlEmail" placeholder="E-posta adresiniz" required/>
+        <button type="submit" id="nlBtn">Abone Ol</button>
+      </form>
+      <p id="nlOk" style="display:none;color:#4ade80;font-size:12px;margin-top:8px">✅ Bültene abone oldunuz!</p>
+      <p id="nlErr" style="display:none;color:#f87171;font-size:12px;margin-top:8px">❌ Bir hata oluştu.</p>
+    </div>
+    <div class="epft-grid">
+      <div>
+        <div class="epft-brand"><span>e<span class="dt">.</span>paylaşım</span><span>Türkiye'nin Sosyal Hediyeleşme Altyapısı</span></div>
+        <p class="tl">Sevdiklerin için birlikte hediyeleş.</p>
+        <div class="epft-soc"><a href="#">X</a><a href="#">in</a><a href="#">ig</a></div>
+      </div>
+      <div class="epft-col"><h5>Platform</h5><ul><li><a href="index.html#nasil-calisir">Nasıl Çalışır</a></li><li><a href="index.html#kampanyalar">Kampanyalar</a></li><li><a href="fiyatlar.html">Fiyatlar</a></li><li><a href="blog.html">Blog</a></li></ul></div>
+      <div class="epft-col"><h5>Şirket</h5><ul><li><a href="hakkimizda.html">Hakkımızda</a></li><li><a href="iletisim.html">İletişim</a></li><li><a href="kariyer.html">Kariyer</a></li><li><a href="basin.html">Basın</a></li></ul></div>
+      <div class="epft-col"><h5>Yasal</h5><ul><li><a href="kvkk.html">KVKK</a></li><li><a href="gizlilik.html">Gizlilik</a></li><li><a href="kullanim-sartlari.html">Kullanım Şartları</a></li><li><a href="cerez-politikasi.html">Çerez Politikası</a></li></ul></div>
+    </div>
+    <div class="epft-bot">
+      <p>&copy; 2026 e.paylaşım. Tüm hakları saklıdır.</p>
+      <div class="epft-badges"><span><span class="dg"></span>SSL</span><span><span class="dg"></span>KVKK</span><span><span class="dg"></span>PCI DSS</span></div>
+    </div>
+  </div>
+</footer>
+</body>
+</html>

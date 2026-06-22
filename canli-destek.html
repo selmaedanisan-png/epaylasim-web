@@ -1,0 +1,575 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Canli Destek — e.paylasim</title>
+  <link rel="icon" type="image/png" href="logo.png"/>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet"/>
+  <style>
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+    :root{--brand:#C4175A;--brand-dark:#9E1248;--brand-light:#FCE8F0;--accent:#891AAE;--gold:#DFA020;--text:#1a1a2e;--text-soft:#64748b;--bg:#f8fafc;--card:#fff;--border:#e2e8f0;--radius:12px;--shadow:0 4px 24px rgba(0,0,0,.08)}
+    body{font-family:'Inter',system-ui,sans-serif;background:var(--bg);color:var(--text);min-height:100vh;display:flex;flex-direction:column}
+
+    .chat-header{background:linear-gradient(135deg,var(--brand),var(--accent));color:#fff;padding:16px 24px;display:flex;align-items:center;gap:14px;position:sticky;top:0;z-index:10}
+    .chat-header .logo{font-weight:800;font-size:20px}
+    .chat-header .logo .dot{color:var(--gold)}
+    .chat-header .status{display:flex;align-items:center;gap:6px;font-size:13px;opacity:.9}
+    .chat-header .status .dot-online{width:8px;height:8px;border-radius:50%;background:#22c55e;animation:blink 2s infinite}
+    @keyframes blink{0%,100%{opacity:1}50%{opacity:.4}}
+    .chat-header .close-btn{margin-left:auto;background:rgba(255,255,255,.2);border:none;color:#fff;width:36px;height:36px;border-radius:10px;cursor:pointer;font-size:18px;display:flex;align-items:center;justify-content:center}
+    .chat-header .close-btn:hover{background:rgba(255,255,255,.3)}
+
+    .chat-body{flex:1;overflow-y:auto;padding:20px 24px;display:flex;flex-direction:column;gap:12px;scroll-behavior:smooth}
+
+    .msg{max-width:80%;padding:12px 16px;border-radius:16px;font-size:14px;line-height:1.6;word-wrap:break-word;position:relative;animation:fadeIn .3s ease}
+    @keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+    .msg.bot{background:var(--card);border:1px solid var(--border);border-bottom-left-radius:4px;align-self:flex-start}
+    .msg.user{background:linear-gradient(135deg,var(--brand),var(--accent));color:#fff;border-bottom-right-radius:4px;align-self:flex-end}
+    .msg .time{font-size:10px;opacity:.6;margin-top:4px;display:block}
+    .msg.system{background:#fef3c7;border:1px solid #fde68a;color:#92400e;align-self:center;max-width:90%;text-align:center;font-size:13px;border-radius:10px}
+
+    .msg .file-preview{margin-top:8px;padding:10px;background:rgba(0,0,0,.05);border-radius:8px;display:flex;align-items:center;gap:10px;cursor:pointer}
+    .msg.user .file-preview{background:rgba(255,255,255,.15)}
+    .msg .file-preview svg{width:28px;height:28px;flex-shrink:0}
+    .msg .file-preview .file-info{font-size:12px;line-height:1.4}
+    .msg .file-preview .file-info .fname{font-weight:600}
+    .msg .file-preview .file-info .fsize{opacity:.7}
+    .msg .file-preview img{max-width:200px;max-height:150px;border-radius:6px}
+
+    .quick-replies{display:flex;flex-wrap:wrap;gap:8px;padding:8px 24px}
+    .quick-replies button{background:var(--card);border:1.5px solid var(--border);border-radius:100px;padding:8px 16px;font-size:13px;font-weight:500;color:var(--text);cursor:pointer;transition:all .2s}
+    .quick-replies button:hover{border-color:var(--brand);color:var(--brand);background:var(--brand-light)}
+
+    .typing-indicator{display:none;align-self:flex-start;padding:12px 16px;background:var(--card);border:1px solid var(--border);border-radius:16px;border-bottom-left-radius:4px}
+    .typing-indicator .dots{display:flex;gap:4px}
+    .typing-indicator .dots span{width:8px;height:8px;border-radius:50%;background:var(--text-soft);animation:typingDot 1.4s infinite}
+    .typing-indicator .dots span:nth-child(2){animation-delay:.2s}
+    .typing-indicator .dots span:nth-child(3){animation-delay:.4s}
+    @keyframes typingDot{0%,60%,100%{opacity:.3;transform:scale(.8)}30%{opacity:1;transform:scale(1)}}
+
+    .chat-input-area{background:var(--card);border-top:1px solid var(--border);padding:12px 16px;display:flex;align-items:flex-end;gap:10px;position:sticky;bottom:0}
+    .chat-input-area .input-wrap{flex:1;display:flex;flex-direction:column;gap:6px}
+    .chat-input-area textarea{width:100%;border:1.5px solid var(--border);border-radius:var(--radius);padding:12px 14px;font-size:14px;font-family:inherit;resize:none;outline:none;min-height:44px;max-height:120px;transition:border-color .2s;line-height:1.5}
+    .chat-input-area textarea:focus{border-color:var(--brand)}
+    .chat-input-area textarea::placeholder{color:var(--text-soft)}
+
+    .file-attach-area{display:none;padding:8px 10px;background:var(--brand-light);border-radius:8px;font-size:12px;color:var(--brand);display:none;align-items:center;gap:8px}
+    .file-attach-area .remove-file{cursor:pointer;font-weight:700;font-size:16px}
+
+    .input-actions{display:flex;gap:6px;align-items:center}
+    .input-actions button{width:40px;height:40px;border-radius:10px;border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .2s}
+    .btn-attach{background:var(--brand-light);color:var(--brand)}
+    .btn-attach:hover{background:#f7d0e0}
+    .btn-send{background:var(--brand);color:#fff}
+    .btn-send:hover{background:var(--brand-dark)}
+    .btn-send:disabled{background:#e2e8f0;color:#94a3b8;cursor:not-allowed}
+
+    #fileInput{display:none}
+
+    .continue-modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:100;align-items:center;justify-content:center}
+    .continue-modal.show{display:flex}
+    .continue-modal .modal-box{background:var(--card);border-radius:16px;padding:32px;max-width:360px;width:90%;text-align:center;box-shadow:0 20px 60px rgba(0,0,0,.2)}
+    .continue-modal .modal-box h3{font-size:18px;font-weight:700;margin-bottom:8px}
+    .continue-modal .modal-box p{font-size:14px;color:var(--text-soft);margin-bottom:20px}
+    .continue-modal .modal-box .timer{font-size:32px;font-weight:800;color:var(--brand);margin-bottom:16px}
+    .continue-modal .modal-btns{display:flex;gap:10px}
+    .continue-modal .modal-btns button{flex:1;padding:12px;border-radius:10px;border:none;font-size:14px;font-weight:600;cursor:pointer}
+    .continue-modal .modal-btns .btn-yes{background:var(--brand);color:#fff}
+    .continue-modal .modal-btns .btn-no{background:#f1f5f9;color:var(--text-soft)}
+
+    .chat-ended{display:none;text-align:center;padding:40px 24px}
+    .chat-ended h3{font-size:20px;font-weight:700;margin-bottom:8px}
+    .chat-ended p{font-size:14px;color:var(--text-soft);margin-bottom:20px}
+    .chat-ended button{background:var(--brand);color:#fff;border:none;padding:14px 28px;border-radius:var(--radius);font-size:15px;font-weight:600;cursor:pointer}
+    .chat-ended button:hover{background:var(--brand-dark)}
+
+    .rate-section{display:none;text-align:center;padding:16px 24px;background:var(--card);border-top:1px solid var(--border)}
+    .rate-section p{font-size:14px;margin-bottom:10px}
+    .rate-section .stars{display:flex;justify-content:center;gap:6px}
+    .rate-section .stars button{background:none;border:none;font-size:28px;cursor:pointer;opacity:.4;transition:all .2s}
+    .rate-section .stars button:hover,.rate-section .stars button.active{opacity:1;transform:scale(1.2)}
+
+    @media(max-width:600px){
+      .msg{max-width:90%}
+      .chat-body{padding:16px}
+      .chat-input-area{padding:10px 12px}
+    }
+  </style>
+</head>
+<body>
+
+<div class="chat-header">
+  <div>
+    <div class="logo">e<span class="dot">.</span>paylasim</div>
+    <div class="status"><span class="dot-online"></span><span id="headerStatus">Canli Destek - Cevrimici</span></div>
+  </div>
+  <button class="close-btn" onclick="window.close()" title="Kapat">&times;</button>
+</div>
+
+<div class="chat-body" id="chatBody"></div>
+
+<div class="typing-indicator" id="typingIndicator">
+  <div class="dots"><span></span><span></span><span></span></div>
+</div>
+
+<div class="quick-replies" id="quickReplies"></div>
+
+<div class="chat-input-area" id="inputArea">
+  <div class="input-wrap">
+    <div class="file-attach-area" id="fileAttachArea">
+      <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M15.172 7l-6.586 6.586a2 2 0 102.828 2.828l6.414-6.586a4 4 0 00-5.656-5.656l-6.415 6.585a6 6 0 108.486 8.486L20.5 13"/></svg>
+      <span id="attachedFileName"></span>
+      <span class="remove-file" onclick="removeFile()">&times;</span>
+    </div>
+    <textarea id="msgInput" placeholder="Mesajinizi yazin..." rows="1" onkeydown="handleKeyDown(event)" oninput="autoResize(this)"></textarea>
+  </div>
+  <div class="input-actions">
+    <button class="btn-attach" onclick="document.getElementById('fileInput').click()" title="Dosya Ekle">
+      <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M15.172 7l-6.586 6.586a2 2 0 102.828 2.828l6.414-6.586a4 4 0 00-5.656-5.656l-6.415 6.585a6 6 0 108.486 8.486L20.5 13"/></svg>
+    </button>
+    <button class="btn-send" id="sendBtn" onclick="sendMessage()" disabled>
+      <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"/></svg>
+    </button>
+  </div>
+  <input type="file" id="fileInput" onchange="handleFileSelect(event)" accept="*/*"/>
+</div>
+
+<div class="rate-section" id="rateSection">
+  <p>Gorusmemizi nasil degerlendirirsiniz?</p>
+  <div class="stars" id="rateStars"></div>
+</div>
+
+<div class="chat-ended" id="chatEnded">
+  <h3>Gorusme Sonlandi</h3>
+  <p>Yardimci olabildigimize seviniyoruz. Tekrar gorusmek uzere!</p>
+  <button onclick="restartChat()">Yeni Gorusme Baslat</button>
+</div>
+
+<div class="continue-modal" id="continueModal">
+  <div class="modal-box">
+    <h3>Hala burada misiniz?</h3>
+    <p>Canli destege devam etmek istiyor musunuz?</p>
+    <div class="timer" id="modalTimer">60</div>
+    <div class="modal-btns">
+      <button class="btn-yes" onclick="continueChat()">Evet, Devam Et</button>
+      <button class="btn-no" onclick="endChat('kullanici')">Hayir, Sonlandir</button>
+    </div>
+  </div>
+</div>
+
+<script>
+const SESSION_KEY = 'ep_chat_session';
+const ALL_SESSIONS_KEY = 'ep_chat_sessions';
+
+let chatSession = {
+  id: generateId(),
+  startTime: new Date().toISOString(),
+  userName: '',
+  userEmail: '',
+  userPhone: '',
+  messages: [],
+  status: 'active',
+  rating: 0,
+  transferredToAgent: false,
+  endReason: '',
+  endTime: null
+};
+
+let attachedFile = null;
+let inactivityTimer = null;
+let modalCountdown = null;
+let modalSeconds = 60;
+let isAgentMode = false;
+let collectingInfo = 0;
+let userResponded = false;
+
+const FAQ = [
+  {q: ['kampanya', 'nasil olusturulur', 'kampanya olustur', 'nasil baslarim'],
+   a: 'Kampanya olusturmak cok kolay! "Hemen Basla" butonuna tiklayarak ucretsiz hesap olusturun, ardindan "Kampanya Olustur" ile hedefinizi belirleyin, aciklamanizi yazin ve tutari girin. 30 saniyede hazir!'},
+  {q: ['odeme', 'guvenli mi', 'kredi karti', 'kart bilgileri'],
+   a: 'Tum odemeler 256-bit SSL sifreleme ve 3D Secure ile korunmaktadir. Kredi karti bilgileriniz PCI DSS standartlarina uygun islenir ve sunucularimizda saklanmaz. Paraniz tamamen guvende!'},
+  {q: ['kvkk', 'kisisel veri', 'gizlilik'],
+   a: 'Kisisel verileriniz KVKK mevzuatina tam uygun sekilde islenmektedir. Verileriniz Turkiye\'deki veri merkezlerinde saklanir. Detaylar icin gizlilik politikamizi inceleyebilirsiniz.'},
+  {q: ['hediye ceki', 'hedef tutulmadi', 'para geri'],
+   a: 'Hediye ceki garantimiz var! Kampanya hedefine ulasilamadiginda, biriken miktar hediye ceki olarak kullanilabilir. Hicbir katki bosa gitmez!'},
+  {q: ['ucret', 'fiyat', 'komisyon', 'ne kadar'],
+   a: 'Ilk kampanyaniz tamamen ucretsizdir — komisyon dahil hicbir ucret alinmaz! Sonraki kampanyalarda yalnizca basariyla tamamlanan katkilardan %5 platform komisyonu kesilir. Aylik ucret veya abonelik yoktur.'},
+  {q: ['iade', 'iptal', 'katki iade'],
+   a: 'Kampanya suresi icinde iptal edilirse veya hedefe ulasilamazsa, katkicilar hediye ceki olarak tutarlarini kullanabilir. Detaylar icin kullanim sartlarimizi inceleyebilirsiniz.'},
+  {q: ['iletisim', 'telefon', 'email', 'adres'],
+   a: 'Bize iletisim sayfamizdan, info@epaylasim.com adresinden veya bu canli destek uzerinden ulasabilirsiniz. 7/24 hizmetinizdeyiz!'},
+  {q: ['whatsapp', 'link paylasma', 'sosyal medya'],
+   a: 'Kampanya linkinizi WhatsApp, SMS, Instagram, Twitter ve diger tum sosyal medya platformlarinda paylasabilirsiniz. Tek tikla paylasim ozelligi mevcuttur!'},
+  {q: ['sure', 'kampanya suresi', 'ne kadar sure'],
+   a: 'Kampanya suresini siz belirlersiniz! 1 gunluk kisa kampanyalardan 90 gunluk uzun kampanyalara kadar istediginiz sureyi secebilirsiniz.'},
+  {q: ['temsilci', 'gercek kisi', 'canli destek', 'insan'],
+   a: 'Sizi hemen bir musteri temsilcisine yonlendireyim. Lutfen bir dakika bekleyin...'}
+];
+
+function generateId() {
+  return 'cs_' + Date.now() + '_' + Math.random().toString(36).substr(2, 6);
+}
+
+function getTime() {
+  return new Date().toLocaleTimeString('tr-TR', {hour:'2-digit', minute:'2-digit'});
+}
+
+function scrollToBottom() {
+  const body = document.getElementById('chatBody');
+  setTimeout(() => body.scrollTop = body.scrollHeight, 50);
+}
+
+function addMessage(text, type, fileData) {
+  const body = document.getElementById('chatBody');
+  const div = document.createElement('div');
+  div.className = 'msg ' + type;
+
+  let html = text;
+  if (fileData) {
+    if (fileData.type && fileData.type.startsWith('image/')) {
+      html += '<div class="file-preview"><img src="' + fileData.dataUrl + '" alt="' + fileData.name + '"/></div>';
+    } else {
+      html += '<div class="file-preview" onclick="downloadFile(\'' + fileData.dataUrl + '\',\'' + fileData.name + '\')">'
+        + '<svg fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m2.25 0H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z"/></svg>'
+        + '<div class="file-info"><div class="fname">' + fileData.name + '</div><div class="fsize">' + fileData.size + '</div></div></div>';
+    }
+  }
+  html += '<span class="time">' + getTime() + '</span>';
+  div.innerHTML = html;
+  body.appendChild(div);
+  scrollToBottom();
+
+  chatSession.messages.push({
+    type, text, time: new Date().toISOString(),
+    file: fileData ? {name: fileData.name, size: fileData.size, type: fileData.type} : null
+  });
+  saveSession();
+}
+
+function addSystemMessage(text) {
+  const body = document.getElementById('chatBody');
+  const div = document.createElement('div');
+  div.className = 'msg system';
+  div.textContent = text;
+  body.appendChild(div);
+  scrollToBottom();
+  chatSession.messages.push({type:'system', text, time: new Date().toISOString()});
+  saveSession();
+}
+
+function showTyping() {
+  document.getElementById('typingIndicator').style.display = 'block';
+  scrollToBottom();
+}
+
+function hideTyping() {
+  document.getElementById('typingIndicator').style.display = 'none';
+}
+
+function showQuickReplies(replies) {
+  const container = document.getElementById('quickReplies');
+  container.innerHTML = '';
+  replies.forEach(r => {
+    const btn = document.createElement('button');
+    btn.textContent = r;
+    btn.onclick = () => {
+      document.getElementById('msgInput').value = r;
+      sendMessage();
+      container.innerHTML = '';
+    };
+    container.appendChild(btn);
+  });
+}
+
+function handleKeyDown(e) {
+  if (e.key === 'Enter' && !e.shiftKey) {
+    e.preventDefault();
+    sendMessage();
+  }
+}
+
+function autoResize(el) {
+  el.style.height = 'auto';
+  el.style.height = Math.min(el.scrollHeight, 120) + 'px';
+  document.getElementById('sendBtn').disabled = !el.value.trim() && !attachedFile;
+}
+
+function handleFileSelect(e) {
+  const file = e.target.files[0];
+  if (!file) return;
+  const maxSize = 25 * 1024 * 1024;
+  if (file.size > maxSize) {
+    addSystemMessage('Dosya boyutu 25MB\'dan buyuk olamaz.');
+    return;
+  }
+  const reader = new FileReader();
+  reader.onload = function(ev) {
+    attachedFile = {
+      name: file.name,
+      size: formatFileSize(file.size),
+      type: file.type,
+      dataUrl: ev.target.result
+    };
+    document.getElementById('fileAttachArea').style.display = 'flex';
+    document.getElementById('attachedFileName').textContent = file.name + ' (' + attachedFile.size + ')';
+    document.getElementById('sendBtn').disabled = false;
+  };
+  reader.readAsDataURL(file);
+  e.target.value = '';
+}
+
+function removeFile() {
+  attachedFile = null;
+  document.getElementById('fileAttachArea').style.display = 'none';
+  document.getElementById('sendBtn').disabled = !document.getElementById('msgInput').value.trim();
+}
+
+function formatFileSize(bytes) {
+  if (bytes < 1024) return bytes + ' B';
+  if (bytes < 1048576) return (bytes / 1024).toFixed(1) + ' KB';
+  return (bytes / 1048576).toFixed(1) + ' MB';
+}
+
+function downloadFile(dataUrl, name) {
+  const a = document.createElement('a');
+  a.href = dataUrl;
+  a.download = name;
+  a.click();
+}
+
+function sendMessage() {
+  const input = document.getElementById('msgInput');
+  const text = input.value.trim();
+  if (!text && !attachedFile) return;
+
+  addMessage(text || (attachedFile ? attachedFile.name + ' gonderildi' : ''), 'user', attachedFile);
+  input.value = '';
+  input.style.height = 'auto';
+  document.getElementById('sendBtn').disabled = true;
+  removeFile();
+
+  resetInactivityTimer();
+  userResponded = true;
+
+  if (collectingInfo > 0) {
+    handleInfoCollection(text);
+    return;
+  }
+
+  if (isAgentMode) {
+    showTyping();
+    setTimeout(() => {
+      hideTyping();
+      addMessage('Temsilciniz mesajinizi aldi. En kisa surede yanit verecektir.', 'bot');
+    }, 1000);
+    return;
+  }
+
+  processAutoReply(text);
+}
+
+function processAutoReply(text) {
+  const lower = text.toLowerCase().replace(/[^a-zA-Z0-9À-ɏĀ-ſığüşöç ]/g, '');
+
+  if (lower.includes('temsilci') || lower.includes('gercek kisi') || lower.includes('insan') || lower.includes('agent')) {
+    showTyping();
+    setTimeout(() => {
+      hideTyping();
+      addMessage('Sizi hemen bir musteri temsilcisine yonlendiriyorum. Lutfen bekleyin...', 'bot');
+      setTimeout(() => {
+        transferToAgent();
+      }, 2000);
+    }, 1500);
+    return;
+  }
+
+  let bestMatch = null;
+  let bestScore = 0;
+  for (const faq of FAQ) {
+    for (const keyword of faq.q) {
+      const words = keyword.split(' ');
+      let score = 0;
+      for (const w of words) {
+        if (lower.includes(w)) score++;
+      }
+      if (score > bestScore) {
+        bestScore = score;
+        bestMatch = faq;
+      }
+    }
+  }
+
+  showTyping();
+  const delay = 1000 + Math.random() * 1500;
+  setTimeout(() => {
+    hideTyping();
+    if (bestMatch && bestScore > 0) {
+      addMessage(bestMatch.a, 'bot');
+      if (bestMatch.a.includes('temsilci')) {
+        setTimeout(() => transferToAgent(), 2000);
+      }
+    } else {
+      addMessage('Sorunuzu anladim. Bu konuda size daha detayli yardimci olabilmem icin sizi bir musteri temsilcisine yonlendirebilirim. Isterseniz "temsilci" yazabilirsiniz veya asagidaki seceneklerden birini secebilirsiniz.', 'bot');
+      showQuickReplies(['Kampanya Nasil Olusturulur?', 'Odeme Guvenligi', 'Fiyatlandirma', 'Temsilciye Baglan']);
+    }
+  }, delay);
+}
+
+function transferToAgent() {
+  isAgentMode = true;
+  chatSession.transferredToAgent = true;
+  saveSession();
+  addSystemMessage('Canli temsilciye baglaniyorsunuz...');
+  showTyping();
+  setTimeout(() => {
+    hideTyping();
+    addMessage('Merhaba! Ben e.paylasim musteri temsilcisi. Size nasil yardimci olabilirim?', 'bot');
+    document.getElementById('headerStatus').textContent = 'Canli Temsilci Bagli';
+  }, 3000);
+}
+
+function handleInfoCollection(text) {
+  if (collectingInfo === 1) {
+    chatSession.userName = text;
+    collectingInfo = 2;
+    showTyping();
+    setTimeout(() => {
+      hideTyping();
+      addMessage('Tesekkurler ' + text + '! E-posta adresinizi paylasar misiniz? (Opsiyonel - bos birakmak icin "yok" yazin)', 'bot');
+    }, 800);
+  } else if (collectingInfo === 2) {
+    if (text.toLowerCase() !== 'yok') chatSession.userEmail = text;
+    collectingInfo = 0;
+    saveSession();
+    showTyping();
+    setTimeout(() => {
+      hideTyping();
+      addMessage('Harika! Simdi size nasil yardimci olabilirim?', 'bot');
+      showQuickReplies(['Kampanya Nasil Olusturulur?', 'Odeme Guvenligi', 'Hediye Ceki Garantisi', 'Fiyatlandirma', 'Temsilciye Baglan']);
+    }, 800);
+  }
+}
+
+function startChat() {
+  addMessage('Merhaba! e.paylasim canli destege hosgeldiniz. Ben dijital asistanin. Size yardimci olmak icin buradayim.', 'bot');
+  setTimeout(() => {
+    addMessage('Gorusmeye baslamadan once adinizi ogrenebilir miyim?', 'bot');
+    collectingInfo = 1;
+    resetInactivityTimer();
+  }, 1000);
+}
+
+function resetInactivityTimer() {
+  if (inactivityTimer) clearTimeout(inactivityTimer);
+  if (chatSession.status !== 'active') return;
+  inactivityTimer = setTimeout(() => {
+    if (chatSession.status === 'active') showContinueModal();
+  }, 60000);
+}
+
+function showContinueModal() {
+  modalSeconds = 60;
+  document.getElementById('continueModal').classList.add('show');
+  document.getElementById('modalTimer').textContent = modalSeconds;
+  modalCountdown = setInterval(() => {
+    modalSeconds--;
+    document.getElementById('modalTimer').textContent = modalSeconds;
+    if (modalSeconds <= 0) {
+      clearInterval(modalCountdown);
+      document.getElementById('continueModal').classList.remove('show');
+      endChat('zaman_asimi');
+    }
+  }, 1000);
+}
+
+function continueChat() {
+  clearInterval(modalCountdown);
+  document.getElementById('continueModal').classList.remove('show');
+  addSystemMessage('Gorusme devam ediyor.');
+  resetInactivityTimer();
+}
+
+function endChat(reason) {
+  clearInterval(modalCountdown);
+  clearTimeout(inactivityTimer);
+  document.getElementById('continueModal').classList.remove('show');
+
+  chatSession.status = 'ended';
+  chatSession.endReason = reason;
+  chatSession.endTime = new Date().toISOString();
+
+  const reasons = {
+    'kullanici': 'Kullanici tarafindan sonlandirildi',
+    'zaman_asimi': 'Inaktivite nedeniyle otomatik sonlandirildi',
+    'temsilci': 'Temsilci tarafindan sonlandirildi'
+  };
+  addSystemMessage('Gorusme sonlandi: ' + (reasons[reason] || reason));
+
+  document.getElementById('inputArea').style.display = 'none';
+  document.getElementById('quickReplies').innerHTML = '';
+  document.getElementById('rateSection').style.display = 'block';
+  initRating();
+
+  saveSession();
+  saveToAllSessions();
+}
+
+function initRating() {
+  const container = document.getElementById('rateStars');
+  container.innerHTML = '';
+  for (let i = 1; i <= 5; i++) {
+    const btn = document.createElement('button');
+    btn.textContent = '★';
+    btn.onclick = () => {
+      chatSession.rating = i;
+      saveSession();
+      saveToAllSessions();
+      container.querySelectorAll('button').forEach((b, idx) => {
+        b.classList.toggle('active', idx < i);
+      });
+      setTimeout(() => {
+        document.getElementById('rateSection').style.display = 'none';
+        document.getElementById('chatEnded').style.display = 'block';
+      }, 800);
+    };
+    container.appendChild(btn);
+  }
+}
+
+function restartChat() {
+  document.getElementById('chatEnded').style.display = 'none';
+  document.getElementById('chatBody').innerHTML = '';
+  document.getElementById('inputArea').style.display = 'flex';
+  document.getElementById('headerStatus').textContent = 'Canli Destek - Cevrimici';
+  isAgentMode = false;
+  collectingInfo = 0;
+  attachedFile = null;
+  chatSession = {
+    id: generateId(),
+    startTime: new Date().toISOString(),
+    userName: '', userEmail: '', userPhone: '',
+    messages: [], status: 'active', rating: 0,
+    transferredToAgent: false, endReason: '', endTime: null
+  };
+  startChat();
+}
+
+function saveSession() {
+  try { localStorage.setItem(SESSION_KEY, JSON.stringify(chatSession)); } catch(e) {}
+}
+
+function saveToAllSessions() {
+  try {
+    let all = JSON.parse(localStorage.getItem(ALL_SESSIONS_KEY) || '[]');
+    const idx = all.findIndex(s => s.id === chatSession.id);
+    if (idx >= 0) all[idx] = chatSession;
+    else all.push(chatSession);
+    localStorage.setItem(ALL_SESSIONS_KEY, JSON.stringify(all));
+  } catch(e) {}
+}
+
+startChat();
+</script>
+</body>
+</html>

@@ -1,0 +1,615 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Kampanya Oluştur — e.paylaşım</title>
+  <meta name="description" content="e.paylaşım'da kampanya oluştur. Hediye hedefini belirle, link paylaş, katkı topla."/>
+  <link rel="icon" type="image/png" href="logo.png"/>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet"/>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --brand: #C4175A; --brand-dark: #9E1248; --brand-light: #FCE8F0;
+      --accent: #891AAE; --gold: #DFA020;
+      --text: #1a1a2e; --text-soft: #64748b; --text-muted: #94a3b8;
+      --bg: #fafafa; --card: #ffffff; --border: #f1f5f9;
+      --radius: 12px; --radius-lg: 20px;
+      --shadow-sm: 0 1px 3px rgba(0,0,0,.04); --shadow-md: 0 4px 20px rgba(0,0,0,.06);
+      --shadow-brand: 0 4px 16px rgba(196,23,90,.18);
+    }
+    body { font-family:'Inter',system-ui,-apple-system,sans-serif; color:var(--text); background:var(--bg); line-height:1.6; -webkit-font-smoothing:antialiased; }
+    a { color:inherit; text-decoration:none; }
+    .container { max-width:1120px; margin:0 auto; padding:0 24px; }
+    @media(min-width:640px){.container{padding:0 32px}}
+
+    .btn { display:inline-flex; align-items:center; gap:8px; font-weight:600; font-size:15px; border:none; cursor:pointer; border-radius:var(--radius); transition:all .2s ease; text-decoration:none; }
+    .btn-primary { background:var(--brand); color:#fff; padding:14px 28px; box-shadow:var(--shadow-brand); }
+    .btn-primary:hover { background:var(--brand-dark); transform:translateY(-1px); }
+    .btn-outline { background:var(--card); color:var(--text); padding:14px 28px; border:1.5px solid var(--border); }
+    .btn-outline:hover { border-color:var(--brand); color:var(--brand); }
+    .btn-sm { padding:10px 20px; font-size:13px; }
+    .arrow-icon { width:18px; height:18px; }
+
+    /* Nav */
+    .nav { position:sticky; top:0; z-index:100; background:rgba(255,255,255,.92); backdrop-filter:blur(16px); border-bottom:1px solid var(--border); }
+    .nav-inner { display:flex; align-items:center; justify-content:space-between; height:72px; }
+    .nav-logo { white-space:nowrap; }
+    .nav-logo .brand-name { font-weight:900; font-size:26px; color:var(--text); letter-spacing:-0.5px; }
+    .nav-logo .dot { color:var(--gold); }
+    .nav-logo .brand-tagline { font-size:9px; font-weight:500; opacity:.7; letter-spacing:0.5px; text-transform:uppercase; display:block; }
+    .nav-links { display:flex; align-items:center; gap:32px; }
+    .nav-links a { font-size:14px; font-weight:500; color:var(--text-soft); transition:color .15s; }
+    .nav-links a:hover { color:var(--brand); }
+    .nav-actions { display:flex; align-items:center; gap:12px; }
+    .nav-actions .login-link { font-size:14px; font-weight:600; color:var(--text-soft); padding:8px 12px; }
+    .nav-actions .login-link:hover { color:var(--brand); }
+    .mobile-toggle { display:none; background:none; border:none; cursor:pointer; width:40px; height:40px; border-radius:10px; color:var(--text-soft); }
+    .mobile-menu { display:none; padding:16px 0; border-top:1px solid var(--border); }
+    .mobile-menu a { display:block; padding:10px 0; font-size:15px; font-weight:500; color:var(--text-soft); }
+    .mobile-menu .mobile-btns { display:flex; gap:8px; margin-top:12px; }
+    .mobile-menu .mobile-btns a { flex:1; text-align:center; }
+    @media(max-width:768px){ .nav-links,.nav-actions .login-link{display:none} .mobile-toggle{display:flex;align-items:center;justify-content:center} .mobile-menu.open{display:block} }
+
+    /* Page */
+    .page-hero { padding:48px 0 32px; background:linear-gradient(165deg,#fff 0%,var(--brand-light) 50%,#f5e6f0 100%); text-align:center; }
+    .page-hero h1 { font-size:clamp(28px,5vw,44px); font-weight:800; line-height:1.15; margin-bottom:12px; }
+    .page-hero h1 em { font-style:normal; background:linear-gradient(135deg,var(--brand),var(--accent)); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; }
+    .page-hero p { color:var(--text-soft); font-size:16px; max-width:480px; margin:0 auto; }
+
+    /* Form */
+    .form-section { padding:48px 0 80px; }
+    .form-wrapper { max-width:680px; margin:0 auto; }
+
+    .stepper { display:flex; justify-content:center; gap:8px; margin-bottom:40px; }
+    .stepper .s { display:flex; align-items:center; gap:8px; }
+    .stepper .s .num { width:32px; height:32px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:13px; font-weight:700; background:var(--border); color:var(--text-muted); transition:all .3s; }
+    .stepper .s.active .num { background:var(--brand); color:#fff; }
+    .stepper .s.done .num { background:#22c55e; color:#fff; }
+    .stepper .s .label { font-size:13px; font-weight:600; color:var(--text-muted); transition:color .3s; }
+    .stepper .s.active .label { color:var(--text); }
+    .stepper .s.done .label { color:#16a34a; }
+    .stepper .line { width:40px; height:2px; background:var(--border); align-self:center; }
+    @media(max-width:540px){ .stepper .label{display:none} .stepper .line{width:24px} }
+
+    .form-card { background:var(--card); border:1px solid var(--border); border-radius:var(--radius-lg); padding:36px; box-shadow:var(--shadow-md); }
+    .step-panel { display:none; }
+    .step-panel.active { display:block; }
+
+    .form-group { margin-bottom:20px; }
+    .form-group label { display:block; font-size:13px; font-weight:600; margin-bottom:6px; color:var(--text); }
+    .form-group label .req { color:var(--brand); }
+    .form-group .hint { font-size:11px; color:var(--text-muted); margin-top:4px; }
+    .form-group input, .form-group select, .form-group textarea {
+      width:100%; border:1.5px solid var(--border); border-radius:var(--radius);
+      padding:12px 14px; font-size:14px; font-family:inherit; outline:none;
+      transition:border-color .2s, box-shadow .2s; background:var(--bg); color:var(--text);
+    }
+    .form-group input:focus, .form-group select:focus, .form-group textarea:focus {
+      border-color:var(--brand); box-shadow:0 0 0 3px rgba(196,23,90,.08); background:#fff;
+    }
+    .form-group textarea { resize:vertical; min-height:100px; }
+
+    .form-row { display:grid; grid-template-columns:1fr 1fr; gap:16px; }
+    @media(max-width:540px){ .form-row{grid-template-columns:1fr} }
+
+    .emoji-picker { display:flex; gap:8px; flex-wrap:wrap; }
+    .emoji-picker button { width:44px; height:44px; border-radius:12px; border:2px solid var(--border); background:var(--bg); font-size:22px; cursor:pointer; transition:all .15s; display:flex; align-items:center; justify-content:center; }
+    .emoji-picker button:hover { border-color:var(--brand); transform:scale(1.1); }
+    .emoji-picker button.selected { border-color:var(--brand); background:var(--brand-light); box-shadow:0 0 0 3px rgba(196,23,90,.15); }
+
+    .amount-presets { display:flex; gap:8px; flex-wrap:wrap; margin-bottom:12px; }
+    .amount-presets button { padding:8px 18px; border-radius:100px; border:1.5px solid var(--border); background:var(--card); font-size:13px; font-weight:600; cursor:pointer; transition:all .15s; font-family:inherit; color:var(--text); }
+    .amount-presets button:hover, .amount-presets button.selected { border-color:var(--brand); color:var(--brand); background:var(--brand-light); }
+
+    .form-btns { display:flex; gap:12px; margin-top:28px; }
+    .form-btns button { flex:1; }
+    .btn-back { background:#f1f5f9; color:var(--text-soft); padding:14px 24px; border:none; border-radius:var(--radius); font-size:15px; font-weight:600; cursor:pointer; transition:all .15s; font-family:inherit; }
+    .btn-back:hover { background:#e2e8f0; }
+    .btn-next { background:var(--brand); color:#fff; padding:14px 24px; border:none; border-radius:var(--radius); font-size:15px; font-weight:600; cursor:pointer; transition:all .15s; font-family:inherit; box-shadow:var(--shadow-brand); }
+    .btn-next:hover { background:var(--brand-dark); }
+    .btn-next:disabled { opacity:.5; cursor:not-allowed; }
+
+    /* Preview */
+    .preview-card { background:var(--bg); border:1px solid var(--border); border-radius:var(--radius-lg); padding:24px; margin-top:24px; }
+    .preview-card .pv-head { display:flex; align-items:center; gap:12px; margin-bottom:16px; }
+    .preview-card .pv-emoji { width:48px; height:48px; border-radius:14px; background:var(--brand-light); display:flex; align-items:center; justify-content:center; font-size:24px; }
+    .preview-card .pv-info h4 { font-size:16px; font-weight:700; }
+    .preview-card .pv-info span { font-size:12px; color:var(--text-muted); }
+    .preview-card .pv-desc { font-size:13px; color:var(--text-soft); margin-bottom:16px; line-height:1.6; }
+    .preview-card .pv-bar-bg { height:8px; background:var(--brand-light); border-radius:4px; overflow:hidden; margin-bottom:8px; }
+    .preview-card .pv-bar-fill { height:100%; border-radius:4px; background:linear-gradient(90deg,var(--brand),var(--accent)); width:0%; }
+    .preview-card .pv-meta { display:flex; justify-content:space-between; font-size:12px; color:var(--text-muted); }
+
+    /* Success */
+    .success-panel { display:none; text-align:center; padding:40px 20px; }
+    .success-panel.active { display:block; }
+    .success-icon { width:72px; height:72px; border-radius:50%; background:#dcfce7; display:flex; align-items:center; justify-content:center; margin:0 auto 20px; }
+    .success-icon svg { width:36px; height:36px; color:#16a34a; }
+    .success-panel h2 { font-size:24px; font-weight:800; margin-bottom:8px; }
+    .success-panel p { font-size:15px; color:var(--text-soft); margin-bottom:24px; }
+    .share-link { display:flex; align-items:center; gap:8px; background:var(--bg); border:1.5px solid var(--border); border-radius:var(--radius); padding:12px 16px; margin-bottom:20px; max-width:460px; margin-left:auto; margin-right:auto; }
+    .share-link input { flex:1; border:none; background:none; font-size:14px; font-weight:600; color:var(--brand); outline:none; font-family:inherit; }
+    .share-link button { background:var(--brand); color:#fff; border:none; padding:8px 16px; border-radius:8px; font-size:12px; font-weight:700; cursor:pointer; transition:all .15s; white-space:nowrap; }
+    .share-link button:hover { background:var(--brand-dark); }
+    .share-btns { display:flex; gap:8px; justify-content:center; flex-wrap:wrap; }
+    .share-btns a { display:flex; align-items:center; gap:6px; padding:10px 20px; border-radius:var(--radius); font-size:13px; font-weight:600; color:#fff; transition:all .15s; }
+    .share-btns a:hover { opacity:.9; transform:translateY(-1px); }
+
+    /* Footer */
+    .footer { background:#0f172a; color:#94a3b8; padding:64px 0 32px; }
+    .footer-grid { display:grid; grid-template-columns:1.5fr 1fr 1fr 1fr; gap:40px; margin-bottom:40px; }
+    .footer-brand { display:flex; align-items:center; gap:10px; font-weight:800; font-size:18px; color:#fff; margin-bottom:16px; }
+    .footer p.tagline { font-size:14px; margin-bottom:16px; }
+    .footer-socials { display:flex; gap:6px; }
+    .footer-socials a { width:36px; height:36px; border-radius:10px; background:#1e293b; display:flex; align-items:center; justify-content:center; font-size:12px; font-weight:600; color:#94a3b8; transition:background .15s,color .15s; }
+    .footer-socials a:hover { background:#334155; color:#fff; }
+    .footer-col h5 { color:#fff; font-size:15px; font-weight:700; margin-bottom:16px; }
+    .footer-col ul { list-style:none; }
+    .footer-col li { margin-bottom:12px; }
+    .footer-col a { font-size:15px; transition:color .15s; }
+    .footer-col a:hover { color:#fff; }
+    .footer-bottom { border-top:1px solid #1e293b; padding-top:24px; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px; }
+    .footer-bottom p { font-size:14px; color:#64748b; }
+    .footer-badges { display:flex; gap:16px; }
+    .footer-badges span { display:flex; align-items:center; gap:6px; font-size:14px; color:#64748b; }
+    .footer-badges .dot-green { width:6px; height:6px; border-radius:50%; background:#22c55e; }
+    @media(max-width:768px){.footer-grid{grid-template-columns:1fr 1fr}}
+    @media(max-width:540px){.footer-grid{grid-template-columns:1fr} .footer-bottom{flex-direction:column;text-align:center}}
+  </style>
+</head>
+<body>
+
+<!-- NAV -->
+<header class="nav">
+  <div class="container">
+    <div class="nav-inner">
+      <a href="index.html" class="nav-logo">
+        <span class="brand-name">e<span class="dot">.</span>paylaşım</span>
+        <span class="brand-tagline">Türkiye'nin Sosyal Hediyeleşme Altyapısı</span>
+      </a>
+      <nav class="nav-links">
+        <a href="nasil-calisir.html">Nasıl Çalışır</a>
+        <a href="kampanyalar.html">Kampanyalar</a>
+        <a href="guvenlik.html">Güvenlik</a>
+        <a href="yorumlar.html">Yorumlar</a>
+      </nav>
+      <div class="nav-actions">
+        <a href="login.html" class="login-link">Giriş</a>
+        <a href="register.html" class="btn btn-primary btn-sm">Hemen Başla
+          <svg class="arrow-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M13 7l5 5m0 0l-5 5m5-5H6"/></svg>
+        </a>
+        <button class="mobile-toggle" onclick="document.getElementById('mMenu').classList.toggle('open')" aria-label="Menu">
+          <svg width="22" height="22" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" d="M4 6h16M4 12h16M4 18h16"/></svg>
+        </button>
+      </div>
+    </div>
+    <div id="mMenu" class="mobile-menu">
+      <a href="nasil-calisir.html">Nasıl Çalışır</a>
+      <a href="kampanyalar.html">Kampanyalar</a>
+      <a href="guvenlik.html">Güvenlik</a>
+      <a href="yorumlar.html">Yorumlar</a>
+      <div class="mobile-btns">
+        <a href="login.html" class="btn btn-outline btn-sm">Giriş</a>
+        <a href="register.html" class="btn btn-primary btn-sm">Hemen Başla</a>
+      </div>
+    </div>
+  </div>
+</header>
+
+<!-- PAGE HERO -->
+<section class="page-hero">
+  <div class="container">
+    <h1>Kampanya <em>Oluştur</em></h1>
+    <p>Hediye hedefini belirle, detayları gir, paylaş. 30 saniyede hazır!</p>
+  </div>
+</section>
+
+<!-- FORM -->
+<section class="form-section">
+  <div class="container">
+    <div class="form-wrapper">
+
+      <!-- Stepper -->
+      <div class="stepper">
+        <div class="s active" id="st1"><span class="num">1</span><span class="label">Detaylar</span></div>
+        <div class="line"></div>
+        <div class="s" id="st2"><span class="num">2</span><span class="label">Hedef & Süre</span></div>
+        <div class="line"></div>
+        <div class="s" id="st3"><span class="num">3</span><span class="label">Önizleme</span></div>
+      </div>
+
+      <div class="form-card">
+
+        <!-- STEP 1: Details -->
+        <div class="step-panel active" id="panel1">
+          <div class="form-group">
+            <label>Kampanya Adı <span class="req">*</span></label>
+            <input type="text" id="cName" placeholder="ör: Ayşe'nin Doğum Günü Hediyesi" maxlength="80">
+            <div class="hint">Kampanyanızı tanımlayan kısa bir başlık yazın</div>
+          </div>
+
+          <div class="form-group">
+            <label>Kampanya Kategorisi <span class="req">*</span></label>
+            <select id="cCat">
+              <option value="">Kategori seçin...</option>
+              <option value="dogumgunu">🎂 Doğum Günü</option>
+              <option value="dugun">💍 Düğün / Nişan</option>
+              <option value="bebek">👶 Bebek / Baby Shower</option>
+              <option value="mezuniyet">🎓 Mezuniyet</option>
+              <option value="yilbasi">🎄 Yılbaşı</option>
+              <option value="sevgililer">❤️ Sevgililer Günü</option>
+              <option value="anneler">🌸 Anneler / Babalar Günü</option>
+              <option value="ev">🏠 Ev / Taşınma</option>
+              <option value="diger">🎁 Diğer</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label>Simge Seçin</label>
+            <div class="emoji-picker" id="emojiPicker">
+              <button type="button" data-emoji="🎂" class="selected">🎂</button>
+              <button type="button" data-emoji="💍">💍</button>
+              <button type="button" data-emoji="👶">👶</button>
+              <button type="button" data-emoji="🎓">🎓</button>
+              <button type="button" data-emoji="🎁">🎁</button>
+              <button type="button" data-emoji="🎄">🎄</button>
+              <button type="button" data-emoji="❤️">❤️</button>
+              <button type="button" data-emoji="🌸">🌸</button>
+              <button type="button" data-emoji="🏠">🏠</button>
+              <button type="button" data-emoji="✈️">✈️</button>
+              <button type="button" data-emoji="🎮">🎮</button>
+              <button type="button" data-emoji="📱">📱</button>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label>Açıklama <span class="req">*</span></label>
+            <textarea id="cDesc" placeholder="Kampanyanız hakkında detaylı bilgi verin. Neden bu hediyeyi istiyorsunuz? Katkıda bulunanlar ne bilmeli?" maxlength="500"></textarea>
+            <div class="hint"><span id="descCount">0</span>/500 karakter</div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label>Adınız Soyadınız <span class="req">*</span></label>
+              <input type="text" id="cOwner" placeholder="ör: Ayşe Yılmaz">
+            </div>
+            <div class="form-group">
+              <label>E-posta <span class="req">*</span></label>
+              <input type="email" id="cEmail" placeholder="ör: ayse@mail.com">
+            </div>
+          </div>
+
+          <div class="form-btns">
+            <a href="index.html" class="btn-back" style="text-align:center;text-decoration:none">İptal</a>
+            <button class="btn-next" onclick="goStep(2)">Devam Et →</button>
+          </div>
+        </div>
+
+        <!-- STEP 2: Target & Duration -->
+        <div class="step-panel" id="panel2">
+          <div class="form-group">
+            <label>Hedef Tutar (₺) <span class="req">*</span></label>
+            <div class="amount-presets">
+              <button type="button" onclick="setAmount(this,500)">₺500</button>
+              <button type="button" onclick="setAmount(this,1000)">₺1.000</button>
+              <button type="button" onclick="setAmount(this,2500)">₺2.500</button>
+              <button type="button" onclick="setAmount(this,5000)">₺5.000</button>
+              <button type="button" onclick="setAmount(this,10000)">₺10.000</button>
+            </div>
+            <input type="number" id="cAmount" placeholder="Veya özel tutar girin..." min="100" max="100000">
+            <div class="hint">Minimum ₺100, maksimum ₺100.000</div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label>Kampanya Süresi <span class="req">*</span></label>
+              <select id="cDuration">
+                <option value="">Süre seçin...</option>
+                <option value="3">3 Gün</option>
+                <option value="7">7 Gün</option>
+                <option value="14">14 Gün</option>
+                <option value="30" selected>30 Gün</option>
+                <option value="60">60 Gün</option>
+                <option value="90">90 Gün</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label>Minimum Katkı (₺)</label>
+              <input type="number" id="cMinContrib" placeholder="ör: 10" min="1" value="10">
+              <div class="hint">Katılımcıların yapabileceği en düşük katkı</div>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label>Kampanya Görünürlüğü</label>
+            <select id="cVisibility">
+              <option value="public">🌐 Herkese Açık — Herkes görebilir ve katkıda bulunabilir</option>
+              <option value="link">🔗 Sadece Linkle — Sadece linke sahip olanlar görebilir</option>
+              <option value="private">🔒 Gizli — Sadece davet ettiğiniz kişiler</option>
+            </select>
+          </div>
+
+          <div class="form-group" style="display:flex;align-items:center;gap:10px;margin-top:8px">
+            <input type="checkbox" id="cNotify" checked style="width:18px;height:18px;accent-color:var(--brand)">
+            <label for="cNotify" style="margin:0;cursor:pointer">Her yeni katkıda e-posta bildirimi al</label>
+          </div>
+
+          <div class="form-btns">
+            <button class="btn-back" onclick="goStep(1)">← Geri</button>
+            <button class="btn-next" onclick="goStep(3)">Önizleme →</button>
+          </div>
+        </div>
+
+        <!-- STEP 3: Preview -->
+        <div class="step-panel" id="panel3">
+          <h3 style="font-size:18px;font-weight:700;margin-bottom:8px">Kampanya Önizleme</h3>
+          <p style="font-size:13px;color:var(--text-soft);margin-bottom:20px">Bilgileri kontrol edin. Her şey tamamsa kampanyanızı yayınlayın.</p>
+
+          <div class="preview-card">
+            <div class="pv-head">
+              <div class="pv-emoji" id="pvEmoji">🎂</div>
+              <div class="pv-info">
+                <h4 id="pvName">Kampanya Adı</h4>
+                <span id="pvOwner">Ad Soyad</span>
+              </div>
+            </div>
+            <p class="pv-desc" id="pvDesc">Açıklama</p>
+            <div class="pv-bar-bg"><div class="pv-bar-fill"></div></div>
+            <div class="pv-meta">
+              <span>₺0 / <strong id="pvAmount">₺0</strong></span>
+              <span id="pvDuration">30 gün</span>
+            </div>
+          </div>
+
+          <div class="form-btns">
+            <button class="btn-back" onclick="goStep(2)">← Düzenle</button>
+            <button class="btn-next" onclick="publishCampaign()" style="background:linear-gradient(135deg,#22c55e,#16a34a);box-shadow:0 4px 16px rgba(34,197,94,.25)">
+              🎉 Kampanyayı Yayınla
+            </button>
+          </div>
+        </div>
+
+        <!-- SUCCESS -->
+        <div class="success-panel" id="successPanel">
+          <div class="success-icon">
+            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
+          </div>
+          <h2>Kampanyanız Yayında! 🎉</h2>
+          <p>Kampanyanız başarıyla oluşturuldu. Linki paylaşarak katkı toplamaya başlayın.</p>
+
+          <div class="share-link">
+            <input type="text" id="shareUrl" readonly value="epaylasim.com/k/ayse-dogumgunu-2026">
+            <button onclick="copyLink()">Kopyala</button>
+          </div>
+
+          <div class="share-btns">
+            <a href="#" style="background:#25D366" onclick="shareWA(event)">
+              <svg width="18" height="18" fill="currentColor" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12 0C5.373 0 0 5.373 0 12c0 2.625.846 5.059 2.284 7.034L.789 23.489l4.624-1.467A11.96 11.96 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 21.75c-2.156 0-4.154-.684-5.789-1.848l-.414-.31-2.741.87.913-2.664-.34-.43A9.713 9.713 0 012.25 12c0-5.385 4.365-9.75 9.75-9.75s9.75 4.365 9.75 9.75-4.365 9.75-9.75 9.75z"/></svg>
+              WhatsApp
+            </a>
+            <a href="#" style="background:#1DA1F2" onclick="shareTwitter(event)">
+              <svg width="18" height="18" fill="currentColor" viewBox="0 0 24 24"><path d="M23.953 4.57a10 10 0 01-2.825.775 4.958 4.958 0 002.163-2.723c-.951.555-2.005.959-3.127 1.184a4.92 4.92 0 00-8.384 4.482C7.69 8.095 4.067 6.13 1.64 3.162a4.822 4.822 0 00-.666 2.475c0 1.71.87 3.213 2.188 4.096a4.904 4.904 0 01-2.228-.616v.06a4.923 4.923 0 003.946 4.827 4.996 4.996 0 01-2.212.085 4.936 4.936 0 004.604 3.417 9.867 9.867 0 01-6.102 2.105c-.39 0-.779-.023-1.17-.067a13.995 13.995 0 007.557 2.209c9.053 0 13.998-7.496 13.998-13.985 0-.21 0-.42-.015-.63A9.935 9.935 0 0024 4.59z"/></svg>
+              Twitter
+            </a>
+            <a href="#" style="background:var(--brand)" onclick="shareSMS(event)">
+              <svg width="18" height="18" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/></svg>
+              SMS
+            </a>
+          </div>
+
+          <div style="margin-top:28px">
+            <a href="kampanyalar.html" class="btn btn-outline btn-sm">Kampanyalara Dön</a>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer class="footer">
+  <div class="container">
+    <div class="footer-grid">
+      <div>
+        <div class="footer-brand" style="flex-direction:column;align-items:flex-start;gap:2px;">
+          <span style="font-weight:800;font-size:24px;">e<span style="color:var(--gold);">.</span>paylaşım</span>
+          <span style="font-size:11px;font-weight:500;opacity:.7;letter-spacing:0.5px;text-transform:uppercase;">Türkiye'nin Sosyal Hediyeleşme Altyapısı</span>
+        </div>
+        <p class="tagline">Sevdiklerin için birlikte hediyeleş.</p>
+        <div class="footer-socials"><a href="#">X</a><a href="#">in</a><a href="#">ig</a></div>
+      </div>
+      <div class="footer-col"><h5>Platform</h5><ul><li><a href="nasil-calisir.html">Nasıl Çalışır</a></li><li><a href="kampanyalar.html">Kampanyalar</a></li><li><a href="fiyatlar.html">Fiyatlar</a></li><li><a href="blog.html">Blog</a></li><li><a href="hediye-donusum.html">Hediye Dönüşüm</a></li><li><a href="is-ortaklari.html">İş Ortakları</a></li><li><a href="gizlilik-kontrolu.html">Gizlilik Kontrolü</a></li></ul></div>
+      <div class="footer-col"><h5>Şirket</h5><ul><li><a href="hakkimizda.html">Hakkımızda</a></li><li><a href="iletisim.html">İletişim</a></li><li><a href="kariyer.html">Kariyer</a></li></ul></div>
+      <div class="footer-col"><h5>Yasal</h5><ul><li><a href="kvkk.html">KVKK</a></li><li><a href="gizlilik.html">Gizlilik</a></li><li><a href="kullanim-sartlari.html">Kullanım Şartları</a></li><li><a href="cerez-politikasi.html">Çerez Politikası</a></li></ul></div>
+    </div>
+    <div class="footer-bottom">
+      <p>&copy; 2026 e.paylaşım. Tüm hakları saklıdır.</p>
+      <div class="footer-badges"><span><span class="dot-green"></span>SSL</span><span><span class="dot-green"></span>KVKK</span><span><span class="dot-green"></span>PCI DSS</span></div>
+    </div>
+  </div>
+</footer>
+
+<script>
+let currentStep = 1;
+let selectedEmoji = '🎂';
+
+// Emoji picker
+document.querySelectorAll('#emojiPicker button').forEach(b => {
+  b.addEventListener('click', () => {
+    document.querySelectorAll('#emojiPicker button').forEach(x => x.classList.remove('selected'));
+    b.classList.add('selected');
+    selectedEmoji = b.dataset.emoji;
+  });
+});
+
+// Desc counter
+document.getElementById('cDesc').addEventListener('input', function() {
+  document.getElementById('descCount').textContent = this.value.length;
+});
+
+// Amount presets
+function setAmount(btn, val) {
+  document.querySelectorAll('.amount-presets button').forEach(b => b.classList.remove('selected'));
+  btn.classList.add('selected');
+  document.getElementById('cAmount').value = val;
+}
+
+// Stepper navigation
+function goStep(step) {
+  if (step === 2 && currentStep === 1) {
+    const name = document.getElementById('cName').value.trim();
+    const cat = document.getElementById('cCat').value;
+    const desc = document.getElementById('cDesc').value.trim();
+    const owner = document.getElementById('cOwner').value.trim();
+    const email = document.getElementById('cEmail').value.trim();
+    if (!name) { alert('Kampanya adı gerekli!'); document.getElementById('cName').focus(); return; }
+    if (!cat) { alert('Kategori seçin!'); return; }
+    if (!desc) { alert('Açıklama yazın!'); document.getElementById('cDesc').focus(); return; }
+    if (!owner) { alert('Adınızı girin!'); document.getElementById('cOwner').focus(); return; }
+    if (!email || !email.includes('@')) { alert('Geçerli e-posta girin!'); document.getElementById('cEmail').focus(); return; }
+  }
+
+  if (step === 3 && currentStep === 2) {
+    const amount = document.getElementById('cAmount').value;
+    const dur = document.getElementById('cDuration').value;
+    if (!amount || amount < 100) { alert('Minimum ₺100 hedef tutar girin!'); document.getElementById('cAmount').focus(); return; }
+    if (!dur) { alert('Süre seçin!'); return; }
+    updatePreview();
+  }
+
+  currentStep = step;
+  document.querySelectorAll('.step-panel').forEach(p => p.classList.remove('active'));
+  document.getElementById('panel' + step).classList.add('active');
+
+  for (let i = 1; i <= 3; i++) {
+    const s = document.getElementById('st' + i);
+    s.classList.remove('active', 'done');
+    if (i < step) s.classList.add('done');
+    if (i === step) s.classList.add('active');
+  }
+}
+
+function updatePreview() {
+  document.getElementById('pvEmoji').textContent = selectedEmoji;
+  document.getElementById('pvName').textContent = document.getElementById('cName').value;
+  document.getElementById('pvOwner').textContent = document.getElementById('cOwner').value;
+  document.getElementById('pvDesc').textContent = document.getElementById('cDesc').value;
+  const amt = Number(document.getElementById('cAmount').value);
+  document.getElementById('pvAmount').textContent = '₺' + amt.toLocaleString('tr-TR');
+  document.getElementById('pvDuration').textContent = document.getElementById('cDuration').value + ' gün';
+}
+
+let publishedData = null;
+
+function encodecamp(obj) {
+  try {
+    const json = JSON.stringify(obj);
+    return btoa(unescape(encodeURIComponent(json)));
+  } catch(e) { return ''; }
+}
+
+function getShareUrl() {
+  if (!publishedData) return '';
+  const base = window.location.href.replace(/[^/]*$/, '') + 'kampanya.html';
+  return base + '?d=' + encodeURIComponent(encodecamp(publishedData));
+}
+
+function getShareText() {
+  if (!publishedData) return '';
+  const amt = '₺' + Number(publishedData.amount).toLocaleString('tr-TR');
+  return (publishedData.emoji || '🎁') + ' ' + publishedData.name + '\n\n' +
+    'e.paylaşım üzerinde ' + amt + ' hedefli bir kampanya oluşturuldu. Sen de katkıda bulun!\n\n' +
+    getShareUrl();
+}
+
+function publishCampaign() {
+  const name = document.getElementById('cName').value.trim();
+  const slug = name.toLowerCase()
+    .replace(/ş/g,'s').replace(/ç/g,'c').replace(/ğ/g,'g').replace(/ü/g,'u').replace(/ö/g,'o').replace(/ı/g,'i')
+    .replace(/[^a-z0-9]+/g, '-').replace(/-+/g, '-').replace(/^-|-$/g, '');
+
+  const campId = 'camp_' + Date.now();
+
+  publishedData = {
+    id: campId,
+    name: name,
+    emoji: selectedEmoji,
+    category: document.getElementById('cCat').value,
+    description: document.getElementById('cDesc').value,
+    owner: document.getElementById('cOwner').value,
+    amount: Number(document.getElementById('cAmount').value),
+    duration: document.getElementById('cDuration').value,
+    minContrib: document.getElementById('cMinContrib').value,
+    visibility: document.getElementById('cVisibility').value,
+    slug: slug,
+    created: new Date().toISOString(),
+    collected: 0,
+    contributors: 0
+  };
+
+  document.getElementById('shareUrl').value = getShareUrl();
+
+  try {
+    const full = Object.assign({}, publishedData, {
+      email: document.getElementById('cEmail').value,
+      notify: document.getElementById('cNotify').checked
+    });
+    const campaigns = JSON.parse(localStorage.getItem('ep_campaigns') || '[]');
+    campaigns.push(full);
+    localStorage.setItem('ep_campaigns', JSON.stringify(campaigns));
+  } catch(e) {}
+
+  document.querySelectorAll('.step-panel').forEach(p => p.classList.remove('active'));
+  document.getElementById('successPanel').classList.add('active');
+  document.querySelector('.stepper').style.display = 'none';
+}
+
+function copyLink() {
+  const url = getShareUrl();
+  if (navigator.clipboard && navigator.clipboard.writeText) {
+    navigator.clipboard.writeText(url).then(() => showCopyOk()).catch(() => fallbackCopy());
+  } else {
+    fallbackCopy();
+  }
+}
+function fallbackCopy() {
+  const input = document.getElementById('shareUrl');
+  input.select();
+  document.execCommand('copy');
+  showCopyOk();
+}
+function showCopyOk() {
+  const btn = document.querySelector('.share-link button');
+  btn.textContent = 'Kopyalandı ✓';
+  btn.style.background = '#16a34a';
+  setTimeout(() => { btn.textContent = 'Kopyala'; btn.style.background = ''; }, 2000);
+}
+
+function shareWA(e) {
+  if (e) e.preventDefault();
+  const text = encodeURIComponent(getShareText());
+  window.open('https://api.whatsapp.com/send?text=' + text, '_blank');
+}
+
+function shareTwitter(e) {
+  if (e) e.preventDefault();
+  const text = encodeURIComponent(publishedEmoji + ' ' + publishedName + ' kampanyasına katkıda bulun! #epaylasim');
+  const url = encodeURIComponent(getShareUrl());
+  window.open('https://twitter.com/intent/tweet?text=' + text + '&url=' + url, '_blank');
+}
+
+function shareSMS(e) {
+  if (e) e.preventDefault();
+  const body = encodeURIComponent(publishedName + ' kampanyasına katkıda bulun! ' + getShareUrl());
+  const ua = navigator.userAgent.toLowerCase();
+  const sep = ua.includes('iphone') || ua.includes('ipad') ? '&' : '?';
+  window.open('sms:' + sep + 'body=' + body);
+}
+</script>
+
+<script src="chat-widget.js"></script>
+</body>
+</html>

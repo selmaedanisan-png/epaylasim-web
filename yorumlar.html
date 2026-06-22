@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Yorumlar — e.paylaşım</title>
+  <meta name="description" content="e.paylaşım kullanıcı yorumları. Binlerce mutlu kullanıcının deneyimlerini okuyun."/>
+  <link rel="icon" type="image/png" href="logo.png"/>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet"/>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --brand: #C4175A; --brand-dark: #9E1248; --brand-light: #FCE8F0;
+      --accent: #891AAE; --gold: #DFA020;
+      --text: #1a1a2e; --text-soft: #64748b; --text-muted: #94a3b8;
+      --bg: #fafafa; --card: #ffffff; --border: #f1f5f9;
+      --radius: 12px; --radius-lg: 20px;
+      --shadow-sm: 0 1px 3px rgba(0,0,0,.04); --shadow-md: 0 4px 20px rgba(0,0,0,.06);
+      --shadow-brand: 0 4px 16px rgba(196,23,90,.18);
+    }
+    body { font-family:'Inter',system-ui,-apple-system,sans-serif; color:var(--text); background:var(--bg); line-height:1.6; -webkit-font-smoothing:antialiased; }
+    a { color:inherit; text-decoration:none; }
+    .container { max-width:1120px; margin:0 auto; padding:0 24px; }
+    @media(min-width:640px){.container{padding:0 32px}}
+    .btn { display:inline-flex; align-items:center; gap:8px; font-weight:600; font-size:15px; border:none; cursor:pointer; border-radius:var(--radius); transition:all .2s ease; text-decoration:none; }
+    .btn-primary { background:var(--brand); color:#fff; padding:14px 28px; box-shadow:var(--shadow-brand); }
+    .btn-primary:hover { background:var(--brand-dark); transform:translateY(-1px); }
+    .btn-outline { background:var(--card); color:var(--text); padding:14px 28px; border:1.5px solid var(--border); }
+    .btn-outline:hover { border-color:var(--brand); color:var(--brand); }
+    .btn-sm { padding:10px 20px; font-size:13px; }
+    .arrow-icon { width:18px; height:18px; }
+
+    .nav { position:sticky; top:0; z-index:100; background:rgba(255,255,255,.92); backdrop-filter:blur(16px); border-bottom:1px solid var(--border); }
+    .nav-inner { display:flex; align-items:center; justify-content:space-between; height:72px; }
+    .nav-logo { white-space:nowrap; }
+    .nav-logo .brand-name { font-weight:900; font-size:26px; color:var(--text); letter-spacing:-0.5px; }
+    .nav-logo .dot { color:var(--gold); }
+    .nav-logo .brand-tagline { font-size:9px; font-weight:500; opacity:.7; letter-spacing:0.5px; text-transform:uppercase; display:block; }
+    .nav-links { display:flex; align-items:center; gap:32px; }
+    .nav-links a { font-size:14px; font-weight:500; color:var(--text-soft); transition:color .15s; }
+    .nav-links a:hover, .nav-links a.active { color:var(--brand); }
+    .nav-actions { display:flex; align-items:center; gap:12px; }
+    .nav-actions .login-link { font-size:14px; font-weight:600; color:var(--text-soft); padding:8px 12px; }
+    .nav-actions .login-link:hover { color:var(--brand); }
+    .mobile-toggle { display:none; background:none; border:none; cursor:pointer; width:40px; height:40px; border-radius:10px; color:var(--text-soft); }
+    .mobile-menu { display:none; padding:16px 0; border-top:1px solid var(--border); }
+    .mobile-menu a { display:block; padding:10px 0; font-size:15px; font-weight:500; color:var(--text-soft); }
+    .mobile-menu .mobile-btns { display:flex; gap:8px; margin-top:12px; }
+    .mobile-menu .mobile-btns a { flex:1; text-align:center; }
+    @media(max-width:768px){ .nav-links,.nav-actions .login-link{display:none} .mobile-toggle{display:flex;align-items:center;justify-content:center} .mobile-menu.open{display:block} }
+
+    .page-hero { padding:60px 0 40px; background:linear-gradient(165deg,#fff 0%,var(--brand-light) 50%,#fdf0f8 100%); text-align:center; }
+    .page-hero h1 { font-size:clamp(32px,5vw,48px); font-weight:800; line-height:1.15; margin-bottom:16px; }
+    .page-hero h1 em { font-style:normal; background:linear-gradient(135deg,var(--brand),var(--accent)); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; }
+    .page-hero p { color:var(--text-soft); font-size:17px; max-width:520px; margin:0 auto; }
+
+    .section { padding:80px 0; }
+
+    /* Stats summary */
+    .review-stats { padding:32px 0; background:var(--card); border-bottom:1px solid var(--border); }
+    .stats-row { display:flex; justify-content:center; gap:48px; flex-wrap:wrap; text-align:center; }
+    .stat-box .num { font-size:32px; font-weight:800; }
+    .stat-box .label { font-size:13px; color:var(--text-muted); margin-top:2px; }
+
+    /* Rating bar */
+    .rating-summary { max-width:480px; margin:0 auto 48px; background:var(--card); border:1px solid var(--border); border-radius:var(--radius-lg); padding:28px; }
+    .rating-summary .overall { display:flex; align-items:center; gap:16px; margin-bottom:20px; }
+    .rating-summary .overall .big-num { font-size:48px; font-weight:800; color:var(--brand); }
+    .rating-summary .overall .stars-info { }
+    .rating-summary .overall .stars-row { display:flex; gap:2px; margin-bottom:4px; }
+    .rating-summary .overall .stars-row svg { width:20px; height:20px; color:#f59e0b; }
+    .rating-summary .overall .count { font-size:13px; color:var(--text-muted); }
+    .rating-bar-row { display:flex; align-items:center; gap:10px; margin-bottom:6px; font-size:13px; }
+    .rating-bar-row .star-label { width:16px; text-align:right; font-weight:600; }
+    .rating-bar-row .bar-bg { flex:1; height:8px; background:var(--border); border-radius:4px; overflow:hidden; }
+    .rating-bar-row .bar-fill { height:100%; border-radius:4px; background:linear-gradient(90deg,#f59e0b,#fbbf24); }
+    .rating-bar-row .pct { width:36px; text-align:right; color:var(--text-muted); }
+
+    /* Testimonials grid */
+    .testimonials-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:20px; }
+    .testimonial { background:var(--card); border:1px solid var(--border); border-radius:var(--radius-lg); padding:28px; transition:border-color .2s; }
+    .testimonial:hover { border-color:#f0a8cc; }
+    .stars { display:flex; gap:2px; margin-bottom:14px; }
+    .stars svg { width:16px; height:16px; color:#f59e0b; }
+    .testimonial blockquote { font-size:14px; color:var(--text-soft); line-height:1.7; margin-bottom:16px; font-style:normal; }
+    .testimonial .author { display:flex; align-items:center; gap:10px; }
+    .testimonial .avatar { width:36px; height:36px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:13px; font-weight:700; color:#fff; }
+    .testimonial .author-info h5 { font-size:14px; font-weight:600; }
+    .testimonial .author-info span { font-size:12px; color:var(--text-muted); }
+    .testimonial .tag { display:inline-block; font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:1px; padding:3px 10px; border-radius:100px; margin-bottom:12px; }
+    @media(max-width:960px){.testimonials-grid{grid-template-columns:1fr 1fr}}
+    @media(max-width:540px){.testimonials-grid{grid-template-columns:1fr}}
+
+    .cta { text-align:center; padding:80px 0; }
+    .cta-icon { width:56px; height:56px; border-radius:16px; background:linear-gradient(135deg,var(--brand),var(--accent)); display:flex; align-items:center; justify-content:center; margin:0 auto 24px; box-shadow:var(--shadow-brand); }
+    .cta-icon svg { width:28px; height:28px; color:#fff; }
+    .cta h2 { font-size:clamp(28px,4vw,44px); font-weight:800; line-height:1.15; margin-bottom:16px; }
+    .cta h2 em { font-style:normal; background:linear-gradient(135deg,var(--brand),var(--accent)); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; }
+    .cta p { color:var(--text-soft); font-size:17px; max-width:460px; margin:0 auto 28px; }
+    .cta .sub { font-size:13px; color:var(--text-muted); margin-top:16px; }
+
+    .footer { background:#0f172a; color:#94a3b8; padding:64px 0 32px; }
+    .footer-grid { display:grid; grid-template-columns:1.5fr 1fr 1fr 1fr; gap:40px; margin-bottom:40px; }
+    .footer-brand { display:flex; align-items:center; gap:10px; font-weight:800; font-size:18px; color:#fff; margin-bottom:16px; }
+    .footer p.tagline { font-size:14px; margin-bottom:16px; }
+    .footer-socials { display:flex; gap:6px; }
+    .footer-socials a { width:36px; height:36px; border-radius:10px; background:#1e293b; display:flex; align-items:center; justify-content:center; font-size:12px; font-weight:600; color:#94a3b8; transition:background .15s,color .15s; }
+    .footer-socials a:hover { background:#334155; color:#fff; }
+    .footer-col h5 { color:#fff; font-size:15px; font-weight:700; margin-bottom:16px; }
+    .footer-col ul { list-style:none; }
+    .footer-col li { margin-bottom:12px; }
+    .footer-col a { font-size:15px; transition:color .15s; }
+    .footer-col a:hover { color:#fff; }
+    .footer-bottom { border-top:1px solid #1e293b; padding-top:24px; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px; }
+    .footer-bottom p { font-size:14px; color:#64748b; }
+    .footer-badges { display:flex; gap:16px; }
+    .footer-badges span { display:flex; align-items:center; gap:6px; font-size:14px; color:#64748b; }
+    .footer-badges .dot-green { width:6px; height:6px; border-radius:50%; background:#22c55e; }
+    @media(max-width:768px){.footer-grid{grid-template-columns:1fr 1fr}}
+    @media(max-width:540px){.footer-grid{grid-template-columns:1fr} .footer-bottom{flex-direction:column;text-align:center}}
+  </style>
+</head>
+<body>
+
+<header class="nav">
+  <div class="container">
+    <div class="nav-inner">
+      <a href="index.html" class="nav-logo">
+        <span class="brand-name">e<span class="dot">.</span>paylaşım</span>
+        <span class="brand-tagline">Türkiye'nin Sosyal Hediyeleşme Altyapısı</span>
+      </a>
+      <nav class="nav-links">
+        <a href="nasil-calisir.html">Nasıl Çalışır</a>
+        <a href="kampanyalar.html">Kampanyalar</a>
+        <a href="guvenlik.html">Güvenlik</a>
+        <a href="yorumlar.html" class="active">Yorumlar</a>
+      </nav>
+      <div class="nav-actions">
+        <a href="login.html" class="login-link">Giriş</a>
+        <a href="register.html" class="btn btn-primary btn-sm">Hemen Başla
+          <svg class="arrow-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M13 7l5 5m0 0l-5 5m5-5H6"/></svg>
+        </a>
+        <button class="mobile-toggle" onclick="document.getElementById('mMenu').classList.toggle('open')" aria-label="Menu">
+          <svg width="22" height="22" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" d="M4 6h16M4 12h16M4 18h16"/></svg>
+        </button>
+      </div>
+    </div>
+    <div id="mMenu" class="mobile-menu">
+      <a href="nasil-calisir.html">Nasıl Çalışır</a>
+      <a href="kampanyalar.html">Kampanyalar</a>
+      <a href="guvenlik.html">Güvenlik</a>
+      <a href="yorumlar.html">Yorumlar</a>
+      <div class="mobile-btns">
+        <a href="login.html" class="btn btn-outline btn-sm">Giriş</a>
+        <a href="register.html" class="btn btn-primary btn-sm">Hemen Başla</a>
+      </div>
+    </div>
+  </div>
+</header>
+
+<section class="page-hero">
+  <div class="container">
+    <h1>Binlerce <em>Mutlu Kullanıcı</em></h1>
+    <p>Gerçek kullanıcıların deneyimleri. Güvenilir, şeffaf, kolay.</p>
+  </div>
+</section>
+
+<!-- Stats -->
+<section class="review-stats">
+  <div class="container">
+    <div class="stats-row">
+      <div class="stat-box"><p class="num" style="color:var(--brand)">4.8</p><p class="label">Ortalama Puan</p></div>
+      <div class="stat-box"><p class="num">2.340+</p><p class="label">Toplam Yorum</p></div>
+      <div class="stat-box"><p class="num">%96</p><p class="label">Memnuniyet</p></div>
+      <div class="stat-box"><p class="num">48.500+</p><p class="label">Kampanya</p></div>
+    </div>
+  </div>
+</section>
+
+<section class="section">
+  <div class="container">
+
+    <!-- Rating summary -->
+    <div class="rating-summary">
+      <div class="overall">
+        <div class="big-num">4.8</div>
+        <div class="stars-info">
+          <div class="stars-row">
+            <svg fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
+            <svg fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
+            <svg fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
+            <svg fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
+            <svg fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
+          </div>
+          <div class="count">2.340 yorum</div>
+        </div>
+      </div>
+      <div class="rating-bar-row"><span class="star-label">5</span><div class="bar-bg"><div class="bar-fill" style="width:72%"></div></div><span class="pct">72%</span></div>
+      <div class="rating-bar-row"><span class="star-label">4</span><div class="bar-bg"><div class="bar-fill" style="width:20%"></div></div><span class="pct">20%</span></div>
+      <div class="rating-bar-row"><span class="star-label">3</span><div class="bar-bg"><div class="bar-fill" style="width:5%"></div></div><span class="pct">5%</span></div>
+      <div class="rating-bar-row"><span class="star-label">2</span><div class="bar-bg"><div class="bar-fill" style="width:2%"></div></div><span class="pct">2%</span></div>
+      <div class="rating-bar-row"><span class="star-label">1</span><div class="bar-bg"><div class="bar-fill" style="width:1%"></div></div><span class="pct">1%</span></div>
+    </div>
+
+    <!-- Testimonials -->
+    <div class="testimonials-grid">
+      <div class="testimonial">
+        <span class="tag" style="background:#fef3c7;color:#d97706">Doğum Günü</span>
+        <div class="stars"><svg fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg><svg fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg><svg fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg><svg fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg><svg fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg></div>
+        <blockquote>Doğum günüm için arkadaşlarımdan hediye toplamak hiç bu kadar kolay olmamıştı. Herkes istediği kadar katkı yaptı, ben de hayalimdeki çantayı aldım!</blockquote>
+        <div class="author">
+          <div class="avatar" style="background:linear-gradient(135deg,var(--brand),#e879a0)">AY</div>
+          <div class="author-info"><h5>Ayşe Yılmaz</h5><span>İstanbul</span></div>
+        </div>
+      </div>
+
+      <div class="testimonial">
+        <span class="tag" style="background:#fce7f3;color:var(--brand)">Düğün</span>
+        <div class="stars"><svg fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg><svg fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg><svg fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg><svg fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg><svg fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg></div>
+        <blockquote>Düğünümüz için istek listesi oluşturduk. Davetliler tek tıkla katkı yaptı, biz de tam istediğimiz eşyaları aldık. Süper şeffaf!</blockquote>
+        <div class="author">
+          <div class="avatar" style="background:linear-gradient(135deg,#a855f7,#7c3aed)">EK</div>
+          <div class="author-info"><h5>Elif Kaya</h5><span>Ankara</span></div>
+        </div>
+      </div>
+
+      <div class="testimonial">
+        <span class="tag" style="background:#dcfce7;color:#16a34a">Eğitim</span>
+        <div class="stars"><svg fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg><svg fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg><svg fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg><svg fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg><svg fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg></div>
+        <blockquote>Sınıf olarak öğretmenimize hediye topladık. Link paylaştık, 2 günde hedefimize ulaştık. Şeffaflık konusunda gerçekten güven veriyor.</blockquote>
+        <div class="author">
+          <div class="avatar" style="background:linear-gradient(135deg,#f59e0b,#d97706)">BD</div>
+          <div class="author-info"><h5>Burak Demir</h5><span>İzmir</span></div>
+        </div>
+      </div>
+
+      <div class="testimonial">
+        <span class="tag" style="background:#dbeafe;color:#2563eb">Mezuniyet</span>
+        <div class="stars"><svg fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg><svg fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg><svg fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg><svg fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg><svg fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg></div>
+        <blockquote>Oğlumun mezuniyet hediyesi için arkadaşlarımla birlikte topladık. 3 gün içinde hediye hazırdı. Hem pratik hem güvenli bir sistem.</blockquote>
+        <div class="author">
+          <div class="avatar" style="background:linear-gradient(135deg,#2563eb,#3b82f6)">FK</div>
+          <div class="author-info"><h5>Fatma Koç</h5><span>Bursa</span></div>
+        </div>
+      </div>
+
+      <div class="testimonial">
+        <span class="tag" style="background:#ede9fe;color:#7c3aed">Bebek</span>
+        <div class="stars"><svg fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg><svg fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg><svg fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg><svg fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg><svg fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg></div>
+        <blockquote>Bebek partimiz için harika bir deneyimdi. Arkadaşlar sadece linke tıklayıp katkıda bulundu. Çok kolay ve güvenli. Herkese tavsiye ederim!</blockquote>
+        <div class="author">
+          <div class="avatar" style="background:linear-gradient(135deg,#a855f7,#7c3aed)">SA</div>
+          <div class="author-info"><h5>Selin Arslan</h5><span>Antalya</span></div>
+        </div>
+      </div>
+
+      <div class="testimonial">
+        <span class="tag" style="background:var(--brand-light);color:var(--brand)">Ofis</span>
+        <div class="stars"><svg fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg><svg fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg><svg fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg><svg fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg><svg fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg></div>
+        <blockquote>Ofiste arkadaşımızın doğum günü için toplandık. Herkes Slack'ten linke tıkladı, 1 saatte hedef tamamlandı. Muhteşem bir deneyim!</blockquote>
+        <div class="author">
+          <div class="avatar" style="background:linear-gradient(135deg,#16a34a,#22c55e)">MT</div>
+          <div class="author-info"><h5>Murat Tan</h5><span>İstanbul</span></div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="cta" style="background:var(--card)">
+  <div class="container">
+    <div class="cta-icon">
+      <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 8v13m0-13V6a2 2 0 112 2h-2zm0 0V5.5A2.5 2.5 0 109.5 8H12zm-7 4h14M5 12a2 2 0 110-4h14a2 2 0 110 4M5 12v7a2 2 0 002 2h10a2 2 0 002-2v-7"/></svg>
+    </div>
+    <h2>Sen de <em>Katıl</em></h2>
+    <p>Binlerce mutlu kullanıcıya katıl, ilk kampanyanı oluştur.</p>
+    <a href="register.html" class="btn btn-primary" style="font-size:16px;padding:16px 36px">
+      Hemen Başla — Ücretsiz
+      <svg class="arrow-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M13 7l5 5m0 0l-5 5m5-5H6"/></svg>
+    </a>
+    <p class="sub">Kredi kartı gerektirmez. 30 saniyede hazır.</p>
+  </div>
+</section>
+
+<footer class="footer">
+  <div class="container">
+    <div class="footer-grid">
+      <div>
+        <div class="footer-brand" style="flex-direction:column;align-items:flex-start;gap:2px;">
+          <span style="font-weight:800;font-size:24px;">e<span style="color:var(--gold);">.</span>paylaşım</span>
+          <span style="font-size:11px;font-weight:500;opacity:.7;letter-spacing:0.5px;text-transform:uppercase;">Türkiye'nin Sosyal Hediyeleşme Altyapısı</span>
+        </div>
+        <p class="tagline">Sevdiklerin için birlikte hediyeleş.</p>
+        <div class="footer-socials"><a href="#">X</a><a href="#">in</a><a href="#">ig</a></div>
+      </div>
+      <div class="footer-col"><h5>Platform</h5><ul><li><a href="nasil-calisir.html">Nasıl Çalışır</a></li><li><a href="kampanyalar.html">Kampanyalar</a></li><li><a href="fiyatlar.html">Fiyatlar</a></li><li><a href="blog.html">Blog</a></li><li><a href="hediye-donusum.html">Hediye Dönüşüm</a></li><li><a href="is-ortaklari.html">İş Ortakları</a></li><li><a href="gizlilik-kontrolu.html">Gizlilik Kontrolü</a></li></ul></div>
+      <div class="footer-col"><h5>Şirket</h5><ul><li><a href="hakkimizda.html">Hakkımızda</a></li><li><a href="iletisim.html">İletişim</a></li><li><a href="kariyer.html">Kariyer</a></li></ul></div>
+      <div class="footer-col"><h5>Yasal</h5><ul><li><a href="kvkk.html">KVKK</a></li><li><a href="gizlilik.html">Gizlilik</a></li><li><a href="kullanim-sartlari.html">Kullanım Şartları</a></li><li><a href="cerez-politikasi.html">Çerez Politikası</a></li></ul></div>
+    </div>
+    <div class="footer-bottom">
+      <p>&copy; 2026 e.paylaşım. Tüm hakları saklıdır.</p>
+      <div class="footer-badges"><span><span class="dot-green"></span>SSL</span><span><span class="dot-green"></span>KVKK</span><span><span class="dot-green"></span>PCI DSS</span></div>
+    </div>
+  </div>
+</footer>
+
+<script src="chat-widget.js"></script>
+</body>
+</html>

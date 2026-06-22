@@ -1,0 +1,1038 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>e.paylaşım — Birlikte Hediyeleş</title>
+  <meta name="description" content="Kampanya oluştur, link paylaş, birlikte hediye al. Güvenli, şeffaf, kolay."/>
+  <link rel="icon" type="image/png" href="logo.png"/>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet"/>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --brand: #C4175A;
+      --brand-dark: #9E1248;
+      --brand-light: #FCE8F0;
+      --accent: #891AAE;
+      --gold: #DFA020;
+      --text: #1a1a2e;
+      --text-soft: #64748b;
+      --text-muted: #94a3b8;
+      --bg: #fafafa;
+      --card: #ffffff;
+      --border: #f1f5f9;
+      --radius: 12px;
+      --radius-lg: 20px;
+      --shadow-sm: 0 1px 3px rgba(0,0,0,.04);
+      --shadow-md: 0 4px 20px rgba(0,0,0,.06);
+      --shadow-brand: 0 4px 16px rgba(196,23,90,.18);
+    }
+
+    body {
+      font-family: 'Inter', system-ui, -apple-system, sans-serif;
+      color: var(--text);
+      background: var(--bg);
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    a { color: inherit; text-decoration: none; }
+    img { max-width: 100%; display: block; }
+
+    .container { max-width: 1120px; margin: 0 auto; padding: 0 24px; }
+    @media (min-width: 640px) { .container { padding: 0 32px; } }
+
+    /* --- Buttons --- */
+    .btn {
+      display: inline-flex; align-items: center; gap: 8px;
+      font-weight: 600; font-size: 15px; border: none; cursor: pointer;
+      border-radius: var(--radius); transition: all .2s ease;
+      text-decoration: none;
+    }
+    .btn-primary {
+      background: var(--brand); color: #fff;
+      padding: 14px 28px;
+      box-shadow: var(--shadow-brand);
+    }
+    .btn-primary:hover { background: var(--brand-dark); transform: translateY(-1px); }
+    .btn-outline {
+      background: var(--card); color: var(--text);
+      padding: 14px 28px;
+      border: 1.5px solid var(--border);
+    }
+    .btn-outline:hover { border-color: var(--brand); color: var(--brand); }
+    .btn-sm { padding: 10px 20px; font-size: 13px; }
+
+    /* --- Nav --- */
+    .epnav{position:sticky;top:0;z-index:100;background:rgba(255,255,255,.92);backdrop-filter:blur(16px);border-bottom:1px solid var(--border)}
+    .epnav-inner{max-width:1120px;margin:0 auto;padding:0 24px;display:flex;align-items:center;justify-content:space-between;height:72px}
+    @media(min-width:640px){.epnav-inner{padding:0 32px}}
+    .epnav-logo{white-space:nowrap;text-decoration:none;color:var(--text)}
+    .epnav-logo .bn{font-weight:900;font-size:26px;letter-spacing:-.5px}
+    .epnav-logo .dt{color:var(--gold)}
+    .epnav-logo .bt{display:block;font-size:10.5px;font-weight:500;color:var(--text-soft);letter-spacing:.2px;margin-top:1px}
+    .epnav-links{display:flex;align-items:center;gap:32px}
+    .epnav-links a{font-size:14px;font-weight:500;color:var(--text-soft);text-decoration:none;transition:color .15s}
+    .epnav-links a:hover{color:var(--text)}
+    .epnav-acts{display:flex;align-items:center;gap:12px}
+    .epnav-acts .gl{font-size:14px;font-weight:600;color:var(--text-soft);padding:8px 12px;text-decoration:none}
+    .epnav-acts .gl:hover{color:var(--brand)}
+    .epnav-acts .hb{display:inline-flex;align-items:center;gap:8px;background:var(--brand);color:#fff;padding:10px 20px;font-size:13px;font-weight:600;border-radius:12px;text-decoration:none;border:none;cursor:pointer;box-shadow:0 4px 16px rgba(196,23,90,.18);transition:all .2s}
+    .epnav-acts .hb:hover{background:#9E1248;transform:translateY(-1px)}
+    .epnav-acts .hb svg{width:18px;height:18px}
+    .epnav-mt{display:none;background:none;border:none;cursor:pointer;width:40px;height:40px;border-radius:10px;color:var(--text-soft);align-items:center;justify-content:center}
+    .epnav-mm{display:none;padding:16px 0;border-top:1px solid var(--border)}
+    .epnav-mm a{display:block;padding:10px 0;font-size:15px;font-weight:500;color:var(--text-soft);text-decoration:none}
+    .epnav-mm .mb{display:flex;gap:8px;margin-top:12px}
+    .epnav-mm .mb a{flex:1;text-align:center;padding:10px 20px;font-size:13px;font-weight:600;border-radius:12px}
+    .epnav-mm .mb .ob{background:#fff;color:var(--text);border:1.5px solid var(--border)}
+    .epnav-mm .mb .pb{background:var(--brand);color:#fff}
+    @media(max-width:768px){.epnav-links,.epnav-acts .gl{display:none}.epnav-mt{display:flex}.epnav-mm.open{display:block}}
+
+    /* --- Hero --- */
+    .hero {
+      position: relative; overflow: hidden;
+      padding: 100px 0 80px;
+      background: linear-gradient(160deg,#0f172a 0%,#1e1040 40%,#3b0d2b 70%,#1a0a1e 100%);
+    }
+    .hero::before {
+      content:''; position:absolute; inset:0; opacity:.30;
+      background:radial-gradient(ellipse 80% 60% at 20% 80%,#C4175A,transparent),radial-gradient(ellipse 60% 50% at 80% 20%,#891AAE,transparent),radial-gradient(ellipse 40% 40% at 60% 70%,#DFA020,transparent);
+    }
+    .hero-grid {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 64px; align-items: center;
+      position: relative; z-index: 2;
+    }
+    .hero-badge {
+      display: inline-flex; align-items: center; gap: 8px;
+      background: rgba(255,255,255,.08); border: 1px solid rgba(255,255,255,.12);
+      backdrop-filter: blur(8px);
+      border-radius: 100px; padding: 8px 18px; margin-bottom: 28px;
+      font-size: 12px; font-weight: 600; color: rgba(255,255,255,.8);
+    }
+    .hero-badge::before {
+      content: ''; width: 6px; height: 6px; border-radius: 50%;
+      background: #22c55e; animation: pulse 2s ease infinite;
+    }
+    @keyframes pulse { 0%,100% { opacity:1 } 50% { opacity:.3 } }
+    .hero h1 {
+      font-size: clamp(38px, 5vw, 60px); font-weight: 800;
+      line-height: 1.08; margin-bottom: 24px; letter-spacing: -0.03em;
+      color: #fff;
+    }
+    .hero h1 em {
+      font-style: normal;
+      background: linear-gradient(90deg, #F472B6, #C084FC, #DFA020);
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .hero p { color: rgba(255,255,255,.5); font-size: 18px; margin-bottom: 36px; max-width: 440px; line-height: 1.7; }
+    .hero-cta { display: flex; gap: 12px; flex-wrap: wrap; margin-bottom: 36px; }
+    .hero-cta .btn-primary {
+      background: #fff; color: #0f172a;
+      box-shadow: 0 4px 20px rgba(255,255,255,.10);
+    }
+    .hero-cta .btn-primary:hover { box-shadow: 0 8px 32px rgba(255,255,255,.15); }
+    .hero-cta .btn-outline {
+      background: transparent; color: rgba(255,255,255,.6);
+      border: 1px solid rgba(255,255,255,.15);
+    }
+    .hero-cta .btn-outline:hover { border-color: rgba(255,255,255,.4); color: #fff; }
+    .hero-trust { display: flex; gap: 20px; flex-wrap: wrap; }
+    .hero-trust span {
+      display: flex; align-items: center; gap: 6px;
+      font-size: 13px; color: rgba(255,255,255,.4);
+    }
+    .hero-trust .check {
+      width: 16px; height: 16px; border-radius: 50%; background: rgba(34,197,94,.15);
+      display: flex; align-items: center; justify-content: center;
+    }
+    .hero-trust .check svg { width: 10px; height: 10px; color: #4ade80; }
+
+    .hero-visual { display: flex; justify-content: center; position: relative; }
+    .hero-card {
+      background: rgba(255,255,255,.06); border-radius: var(--radius-lg);
+      border: 1px solid rgba(255,255,255,.10); backdrop-filter: blur(20px);
+      box-shadow: 0 20px 60px rgba(0,0,0,.3);
+      padding: 28px; width: 360px; color: #fff;
+    }
+    .hero-card .campaign-head { display: flex; align-items: center; gap: 12px; margin-bottom: 16px; }
+    .hero-card .campaign-icon {
+      width: 44px; height: 44px; border-radius: 12px; background: rgba(254,243,199,.15);
+      display: flex; align-items: center; justify-content: center; font-size: 22px;
+    }
+    .hero-card .campaign-info h4 { font-size: 15px; font-weight: 700; color: #fff; }
+    .hero-card .campaign-info span { font-size: 12px; color: rgba(255,255,255,.5); }
+    .hero-card .campaign-badge {
+      margin-left: auto; font-size: 11px; font-weight: 700;
+      background: rgba(196,23,90,.2); color: #F472B6;
+      padding: 4px 10px; border-radius: 100px;
+    }
+    .progress-wrap { margin-bottom: 16px; }
+    .progress-labels { display: flex; justify-content: space-between; font-size: 13px; color: rgba(255,255,255,.5); margin-bottom: 6px; }
+    .progress-labels strong { color: #F472B6; font-weight: 700; }
+    .progress-bar { height: 6px; background: rgba(255,255,255,.08); border-radius: 6px; overflow: hidden; }
+    .progress-fill {
+      height: 100%; width: 78%; border-radius: 6px;
+      background: linear-gradient(90deg, #C4175A, #891AAE);
+    }
+    .hero-card .avatars { display: flex; align-items: center; justify-content: space-between; }
+    .avatar-stack { display: flex; }
+    .avatar-stack span {
+      width: 32px; height: 32px; border-radius: 50%; border: 2px solid rgba(255,255,255,.1);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 11px; font-weight: 700; margin-left: -6px; color: #fff;
+    }
+    .avatar-stack span:first-child { margin-left: 0; }
+
+    @media (max-width: 960px) {
+      .hero-grid { grid-template-columns: 1fr; gap: 40px; }
+      .hero-visual { display: none; }
+      .hero { padding: 80px 0 64px; }
+    }
+
+    /* --- Stats --- */
+    .stats {
+      position: relative; z-index: 10; margin-top: -40px;
+      padding: 0 0 20px;
+      background: transparent;
+    }
+    .stats-grid {
+      display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px;
+    }
+    .stat-item {
+      text-align: center; background: var(--card); border-radius: 20px;
+      padding: 24px 16px; border: 1px solid var(--border);
+      box-shadow: 0 8px 32px rgba(0,0,0,.06);
+    }
+    .stat-item .num {
+      font-size: 28px; font-weight: 800; font-variant-numeric: tabular-nums;
+      background: linear-gradient(135deg, var(--brand), var(--accent));
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+    }
+    .stat-item .label { font-size: 11px; color: var(--text-muted); margin-top: 4px; font-weight: 500; text-transform: uppercase; letter-spacing: 0.5px; }
+    @media (max-width: 640px) { .stats-grid { grid-template-columns: 1fr 1fr; } }
+
+    /* --- Section shared --- */
+    .section { padding: 88px 0; }
+    .section-header { text-align: center; max-width: 560px; margin: 0 auto 56px; }
+    .section-tag {
+      display: inline-block; font-size: 10px; font-weight: 700;
+      text-transform: uppercase; letter-spacing: 2.5px;
+      padding: 6px 16px; border-radius: 100px; margin-bottom: 16px;
+    }
+    .section-header h2 {
+      font-size: clamp(30px, 4vw, 42px); font-weight: 800;
+      line-height: 1.15; margin-bottom: 14px; letter-spacing: -0.02em;
+    }
+    .section-header h2 em {
+      font-style: normal;
+      background: linear-gradient(135deg, var(--brand), var(--accent));
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .section-header p { color: var(--text-soft); font-size: 16px; line-height: 1.7; }
+
+    /* --- Steps --- */
+    .steps-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; }
+    .step {
+      background: var(--card); border: 1px solid var(--border);
+      border-radius: 24px; padding: 32px 24px; text-align: center;
+      transition: all .3s ease;
+    }
+    .step:hover { border-color: #f0a8cc; box-shadow: 0 12px 40px rgba(196,23,90,.08); transform: translateY(-4px); }
+    .step.step--highlight {
+      background: linear-gradient(135deg, #0f172a, #1e1040);
+      border: 1.5px solid rgba(196,23,90,.35);
+      position: relative;
+      overflow: hidden;
+    }
+    .step.step--highlight::before {
+      content: ''; position: absolute; inset: 0; opacity: .12;
+      background: radial-gradient(circle at 80% 20%, #C4175A, transparent 60%), radial-gradient(circle at 20% 80%, #DFA020, transparent 60%);
+    }
+    .step.step--highlight > * { position: relative; z-index: 2; }
+    .step.step--highlight h3 { color: #fff; }
+    .step.step--highlight p { color: rgba(255,255,255,.6); }
+    .step.step--highlight .step-num { color: #DFA020 !important; }
+    .step.step--highlight:hover { border-color: #C4175A; box-shadow: 0 12px 48px rgba(196,23,90,.2); }
+    .step--highlight .step-badge {
+      display: inline-flex; align-items: center; gap: 5px;
+      background: rgba(223,160,32,.12); border: 1px solid rgba(223,160,32,.25);
+      border-radius: 100px; padding: 4px 12px; margin-top: 14px;
+      font-size: 10px; font-weight: 700; color: #DFA020; letter-spacing: .5px;
+    }
+    .step--highlight .step-badge svg { width: 12px; height: 12px; }
+    .step-icon {
+      width: 56px; height: 56px; border-radius: 18px;
+      display: flex; align-items: center; justify-content: center;
+      margin: 0 auto 18px; box-shadow: 0 6px 20px rgba(0,0,0,.12);
+    }
+    .step-icon svg { width: 24px; height: 24px; color: #fff; }
+    .step-num {
+      font-size: 10px; font-weight: 700; text-transform: uppercase;
+      letter-spacing: 2px; margin-bottom: 10px;
+    }
+    .step h3 { font-size: 16px; font-weight: 700; margin-bottom: 10px; }
+    .step p { font-size: 13px; color: var(--text-soft); line-height: 1.7; }
+
+    @media (max-width: 960px) { .steps-grid { grid-template-columns: 1fr 1fr; } }
+    @media (max-width: 540px) { .steps-grid { grid-template-columns: 1fr; } }
+
+    /* --- Guarantee --- */
+    .guarantee {
+      background: transparent;
+    }
+    .guarantee-inner {
+      display: flex; align-items: center; gap: 48px;
+      background: linear-gradient(135deg, #0f172a, #1e1040, #2d1535);
+      border-radius: 28px; padding: 52px; position: relative; overflow: hidden;
+    }
+    .guarantee-inner::before {
+      content:''; position:absolute; inset:0; opacity:.15;
+      background:radial-gradient(circle at 100% 0%,#C4175A,transparent 50%),radial-gradient(circle at 0% 100%,#DFA020,transparent 50%);
+    }
+    .guarantee-inner > * { position: relative; z-index: 2; }
+    .guarantee-icon {
+      flex-shrink: 0; width: 88px; height: 88px; border-radius: 24px;
+      background: rgba(255,255,255,.08); border: 1px solid rgba(255,255,255,.1);
+      display: flex; align-items: center; justify-content: center;
+    }
+    .guarantee-icon svg { width: 40px; height: 40px; color: rgba(255,255,255,.5); }
+    .guarantee-tag {
+      display: inline-flex; align-items: center; gap: 6px;
+      background: rgba(223,160,32,.1); border: 1px solid rgba(223,160,32,.2);
+      border-radius: 100px; padding: 4px 12px; margin-bottom: 12px;
+      font-size: 11px; font-weight: 700; color: #DFA020;
+    }
+    .guarantee-content h2 { font-size: 24px; font-weight: 800; margin-bottom: 12px; color: #fff; }
+    .guarantee-content h2 em {
+      font-style: normal;
+      background: linear-gradient(90deg, #F472B6, #C084FC, #DFA020);
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .guarantee-content p { color: rgba(255,255,255,.5); font-size: 15px; margin-bottom: 20px; }
+    .guarantee-checks { display: flex; flex-wrap: wrap; gap: 10px; }
+    .guarantee-checks .check-item {
+      display: flex; align-items: center; gap: 8px;
+      background: rgba(255,255,255,.06); border: 1px solid rgba(255,255,255,.08);
+      border-radius: var(--radius); padding: 8px 14px;
+      font-size: 13px; font-weight: 500; color: rgba(255,255,255,.7);
+    }
+    .guarantee-checks .check-item .ico {
+      width: 24px; height: 24px; border-radius: 6px; background: rgba(34,197,94,.12);
+      display: flex; align-items: center; justify-content: center;
+    }
+    .guarantee-checks .check-item .ico svg { width: 12px; height: 12px; color: #4ade80; }
+
+    @media (max-width: 768px) {
+      .guarantee-inner { flex-direction: column; text-align: center; padding: 36px 24px; }
+      .guarantee-checks { justify-content: center; }
+    }
+
+    /* --- Campaigns --- */
+    .campaigns-top { display: flex; align-items: end; justify-content: space-between; margin-bottom: 32px; }
+    .campaigns-top h2 { font-size: 32px; font-weight: 800; }
+    .campaigns-top h2 em {
+      font-style: normal;
+      background: linear-gradient(135deg, var(--brand), var(--accent));
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .campaigns-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+    .campaign-card {
+      background: var(--card); border: 1px solid var(--border);
+      border-radius: 24px; padding: 28px;
+      transition: all .3s ease; cursor: pointer;
+    }
+    .campaign-card:hover { border-color: #f0a8cc; box-shadow: 0 12px 40px rgba(196,23,90,.08); transform: translateY(-4px); }
+    .campaign-card .top { display: flex; align-items: start; gap: 12px; margin-bottom: 16px; }
+    .campaign-card .emoji-box {
+      width: 44px; height: 44px; border-radius: 12px;
+      display: flex; align-items: center; justify-content: center; font-size: 22px;
+      flex-shrink: 0;
+    }
+    .campaign-card .meta { flex: 1; min-width: 0; }
+    .campaign-card .meta h4 { font-size: 15px; font-weight: 700; transition: color .15s; }
+    .campaign-card:hover .meta h4 { color: var(--brand); }
+    .campaign-card .meta span { font-size: 12px; color: var(--text-muted); }
+    .campaign-card .status {
+      font-size: 10px; font-weight: 700; padding: 3px 10px;
+      border-radius: 100px; flex-shrink: 0;
+    }
+    .campaign-card .bottom { display: flex; align-items: center; justify-content: space-between; margin-top: 16px; }
+    .campaign-card .contributors { font-size: 12px; color: var(--text-muted); display: flex; align-items: center; gap: 6px; }
+    .campaign-card .contributors svg { width: 14px; height: 14px; }
+
+    .campaign-banner {
+      margin-top: 32px; border-radius: 24px;
+      background: linear-gradient(160deg,#0f172a,#1e1040,#3b0d2b);
+      padding: 44px 52px; position: relative; overflow: hidden;
+      display: flex; align-items: center; justify-content: space-between; gap: 24px;
+    }
+    .campaign-banner::before {
+      content:''; position:absolute; inset:0; opacity:.2;
+      background:radial-gradient(circle at 100% 50%,#C4175A,transparent 60%),radial-gradient(circle at 0% 50%,#DFA020,transparent 60%);
+    }
+    .campaign-banner > * { position: relative; z-index: 2; }
+    .campaign-banner h3 { font-size: 22px; font-weight: 800; color: #fff; margin-bottom: 6px; }
+    .campaign-banner p { font-size: 14px; color: rgba(255,255,255,.5); }
+    .campaign-banner .btn {
+      background: #fff; color: #0f172a; font-weight: 700;
+      padding: 14px 28px; border-radius: 14px; flex-shrink: 0;
+    }
+    .campaign-banner .btn:hover { box-shadow: 0 8px 32px rgba(255,255,255,.12); }
+
+    @media (max-width: 960px) { .campaigns-grid { grid-template-columns: 1fr 1fr; } }
+    @media (max-width: 540px) {
+      .campaigns-grid { grid-template-columns: 1fr; }
+      .campaigns-top { flex-direction: column; align-items: start; gap: 12px; }
+      .campaign-banner { flex-direction: column; text-align: center; padding: 32px; }
+    }
+
+    /* --- Trust --- */
+    .trust-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+    .trust-card {
+      background: var(--card); border: 1px solid var(--border);
+      border-radius: 24px; padding: 32px;
+      transition: all .3s ease;
+    }
+    .trust-card:hover { border-color: #f0a8cc; box-shadow: 0 12px 40px rgba(196,23,90,.08); transform: translateY(-4px); }
+    .trust-card .icon {
+      width: 48px; height: 48px; border-radius: 16px;
+      display: flex; align-items: center; justify-content: center;
+      margin-bottom: 18px;
+    }
+    .trust-card .icon svg { width: 22px; height: 22px; }
+    .trust-card h3 { font-size: 15px; font-weight: 700; margin-bottom: 10px; }
+    .trust-card p { font-size: 13px; color: var(--text-soft); line-height: 1.7; }
+
+    @media (max-width: 960px) { .trust-grid { grid-template-columns: 1fr 1fr; } }
+    @media (max-width: 540px) { .trust-grid { grid-template-columns: 1fr; } }
+
+    /* --- Testimonials --- */
+    .testimonials-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+    .testimonial {
+      background: var(--card); border: 1px solid var(--border);
+      border-radius: 24px; padding: 32px;
+      transition: all .3s ease; position: relative;
+    }
+    .testimonial:hover { border-color: #f0a8cc; box-shadow: 0 12px 40px rgba(196,23,90,.08); transform: translateY(-4px); }
+    .testimonial::before {
+      content: '\201C'; position: absolute; top: 20px; right: 24px;
+      font-size: 48px; font-weight: 900; color: var(--brand-light); line-height: 1; font-family: Georgia, serif;
+    }
+    .stars { display: flex; gap: 2px; margin-bottom: 16px; }
+    .stars svg { width: 16px; height: 16px; color: #f59e0b; }
+    .testimonial blockquote {
+      font-size: 14px; color: var(--text-soft); line-height: 1.8;
+      margin-bottom: 20px; font-style: normal;
+    }
+    .testimonial .author { display: flex; align-items: center; gap: 12px; padding-top: 16px; border-top: 1px solid var(--border); }
+    .testimonial .avatar {
+      width: 40px; height: 40px; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 13px; font-weight: 700; color: #fff;
+    }
+    .testimonial .author-info h5 { font-size: 14px; font-weight: 600; }
+    .testimonial .author-info span { font-size: 12px; color: var(--text-muted); }
+
+    @media (max-width: 960px) { .testimonials-grid { grid-template-columns: 1fr 1fr; } }
+    @media (max-width: 540px) { .testimonials-grid { grid-template-columns: 1fr; } }
+
+    /* --- CTA --- */
+    .cta {
+      text-align: center; position: relative; overflow: hidden;
+      background: linear-gradient(160deg,#0f172a 0%,#1e1040 40%,#3b0d2b 70%,#1a0a1e 100%);
+      border-radius: 32px; margin: 0 24px; padding: 80px 32px;
+    }
+    .cta::before {
+      content:''; position:absolute; inset:0; opacity:.20;
+      background:radial-gradient(ellipse 50% 80% at 80% 50%,#C4175A,transparent),radial-gradient(ellipse 40% 60% at 20% 50%,#DFA020,transparent);
+    }
+    .cta .container { position: relative; z-index: 2; }
+    .cta-icon {
+      width: 56px; height: 56px; border-radius: 16px;
+      background: rgba(255,255,255,.1); border: 1px solid rgba(255,255,255,.1);
+      display: flex; align-items: center; justify-content: center;
+      margin: 0 auto 24px;
+    }
+    .cta-icon svg { width: 28px; height: 28px; color: rgba(255,255,255,.6); }
+    .cta h2 {
+      font-size: clamp(28px, 4vw, 44px); font-weight: 800;
+      line-height: 1.15; margin-bottom: 16px; color: #fff;
+    }
+    .cta h2 em {
+      font-style: normal;
+      background: linear-gradient(90deg, #F472B6, #C084FC, #DFA020);
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .cta p { color: rgba(255,255,255,.5); font-size: 17px; max-width: 460px; margin: 0 auto 28px; }
+    .cta .btn-primary {
+      background: #fff; color: #0f172a;
+      box-shadow: 0 4px 20px rgba(255,255,255,.10);
+    }
+    .cta .btn-primary:hover { box-shadow: 0 8px 32px rgba(255,255,255,.15); }
+    .cta .sub { font-size: 13px; color: rgba(255,255,255,.35); margin-top: 16px; }
+    @media (min-width: 640px) { .cta { margin: 0 32px; } }
+    @media (min-width: 1184px) { .cta { max-width: 1120px; margin: 0 auto; } }
+
+    /* --- Footer --- */
+    .epft{background:#0f172a;color:#94a3b8;padding:64px 0 32px}
+    .epft-inner{max-width:1120px;margin:0 auto;padding:0 24px}
+    @media(min-width:640px){.epft-inner{padding:0 32px}}
+    .epft-grid{display:grid;grid-template-columns:1.5fr 1fr 1fr 1fr;gap:40px;margin-bottom:40px}
+    .epft-brand{display:flex;flex-direction:column;align-items:flex-start;gap:2px;margin-bottom:16px}
+    .epft-brand span:first-child{font-weight:800;font-size:20px;color:#fff}
+    .epft-brand .dt{color:var(--gold)}
+    .epft-brand span:last-child{font-size:9px;font-weight:500;opacity:.7;letter-spacing:.5px;text-transform:uppercase}
+    .epft p.tl{font-size:14px;margin-bottom:16px}
+    .epft-soc{display:flex;gap:6px}
+    .epft-soc a{width:36px;height:36px;border-radius:10px;background:#1e293b;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:600;color:#94a3b8;text-decoration:none;transition:background .15s,color .15s}
+    .epft-soc a:hover{background:#334155;color:#fff}
+    .epft-col h5{color:#fff;font-size:13px;font-weight:600;margin-bottom:14px}
+    .epft-col ul{list-style:none;padding:0;margin:0}
+    .epft-col li{margin-bottom:10px}
+    .epft-col a{font-size:14px;color:#94a3b8;text-decoration:none;transition:color .15s}
+    .epft-col a:hover{color:#fff}
+    .epft-bot{border-top:1px solid #1e293b;padding-top:24px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px}
+    .epft-bot p{font-size:12px;color:#64748b;margin:0}
+    .epft-badges{display:flex;gap:16px}
+    .epft-badges span{display:flex;align-items:center;gap:6px;font-size:12px;color:#64748b}
+    .epft-badges .dg{width:6px;height:6px;border-radius:50%;background:#22c55e}
+    @media(max-width:768px){.epft-grid{grid-template-columns:1fr 1fr}}
+    @media(max-width:540px){.epft-grid{grid-template-columns:1fr}.epft-bot{flex-direction:column;text-align:center}}
+
+    .epft-nl{background:linear-gradient(135deg,rgba(139,92,246,.08),rgba(236,72,153,.08));border:1px solid rgba(139,92,246,.15);border-radius:16px;padding:28px 32px;margin-bottom:32px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:16px}
+    .epft-nl-text h5{margin:0 0 4px;font-size:15px;font-weight:600;color:#e2e8f0}
+    .epft-nl-text p{margin:0;font-size:13px;color:#94a3b8}
+    .epft-nl-form{display:flex;gap:8px}
+    .epft-nl-form input{padding:10px 16px;border-radius:10px;border:1px solid #334155;background:#0f172a;color:#e2e8f0;font-size:13px;width:260px;outline:none;transition:border-color .2s}
+    .epft-nl-form input:focus{border-color:#8b5cf6}
+    .epft-nl-form input::placeholder{color:#64748b}
+    .epft-nl-form button{padding:10px 22px;border-radius:10px;border:none;background:linear-gradient(135deg,#8b5cf6,#ec4899);color:#fff;font-size:13px;font-weight:600;cursor:pointer;transition:opacity .2s,transform .2s;white-space:nowrap}
+    .epft-nl-form button:hover{opacity:.9;transform:translateY(-1px)}
+    .epft-nl-form button:disabled{opacity:.6;cursor:not-allowed;transform:none}
+    @media(max-width:640px){.epft-nl{flex-direction:column;text-align:center}.epft-nl-form{flex-direction:column;width:100%}.epft-nl-form input{width:100%}}
+
+    /* --- Cookie --- */
+    .cookie-banner {
+      position: fixed; bottom: 16px; right: 16px; z-index: 200;
+      background: var(--card); border: 1px solid var(--border);
+      border-radius: var(--radius-lg); box-shadow: var(--shadow-md);
+      padding: 20px; width: 320px; display: none;
+    }
+    .cookie-banner p { font-size: 13px; color: var(--text-soft); margin-bottom: 14px; }
+    .cookie-banner a { color: var(--brand); font-weight: 600; }
+    .cookie-btns { display: flex; gap: 8px; }
+    .cookie-btns button {
+      flex: 1; padding: 10px; border-radius: var(--radius); border: none;
+      font-size: 13px; font-weight: 600; cursor: pointer; transition: all .15s;
+    }
+    .cookie-accept { background: var(--brand); color: #fff; }
+    .cookie-accept:hover { background: var(--brand-dark); }
+    .cookie-reject { background: #f1f5f9; color: var(--text-soft); }
+    .cookie-reject:hover { background: #e2e8f0; }
+
+    /* --- Arrow icon reuse --- */
+    .arrow-icon { width: 18px; height: 18px; }
+  </style>
+</head>
+<body>
+
+<!-- NAV -->
+<header class="epnav">
+  <div class="epnav-inner">
+    <a href="index.html" class="epnav-logo">
+      <span class="bn">e<span class="dt">.</span>paylaşım</span>
+      <span class="bt">Türkiye'nin Sosyal Hediyeleşme Altyapısı</span>
+    </a>
+    <nav class="epnav-links">
+      <a href="#nasil-calisir">Nasıl Çalışır</a>
+      <a href="#kampanyalar">Kampanyalar</a>
+      <a href="katkida-bulun.html">Katkıda Bulun</a>
+      <a href="#guven">Güvenlik</a>
+      <a href="#yorumlar">Yorumlar</a>
+    </nav>
+    <div class="epnav-acts">
+      <a href="login.html" class="gl">Giriş</a>
+      <a href="register.html" class="hb">Hemen Başla
+        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M13 7l5 5m0 0l-5 5m5-5H6"/></svg>
+      </a>
+      <button class="epnav-mt" onclick="document.getElementById('epMM').classList.toggle('open')" aria-label="Menu">
+        <svg width="22" height="22" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" d="M4 6h16M4 12h16M4 18h16"/></svg>
+      </button>
+    </div>
+  </div>
+  <div id="epMM" class="epnav-mm" style="max-width:1120px;margin:0 auto;padding-left:24px;padding-right:24px">
+    <a href="#nasil-calisir">Nasıl Çalışır</a>
+    <a href="#kampanyalar">Kampanyalar</a>
+    <a href="katkida-bulun.html">Katkıda Bulun</a>
+    <a href="#guven">Güvenlik</a>
+    <a href="#yorumlar">Yorumlar</a>
+    <div class="mb">
+      <a href="login.html" class="ob">Giriş</a>
+      <a href="register.html" class="pb">Hemen Başla</a>
+    </div>
+  </div>
+</header>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="container">
+    <div class="hero-grid">
+      <div>
+        <div class="hero-badge">Türkiye'nin dijital hediye platformu</div>
+        <h1>Sevdiklerin İçin<br/><em>Birlikte Hediyeleş</em></h1>
+        <p>Kampanya oluştur, link paylaş, katkıları topla. Güvenli, şeffaf, birlikte.</p>
+        <div class="hero-cta">
+          <a href="register.html" class="btn btn-primary">Hemen Başla
+            <svg class="arrow-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M13 7l5 5m0 0l-5 5m5-5H6"/></svg>
+          </a>
+          <a href="register.html" class="btn btn-outline">Kampanya Oluştur</a>
+        </div>
+        <div class="hero-trust">
+          <span><span class="check"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="3"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg></span>Ücretsiz</span>
+          <span><span class="check"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="3"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg></span>SSL Güvenli</span>
+          <span><span class="check"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="3"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg></span>KVKK Uyumlu</span>
+        </div>
+      </div>
+
+      <div class="hero-visual">
+        <div class="hero-card">
+          <div class="campaign-head">
+            <div class="campaign-icon">🎂</div>
+            <div class="campaign-info">
+              <h4>Ayşe'nin Doğum Günü</h4>
+              <span>12 katkıcı</span>
+            </div>
+            <span class="campaign-badge">%78</span>
+          </div>
+          <div class="progress-wrap">
+            <div class="progress-labels"><span>₺3.900 toplandı</span><strong>₺5.000</strong></div>
+            <div class="progress-bar"><div class="progress-fill"></div></div>
+          </div>
+          <div class="avatars">
+            <div class="avatar-stack">
+              <span style="background:rgba(196,23,90,.3);color:#F472B6">A</span>
+              <span style="background:rgba(137,26,174,.3);color:#C084FC">M</span>
+              <span style="background:rgba(223,160,32,.3);color:#DFA020">S</span>
+              <span style="background:rgba(255,255,255,.1);color:rgba(255,255,255,.5)">+9</span>
+            </div>
+            <a href="register.html" class="btn btn-primary btn-sm">Katkı Yap</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- STATS -->
+<section class="stats">
+  <div class="container">
+    <div class="stats-grid">
+      <div class="stat-item"><p class="num" id="s1">0</p><p class="label">Kampanya</p></div>
+      <div class="stat-item"><p class="num" id="s2">0</p><p class="label">Katkıcı</p></div>
+      <div class="stat-item"><p class="num" id="s3">0</p><p class="label">Hediye Gerçekleşti</p></div>
+      <div class="stat-item"><p class="num" id="s4" style="color:var(--brand)">0</p><p class="label">Mutlu Kullanıcı</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- HOW IT WORKS -->
+<section id="nasil-calisir" class="section">
+  <div class="container">
+    <div class="section-header">
+      <span class="section-tag" style="background:var(--brand-light);color:var(--brand)">Nasıl Çalışır</span>
+      <h2>Dört Adımda <em>Hayaline Ulaş</em></h2>
+      <p>Kampanyanı oluştur, paylaş, katkı topla ve hediyeni al.</p>
+    </div>
+
+    <div class="steps-grid">
+      <div class="step">
+        <div class="step-icon" style="background:linear-gradient(135deg,#D4307A,#C4175A)">
+          <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"/></svg>
+        </div>
+        <p class="step-num" style="color:var(--brand)">Adım 1</p>
+        <h3>Kampanya Oluştur</h3>
+        <p>Hediye hedefini belirle, açıklamanı yaz, tutarı gir. 30 saniyede hazır.</p>
+      </div>
+      <div class="step">
+        <div class="step-icon" style="background:linear-gradient(135deg,#A040A0,#891AAE)">
+          <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.367 2.684 3 3 0 00-5.367-2.684z"/></svg>
+        </div>
+        <p class="step-num" style="color:var(--accent)">Adım 2</p>
+        <h3>Link Paylaş</h3>
+        <p>WhatsApp, SMS veya sosyal medya ile kampanya linkini paylaş.</p>
+      </div>
+      <div class="step">
+        <div class="step-icon" style="background:linear-gradient(135deg,#f59e0b,#d97706)">
+          <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z"/></svg>
+        </div>
+        <p class="step-num" style="color:#d97706">Adım 3</p>
+        <h3>Katkıları Topla</h3>
+        <p>Herkes istediği miktarda katkı yapsın. Güvenli ödeme, anlık bildirim.</p>
+      </div>
+      <div class="step step--highlight">
+        <div class="step-icon" style="background:linear-gradient(135deg,#DFA020,#C4175A)">
+          <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 8.25h19.5M2.25 9h19.5m-16.5 5.25h6m-6 2.25h3m-3.75 3h15a2.25 2.25 0 002.25-2.25V6.75A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25v10.5A2.25 2.25 0 004.5 19.5z"/></svg>
+        </div>
+        <p class="step-num">Adım 4</p>
+        <h3>Hediyeni Al</h3>
+        <p>Hedef tamamlandığında hediyeni al. Tamamlanmazsa birikimler <strong style="color:#DFA020">e.paylaşım Hediye Kartı</strong>'na dönüşür.</p>
+        <div class="step-badge">
+          <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+          HİÇBİR KATKI BOŞA GİTMEZ
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- GUARANTEE -->
+<section class="section guarantee">
+  <div class="container">
+    <div class="guarantee-inner">
+      <div class="guarantee-icon" style="background:linear-gradient(135deg,rgba(223,160,32,.15),rgba(196,23,90,.15));border-color:rgba(223,160,32,.25)">
+        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5" style="color:#DFA020"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 8.25h19.5M2.25 9h19.5m-16.5 5.25h6m-6 2.25h3m-3.75 3h15a2.25 2.25 0 002.25-2.25V6.75A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25v10.5A2.25 2.25 0 004.5 19.5z"/></svg>
+      </div>
+      <div class="guarantee-content">
+        <div class="guarantee-tag">
+          <svg width="14" height="14" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg>
+          e.paylaşım Hediye Kartı
+        </div>
+        <h2>Birikimler <em>Hediye Kartına Dönüşür</em></h2>
+        <p>Kampanya hedefine ulaşılamazsa toplanan tüm birikimler otomatik olarak e.paylaşım Hediye Kartı'na aktarılır. Anlaşmalı mağazalarda dilediğin zaman kullanabilirsin.</p>
+        <div class="guarantee-checks">
+          <div class="check-item"><span class="ico"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="3"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg></span>Otomatik dönüşüm</div>
+          <div class="check-item"><span class="ico"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="3"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg></span>Anlaşmalı mağazalarda geçerli</div>
+          <div class="check-item"><span class="ico"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="3"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg></span>Süresiz kullanım</div>
+          <div class="check-item"><span class="ico"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="3"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg></span>Hiçbir katkı boşa gitmez</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CAMPAIGNS -->
+<section id="kampanyalar" class="section" style="background:var(--card)">
+  <div class="container">
+    <div class="campaigns-top">
+      <div>
+        <span class="section-tag" style="background:#f3e8ff;color:#7c3aed;margin-bottom:12px">Popüler Kampanyalar</span>
+        <h2>Birlikte <em>Gerçekleşen</em> Hayaller</h2>
+      </div>
+      <a href="listeler.html" class="btn btn-outline btn-sm">Tümünü Gör</a>
+    </div>
+
+    <div class="campaigns-grid">
+      <!-- 1 -->
+      <div class="campaign-card">
+        <div class="top">
+          <div class="emoji-box" style="background:#fef3c7">🎂</div>
+          <div class="meta"><h4>Ayşe'nin 30. Doğum Günü</h4><span>Ayşe Yılmaz</span></div>
+          <span class="status" style="background:#dcfce7;color:#16a34a">Aktif</span>
+        </div>
+        <div class="progress-wrap">
+          <div class="progress-labels"><span>₺3.900 / ₺5.000</span><strong>%78</strong></div>
+          <div class="progress-bar"><div class="progress-fill" style="width:78%"></div></div>
+        </div>
+        <div class="bottom">
+          <span class="contributors">
+            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"/></svg>
+            12 katkıcı
+          </span>
+          <a href="katkida-bulun.html" class="btn btn-primary btn-sm">Katkı Yap</a>
+        </div>
+      </div>
+      <!-- 2 -->
+      <div class="campaign-card">
+        <div class="top">
+          <div class="emoji-box" style="background:#fce7f3">💍</div>
+          <div class="meta"><h4>Elif & Mert Düğün Listesi</h4><span>Elif Kaya</span></div>
+          <span class="status" style="background:#f3e8ff;color:#7c3aed">Popüler</span>
+        </div>
+        <div class="progress-wrap">
+          <div class="progress-labels"><span>₺6.300 / ₺15.000</span><strong style="color:#7c3aed">%42</strong></div>
+          <div class="progress-bar"><div class="progress-fill" style="width:42%;background:linear-gradient(90deg,#a855f7,#7c3aed)"></div></div>
+        </div>
+        <div class="bottom">
+          <span class="contributors">
+            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"/></svg>
+            28 katkıcı
+          </span>
+          <a href="katkida-bulun.html" class="btn btn-primary btn-sm">Katkı Yap</a>
+        </div>
+      </div>
+      <!-- 3 -->
+      <div class="campaign-card">
+        <div class="top">
+          <div class="emoji-box" style="background:#ede9fe">👶</div>
+          <div class="meta"><h4>Selin'in Bebek Partisi</h4><span>Selin Arslan</span></div>
+          <span class="status" style="background:#fef3c7;color:#d97706">2 gün</span>
+        </div>
+        <div class="progress-wrap">
+          <div class="progress-labels"><span>₺2.800 / ₺3.500</span><strong style="color:#16a34a">%80</strong></div>
+          <div class="progress-bar"><div class="progress-fill" style="width:80%;background:linear-gradient(90deg,#22c55e,#16a34a)"></div></div>
+        </div>
+        <div class="bottom">
+          <span class="contributors">
+            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"/></svg>
+            18 katkıcı
+          </span>
+          <a href="katkida-bulun.html" class="btn btn-primary btn-sm">Katkı Yap</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="campaign-banner">
+      <div>
+        <h3>Senin Hayalin Ne?</h3>
+        <p>Hemen kampanyanı oluştur, sevdiklerinle birlikte gerçekleştir.</p>
+      </div>
+      <a href="register.html" class="btn">Kampanya Oluştur
+        <svg class="arrow-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M13 7l5 5m0 0l-5 5m5-5H6"/></svg>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- TRUST -->
+<section id="guven" class="section">
+  <div class="container">
+    <div class="section-header">
+      <span class="section-tag" style="background:#dcfce7;color:#16a34a">Güvenlik</span>
+      <h2>Paranız <em>Güvende</em></h2>
+      <p>Her katkı ve her işlem tam koruma altında.</p>
+    </div>
+
+    <div class="trust-grid">
+      <div class="trust-card">
+        <div class="icon" style="background:#dcfce7"><svg style="color:#16a34a" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg></div>
+        <h3>SSL & 3D Secure</h3>
+        <p>256-bit SSL şifreleme ve 3D Secure ödeme ile tüm finansal veriler korunur.</p>
+      </div>
+      <div class="trust-card">
+        <div class="icon" style="background:#dbeafe"><svg style="color:#2563eb" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/></svg></div>
+        <h3>KVKK Uyumlu</h3>
+        <p>Kişisel verileriniz Türkiye'deki veri merkezlerinde KVKK mevzuatına uygun saklanır.</p>
+      </div>
+      <div class="trust-card">
+        <div class="icon" style="background:var(--brand-light)"><svg style="color:var(--brand)" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"/></svg></div>
+        <h3>Şeffaf Takip</h3>
+        <p>Her katkı anlık görünür. Kampanya sahibi ve katkıcılar tüm akışı şeffafça izler.</p>
+      </div>
+      <div class="trust-card">
+        <div class="icon" style="background:#ede9fe"><svg style="color:#7c3aed" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg></div>
+        <h3>Cloudflare WAF</h3>
+        <p>Global CDN ve WAF ile DDoS koruması ve ultra-hızlı erişim sağlanır.</p>
+      </div>
+      <div class="trust-card">
+        <div class="icon" style="background:#fce7f3"><svg style="color:#e11d48" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z"/></svg></div>
+        <h3>PCI DSS Sertifikalı</h3>
+        <p>Kredi kartı verileri PCI DSS standartlarına uygun işlenir, saklanmaz.</p>
+      </div>
+      <div class="trust-card">
+        <div class="icon" style="background:#fef3c7"><svg style="color:#d97706" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M18.364 5.636l-3.536 3.536m0 5.656l3.536 3.536M9.172 9.172L5.636 5.636m3.536 9.192l-3.536 3.536M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-5 0a4 4 0 11-8 0 4 4 0 018 0z"/></svg></div>
+        <h3>7/24 Destek</h3>
+        <p>Canlı destek, e-posta ve yardım merkezi ile her zaman yanınızdayız.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TESTIMONIALS -->
+<section id="yorumlar" class="section" style="background:var(--card)">
+  <div class="container">
+    <div class="section-header">
+      <span class="section-tag" style="background:var(--brand-light);color:var(--brand)">Yorumlar</span>
+      <h2>Binlerce <em>Mutlu Kullanıcı</em></h2>
+      <p>Gerçek kullanıcıların deneyimleri.</p>
+    </div>
+
+    <div class="testimonials-grid">
+      <div class="testimonial">
+        <div class="stars">
+          <svg fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
+          <svg fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
+          <svg fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
+          <svg fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
+          <svg fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
+        </div>
+        <blockquote>Doğum günüm için arkadaşlarımdan hediye toplamak hiç bu kadar kolay olmamıştı. Herkes istediği kadar katkı yaptı, ben de hayalimdeki çantayı aldım!</blockquote>
+        <div class="author">
+          <div class="avatar" style="background:linear-gradient(135deg,var(--brand),#e879a0)">AY</div>
+          <div class="author-info"><h5>Ayşe Yılmaz</h5><span>İstanbul</span></div>
+        </div>
+      </div>
+
+      <div class="testimonial">
+        <div class="stars">
+          <svg fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
+          <svg fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
+          <svg fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
+          <svg fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
+          <svg fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
+        </div>
+        <blockquote>Düğünümüz için istek listesi oluşturduk. Davetliler tek tıkla katkı yaptı, biz de tam istediğimiz eşyaları aldık. Süper şeffaf!</blockquote>
+        <div class="author">
+          <div class="avatar" style="background:linear-gradient(135deg,#a855f7,#7c3aed)">EK</div>
+          <div class="author-info"><h5>Elif Kaya</h5><span>Ankara</span></div>
+        </div>
+      </div>
+
+      <div class="testimonial">
+        <div class="stars">
+          <svg fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
+          <svg fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
+          <svg fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
+          <svg fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
+          <svg fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
+        </div>
+        <blockquote>Sınıf olarak öğretmenimize hediye topladık. Link paylaştık, 2 günde hedefimize ulaştık. Şeffaflık konusunda gerçekten güven veriyor.</blockquote>
+        <div class="author">
+          <div class="avatar" style="background:linear-gradient(135deg,#f59e0b,#d97706)">BD</div>
+          <div class="author-info"><h5>Burak Demir</h5><span>İzmir</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="section" style="padding-bottom:100px">
+<div class="cta">
+  <div class="container">
+    <div class="cta-icon">
+      <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 8v13m0-13V6a2 2 0 112 2h-2zm0 0V5.5A2.5 2.5 0 109.5 8H12zm-7 4h14M5 12a2 2 0 110-4h14a2 2 0 110 4M5 12v7a2 2 0 002 2h10a2 2 0 002-2v-7"/></svg>
+    </div>
+    <h2>Hayaline <em>Birlikte</em> Ulaş</h2>
+    <p>Ücretsiz hesap oluştur, ilk kampanyanı başlat ve sevdiklerinle birlikte mutlu ol.</p>
+    <a href="register.html" class="btn btn-primary" style="font-size:16px;padding:16px 36px">
+      Hemen Başla — Ücretsiz
+      <svg class="arrow-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M13 7l5 5m0 0l-5 5m5-5H6"/></svg>
+    </a>
+    <p class="sub">Kredi kartı gerektirmez. 30 saniyede hazır.</p>
+  </div>
+</div>
+</section>
+
+<!-- FOOTER -->
+<footer class="epft">
+  <div class="epft-inner">
+    <div class="epft-nl">
+      <div class="epft-nl-text"><h5>📬 Bültene Abone Ol</h5><p>Kampanya haberleri ve özel fırsatlardan ilk sen haberdar ol.</p></div>
+      <form class="epft-nl-form" onsubmit="subscribeNL(event)">
+        <input type="email" id="nlEmail" placeholder="E-posta adresiniz" required/>
+        <button type="submit" id="nlBtn">Abone Ol</button>
+      </form>
+      <p id="nlOk" style="display:none;color:#4ade80;font-size:12px;margin-top:8px">✅ Bültene abone oldunuz!</p>
+      <p id="nlErr" style="display:none;color:#f87171;font-size:12px;margin-top:8px">❌ Bir hata oluştu.</p>
+    </div>
+    <div class="epft-grid">
+      <div>
+        <div class="epft-brand"><span>e<span class="dt">.</span>paylaşım</span><span>Türkiye'nin Sosyal Hediyeleşme Altyapısı</span></div>
+        <p class="tl">Sevdiklerin için birlikte hediyeleş.</p>
+        <div class="epft-soc"><a href="#">X</a><a href="#">in</a><a href="#">ig</a></div>
+      </div>
+      <div class="epft-col"><h5>Platform</h5><ul><li><a href="#nasil-calisir">Nasıl Çalışır</a></li><li><a href="#kampanyalar">Kampanyalar</a></li><li><a href="fiyatlar.html">Fiyatlar</a></li><li><a href="blog.html">Blog</a></li></ul></div>
+      <div class="epft-col"><h5>Şirket</h5><ul><li><a href="hakkimizda.html">Hakkımızda</a></li><li><a href="iletisim.html">İletişim</a></li><li><a href="kariyer.html">Kariyer</a></li><li><a href="basin.html">Basın</a></li></ul></div>
+      <div class="epft-col"><h5>Yasal</h5><ul><li><a href="kvkk.html">KVKK</a></li><li><a href="gizlilik.html">Gizlilik</a></li><li><a href="kullanim-sartlari.html">Kullanım Şartları</a></li><li><a href="cerez-politikasi.html">Çerez Politikası</a></li></ul></div>
+    </div>
+    <div class="epft-bot">
+      <p>&copy; 2026 e.paylaşım. Tüm hakları saklıdır.</p>
+      <div class="epft-badges"><span><span class="dg"></span>SSL</span><span><span class="dg"></span>KVKK</span><span><span class="dg"></span>PCI DSS</span></div>
+    </div>
+  </div>
+</footer>
+
+<!-- COOKIE BANNER -->
+<div id="cookieBanner" class="cookie-banner">
+  <p>Daha iyi bir deneyim sunmak için çerezler kullanıyoruz. <a href="cerez-politikasi.html">Detaylar</a></p>
+  <div class="cookie-btns">
+    <button class="cookie-accept" onclick="localStorage.setItem('ep_cookies','1');document.getElementById('cookieBanner').style.display='none'">Kabul Et</button>
+    <button class="cookie-reject" onclick="document.getElementById('cookieBanner').style.display='none'">Reddet</button>
+  </div>
+</div>
+
+<script>
+  const API_BASE = 'http://localhost:3001/api/v1';
+
+  async function subscribeNL(e) {
+    e.preventDefault();
+    const btn = document.getElementById('nlBtn');
+    const okEl = document.getElementById('nlOk');
+    const errEl = document.getElementById('nlErr');
+    const emailInput = document.getElementById('nlEmail');
+    okEl.style.display = 'none';
+    errEl.style.display = 'none';
+    btn.disabled = true;
+    btn.textContent = 'Gönderiliyor...';
+    try {
+      const res = await fetch(API_BASE + '/newsletter/subscribe', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email: emailInput.value.trim() })
+      });
+      if (!res.ok) throw new Error();
+      okEl.style.display = 'block';
+      emailInput.value = '';
+    } catch {
+      errEl.style.display = 'block';
+    } finally {
+      btn.disabled = false;
+      btn.textContent = 'Abone Ol';
+    }
+  }
+
+  // Counter animation
+  function countUp(el, target) {
+    let v = 0;
+    const step = target / 50;
+    const t = setInterval(() => {
+      v = Math.min(v + step, target);
+      const n = Math.floor(v);
+      el.textContent = target >= 1e6 ? (n / 1e6).toFixed(1) + 'M+'
+        : target >= 1e3 ? (n / 1e3).toFixed(n >= 1e4 ? 0 : 1) + 'K+'
+        : n.toLocaleString('tr-TR');
+      if (v >= target) clearInterval(t);
+    }, 30);
+  }
+
+  const so = new IntersectionObserver(entries => {
+    if (entries[0].isIntersecting) {
+      countUp(document.getElementById('s1'), 48500);
+      countUp(document.getElementById('s2'), 125000);
+      countUp(document.getElementById('s3'), 31200);
+      countUp(document.getElementById('s4'), 180000);
+      so.disconnect();
+    }
+  }, { threshold: 0.3 });
+  so.observe(document.getElementById('s1'));
+
+  // Cookie
+  if (!localStorage.getItem('ep_cookies')) {
+    setTimeout(() => { document.getElementById('cookieBanner').style.display = 'block'; }, 2500);
+  }
+
+  // Smooth scroll
+  document.querySelectorAll('a[href^="#"]').forEach(a => {
+    a.addEventListener('click', e => {
+      const t = document.querySelector(a.getAttribute('href'));
+      if (t) {
+        e.preventDefault();
+        t.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        const m = document.getElementById('mMenu');
+        if (m) m.classList.remove('open');
+      }
+    });
+  });
+</script>
+
+<script src="chat-widget.js"></script>
+</body>
+</html>

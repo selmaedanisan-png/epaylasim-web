@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html lang="tr" class="scroll-smooth">
+<head>
+<meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>Listeler – E-Paylaşım</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet"/>
+<style>
+*{font-family:'Inter',sans-serif;box-sizing:border-box;}
+.grad-tri{background:linear-gradient(135deg,#C4175A 0%,#891AAE 50%,#DFA020 100%);}
+.text-tri{background:linear-gradient(135deg,#C4175A,#891AAE,#DFA020);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+.btn-tri{background:linear-gradient(135deg,#C4175A 0%,#891AAE 50%,#DFA020 100%);transition:all .2s;box-shadow:0 4px 20px rgba(196,23,90,.25);}
+.btn-tri:hover{opacity:.92;transform:translateY(-1px);}
+.btn-coral{background:#DFA020;transition:all .2s;box-shadow:0 4px 16px rgba(223,160,32,.25);}
+.btn-coral:hover{background:#B8821A;transform:translateY(-1px);}
+.btn-out{border:1.5px solid #E2E8F0;background:#fff;transition:all .2s;}
+.btn-out:hover{border-color:#C4175A;color:#C4175A;}
+.inp{border:1.5px solid #E2E8F0;border-radius:12px;padding:11px 14px;width:100%;outline:none;transition:all .2s;font-size:14px;background:#FAFAFA;color:#0F172A;}
+.inp:focus{border-color:#C4175A;box-shadow:0 0 0 3px rgba(196,23,90,.09);background:#fff;}
+.card{background:#fff;border:1px solid #E2E8F0;border-radius:20px;transition:all .25s;}
+.card:hover{border-color:#F0A8CC;box-shadow:0 8px 32px rgba(196,23,90,.10);transform:translateY(-3px);}
+.cat-pill{border:1.5px solid #E2E8F0;background:#fff;border-radius:100px;transition:all .2s;cursor:pointer;white-space:nowrap;padding:6px 16px;font-size:13px;font-weight:500;}
+.cat-pill:hover,.cat-pill.active{border-color:#C4175A;background:#FCE8F0;color:#C4175A;}
+.prog-tri{background:linear-gradient(90deg,#C4175A,#891AAE,#DFA020);}
+.prog-pink{background:linear-gradient(90deg,#891AAE,#7315A0);}
+.prog-rose{background:linear-gradient(90deg,#C4175A,#E0407A);}
+.prog-amber{background:linear-gradient(90deg,#DFA020,#F0BC30);}
+.nl{position:relative;}
+.nl::after{content:'';position:absolute;bottom:-2px;left:0;width:0;height:2px;background:linear-gradient(90deg,#C4175A,#891AAE);border-radius:2px;transition:width .25s;}
+.nl:hover::after{width:100%;}
+
+.shimmer{background:linear-gradient(90deg,#C4175A,#891AAE,#DFA020,#891AAE,#C4175A);background-size:300% 100%;animation:shimmer 3s linear infinite;}
+@keyframes shimmer{0%{background-position:0% 0}100%{background-position:300% 0}}
+.search-wrap{box-shadow:0 2px 16px rgba(196,23,90,.10);border:1.5px solid #E2E8F0;border-radius:14px;transition:all .25s;}
+.search-wrap:focus-within{border-color:#C4175A;box-shadow:0 2px 20px rgba(196,23,90,.15);}
+::-webkit-scrollbar{width:5px;}
+::-webkit-scrollbar-thumb{background:#CBD5E1;border-radius:6px;}
+</style>
+</head>
+<body class="bg-[#FDF5F9] text-[#0F172A] antialiased">
+
+<!-- DRAWER -->
+<!-- NAVBAR -->
+<style>
+.epnav{position:sticky;top:0;z-index:100;background:rgba(255,255,255,.92);backdrop-filter:blur(16px);border-bottom:1px solid #f1f5f9}
+.epnav-inner{max-width:1120px;margin:0 auto;padding:0 24px;display:flex;align-items:center;justify-content:space-between;height:72px}
+@media(min-width:640px){.epnav-inner{padding:0 32px}}
+.epnav-logo{white-space:nowrap;text-decoration:none;color:#1a1a2e}
+.epnav-logo .bn{font-weight:900;font-size:26px;letter-spacing:-.5px}
+.epnav-logo .dt{color:#DFA020}
+.epnav-logo .bt{display:block;font-size:10.5px;font-weight:500;color:#64748b;letter-spacing:.2px;margin-top:1px}
+.epnav-links{display:flex;align-items:center;gap:32px}
+.epnav-links a{font-size:14px;font-weight:500;color:#64748b;text-decoration:none;transition:color .15s}
+.epnav-links a:hover{color:#1a1a2e}
+.epnav-acts{display:flex;align-items:center;gap:12px}
+.epnav-acts .gl{font-size:14px;font-weight:600;color:#64748b;padding:8px 12px;text-decoration:none}
+.epnav-acts .gl:hover{color:#C4175A}
+.epnav-acts .hb{display:inline-flex;align-items:center;gap:8px;background:#C4175A;color:#fff;padding:10px 20px;font-size:13px;font-weight:600;border-radius:12px;text-decoration:none;border:none;cursor:pointer;box-shadow:0 4px 16px rgba(196,23,90,.18);transition:all .2s}
+.epnav-acts .hb:hover{background:#9E1248;transform:translateY(-1px)}.epnav-acts .hb svg{width:18px;height:18px}
+.epnav-mt{display:none;background:none;border:none;cursor:pointer;width:40px;height:40px;border-radius:10px;color:#64748b;align-items:center;justify-content:center}
+.epnav-mm{display:none;padding:16px 0;border-top:1px solid #f1f5f9}
+.epnav-mm a{display:block;padding:10px 0;font-size:15px;font-weight:500;color:#64748b;text-decoration:none}
+.epnav-mm .mb{display:flex;gap:8px;margin-top:12px}
+.epnav-mm .mb a{flex:1;text-align:center;padding:10px 20px;font-size:13px;font-weight:600;border-radius:12px}
+.epnav-mm .mb .ob{background:#fff;color:#1a1a2e;border:1.5px solid #f1f5f9}
+.epnav-mm .mb .pb{background:#C4175A;color:#fff}
+@media(max-width:768px){.epnav-links,.epnav-acts .gl{display:none}.epnav-mt{display:flex}.epnav-mm.open{display:block}}
+</style>
+<header class="epnav">
+  <div class="epnav-inner">
+    <a href="index.html" class="epnav-logo">
+      <span class="bn">e<span class="dt">.</span>paylaşım</span>
+      <span class="bt">Türkiye'nin Sosyal Hediyeleşme Altyapısı</span>
+    </a>
+    <nav class="epnav-links">
+      <a href="index.html#nasil-calisir">Nasıl Çalışır</a>
+      <a href="index.html#kampanyalar">Kampanyalar</a>
+      <a href="katkida-bulun.html">Katkıda Bulun</a>
+      <a href="index.html#guven">Güvenlik</a>
+      <a href="index.html#yorumlar">Yorumlar</a>
+    </nav>
+    <div class="epnav-acts">
+      <a href="login.html" class="gl">Giriş</a>
+      <a href="register.html" class="hb">Hemen Başla <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M13 7l5 5m0 0l-5 5m5-5H6"/></svg></a>
+      <button class="epnav-mt" onclick="document.getElementById('epMM').classList.toggle('open')" aria-label="Menu">
+        <svg width="22" height="22" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" d="M4 6h16M4 12h16M4 18h16"/></svg>
+      </button>
+    </div>
+  </div>
+  <div id="epMM" class="epnav-mm" style="max-width:1120px;margin:0 auto;padding-left:24px;padding-right:24px">
+    <a href="index.html#nasil-calisir">Nasıl Çalışır</a>
+    <a href="index.html#kampanyalar">Kampanyalar</a>
+    <a href="katkida-bulun.html">Katkıda Bulun</a>
+    <a href="index.html#guven">Güvenlik</a>
+    <a href="index.html#yorumlar">Yorumlar</a>
+    <div class="mb">
+      <a href="login.html" class="ob">Giriş</a>
+      <a href="register.html" class="pb">Hemen Başla</a>
+    </div>
+  </div>
+</header>
+
+<!-- MAIN -->
+<main class="max-w-7xl mx-auto px-4 sm:px-6 py-8">
+
+  <!-- Header row -->
+  <div class="flex items-center justify-between mb-6">
+    <div>
+      <h1 class="text-xl font-black text-[#0F172A]">Tüm Listeler</h1>
+      <p class="text-slate-400 text-sm mt-0.5" id="resultCount">48.500+ aktif kampanya</p>
+    </div>
+    <div class="flex items-center gap-2">
+      <select id="sortSelect" onchange="sortCards()" class="inp text-sm text-slate-600 w-auto px-3 py-2 rounded-xl" style="width:auto;">
+        <option value="pop">En Popüler</option>
+        <option value="new">En Yeni</option>
+        <option value="ending">Bitmek Üzere</option>
+        <option value="most">En Çok Katkı</option>
+      </select>
+    </div>
+  </div>
+
+  <!-- Grid -->
+  <div id="cardGrid" class="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
+
+    <div class="card p-5 cursor-pointer group" data-cat="dogum" data-pct="68" data-contrib="12" data-days="3">
+      <div class="flex items-start justify-between mb-4">
+        <div class="flex items-center gap-3">
+          <div class="w-12 h-12 rounded-2xl bg-yellow-50 flex items-center justify-center text-2xl flex-shrink-0">🎂</div>
+          <div><p class="font-bold text-[#0F172A] text-sm group-hover:text-[#C4175A] transition-colors">Ayşe'nin 30. Doğum Günü</p><p class="text-slate-400 text-xs mt-0.5">Ayşe Y. · İstanbul</p></div>
+        </div>
+        <span class="text-[10px] font-bold px-2 py-0.5 rounded-full flex-shrink-0 ml-2" style="color:#891AAE;background:#FBE8F4;">Aktif</span>
+      </div>
+      <div class="mb-3"><div class="flex justify-between text-xs mb-1.5"><span class="text-slate-500">₺3.400 / ₺5.000</span><span class="font-bold" style="color:#891AAE;">%68</span></div><div class="h-2 bg-slate-100 rounded-full overflow-hidden"><div class="h-full prog-pink rounded-full" style="width:68%"></div></div></div>
+      <div class="flex items-center justify-between"><p class="text-xs text-slate-400">12 katkı · 3 gün kaldı ⏰</p><button class="btn-coral text-white text-xs font-bold px-4 py-1.5 rounded-xl">Katkı Yap</button></div>
+    </div>
+
+    <div class="card p-5 cursor-pointer group" data-cat="dugun" data-pct="42" data-contrib="28" data-days="12">
+      <div class="flex items-start justify-between mb-4">
+        <div class="flex items-center gap-3">
+          <div class="w-12 h-12 rounded-2xl bg-pink-50 flex items-center justify-center text-2xl flex-shrink-0">💍</div>
+          <div><p class="font-bold text-[#0F172A] text-sm group-hover:text-[#C4175A] transition-colors">Elif &amp; Mert Düğün</p><p class="text-slate-400 text-xs mt-0.5">Elif K. · Ankara</p></div>
+        </div>
+        <span class="text-[10px] font-bold px-2 py-0.5 rounded-full flex-shrink-0 ml-2" style="color:#C4175A;background:#FCE8F0;">Popüler</span>
+      </div>
+      <div class="mb-3"><div class="flex justify-between text-xs mb-1.5"><span class="text-slate-500">₺6.300 / ₺15.000</span><span class="font-bold" style="color:#DFA020;">%42</span></div><div class="h-2 bg-slate-100 rounded-full overflow-hidden"><div class="h-full prog-tri rounded-full" style="width:42%"></div></div></div>
+      <div class="flex items-center justify-between"><p class="text-xs text-slate-400">28 katkı · 12 gün</p><button class="btn-coral text-white text-xs font-bold px-4 py-1.5 rounded-xl">Katkı Yap</button></div>
+    </div>
+
+    <div class="card p-5 cursor-pointer group" data-cat="bebek" data-pct="80" data-contrib="18" data-days="2">
+      <div class="flex items-start justify-between mb-4">
+        <div class="flex items-center gap-3">
+          <div class="w-12 h-12 rounded-2xl bg-purple-50 flex items-center justify-center text-2xl flex-shrink-0">👶</div>
+          <div><p class="font-bold text-[#0F172A] text-sm group-hover:text-[#C4175A] transition-colors">Selin'in Bebek Partisi</p><p class="text-slate-400 text-xs mt-0.5">Selin A. · İzmir</p></div>
+        </div>
+        <span class="text-[10px] font-bold px-2 py-0.5 rounded-full flex-shrink-0 ml-2" style="color:#DFA020;background:#FDF0F8;">Son 2 Gün</span>
+      </div>
+      <div class="mb-3"><div class="flex justify-between text-xs mb-1.5"><span class="text-slate-500">₺2.800 / ₺3.500</span><span class="font-bold" style="color:#891AAE;">%80</span></div><div class="h-2 bg-slate-100 rounded-full overflow-hidden"><div class="h-full shimmer rounded-full" style="width:80%"></div></div></div>
+      <div class="flex items-center justify-between"><p class="text-xs text-slate-400">18 katkı · 2 gün ⏰</p><button class="btn-coral text-white text-xs font-bold px-4 py-1.5 rounded-xl">Katkı Yap</button></div>
+    </div>
+
+    <div class="card p-5 cursor-pointer group" data-cat="mezuniyet" data-pct="30" data-contrib="6" data-days="20">
+      <div class="flex items-start justify-between mb-4">
+        <div class="flex items-center gap-3">
+          <div class="w-12 h-12 rounded-2xl bg-violet-50 flex items-center justify-center text-2xl flex-shrink-0">🎓</div>
+          <div><p class="font-bold text-[#0F172A] text-sm group-hover:text-[#C4175A] transition-colors">Burak'ın Mezuniyeti</p><p class="text-slate-400 text-xs mt-0.5">Burak D. · Bursa</p></div>
+        </div>
+        <span class="text-[10px] font-bold px-2 py-0.5 rounded-full flex-shrink-0 ml-2" style="color:#C4175A;background:#FCE8F0;">Yeni</span>
+      </div>
+      <div class="mb-3"><div class="flex justify-between text-xs mb-1.5"><span class="text-slate-500">₺1.200 / ₺4.000</span><span class="font-bold" style="color:#C4175A;">%30</span></div><div class="h-2 bg-slate-100 rounded-full overflow-hidden"><div class="h-full prog-rose rounded-full" style="width:30%"></div></div></div>
+      <div class="flex items-center justify-between"><p class="text-xs text-slate-400">6 katkı · 20 gün</p><button class="btn-coral text-white text-xs font-bold px-4 py-1.5 rounded-xl">Katkı Yap</button></div>
+    </div>
+
+    <div class="card p-5 cursor-pointer group" data-cat="ortak" data-pct="47" data-contrib="20" data-days="5">
+      <div class="flex items-start justify-between mb-4">
+        <div class="flex items-center gap-3">
+          <div class="w-12 h-12 rounded-2xl bg-pink-50 flex items-center justify-center text-2xl flex-shrink-0">🤝</div>
+          <div><p class="font-bold text-[#0F172A] text-sm group-hover:text-[#C4175A] transition-colors">Öğretmenimize Hediye</p><p class="text-slate-400 text-xs mt-0.5">8-B Sınıfı · Konya</p></div>
+        </div>
+        <span class="text-[10px] font-bold px-2 py-0.5 rounded-full flex-shrink-0 ml-2" style="color:#C4175A;background:#FCE8F0;">Grup</span>
+      </div>
+      <div class="mb-3"><div class="flex justify-between text-xs mb-1.5"><span class="text-slate-500">₺950 / ₺2.000</span><span class="font-bold" style="color:#C4175A;">%47</span></div><div class="h-2 bg-slate-100 rounded-full overflow-hidden"><div class="h-full prog-rose rounded-full" style="width:47%"></div></div></div>
+      <div class="flex items-center justify-between"><p class="text-xs text-slate-400">20 katkı · 5 gün</p><button class="btn-coral text-white text-xs font-bold px-4 py-1.5 rounded-xl">Katkı Yap</button></div>
+    </div>
+
+    <div class="card p-5 cursor-pointer group" data-cat="hedef" data-pct="24" data-contrib="11" data-days="45">
+      <div class="flex items-start justify-between mb-4">
+        <div class="flex items-center gap-3">
+          <div class="w-12 h-12 rounded-2xl bg-yellow-50 flex items-center justify-center text-2xl flex-shrink-0">⭐</div>
+          <div><p class="font-bold text-[#0F172A] text-sm group-hover:text-[#C4175A] transition-colors">Yeni MacBook Hedefim</p><p class="text-slate-400 text-xs mt-0.5">Murat K. · İstanbul</p></div>
+        </div>
+        <span class="text-[10px] font-bold px-2 py-0.5 rounded-full flex-shrink-0 ml-2" style="color:#B8821A;background:#FDF0F8;">Hedef</span>
+      </div>
+      <div class="mb-3"><div class="flex justify-between text-xs mb-1.5"><span class="text-slate-500">₺8.500 / ₺35.000</span><span class="font-bold" style="color:#B8821A;">%24</span></div><div class="h-2 bg-slate-100 rounded-full overflow-hidden"><div class="h-full prog-amber rounded-full" style="width:24%"></div></div></div>
+      <div class="flex items-center justify-between"><p class="text-xs text-slate-400">11 katkı · 45 gün</p><button class="btn-coral text-white text-xs font-bold px-4 py-1.5 rounded-xl">Katkı Yap</button></div>
+    </div>
+
+    <!-- CTA -->
+    <div class="grad-tri rounded-[20px] p-5 flex flex-col justify-between cursor-pointer hover:opacity-95 transition-opacity" onclick="location.href='register.html'" id="ctaCard">
+      <div>
+        <p class="text-white/70 text-xs font-medium mb-2">Siz de başlayın</p>
+        <p class="text-white font-black text-xl leading-tight mb-3">Listenizi Oluşturun, Paylaşın</p>
+        <p class="text-white/70 text-sm">Ücretsiz, güvenli, hızlı.</p>
+      </div>
+      <div class="mt-6">
+        <div class="bg-white text-[#C4175A] font-bold text-sm px-5 py-2.5 rounded-xl inline-flex items-center gap-2">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.3"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"/></svg>
+          Liste Oluştur
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Empty state -->
+  <div id="emptyState" class="hidden text-center py-16">
+    <p class="text-4xl mb-3">🔍</p>
+    <p class="font-bold text-slate-700 mb-1">Sonuç bulunamadı</p>
+    <p class="text-slate-400 text-sm">Farklı bir kelime deneyin veya filtreyi kaldırın.</p>
+  </div>
+
+  <!-- Pagination -->
+  <div class="flex justify-center gap-2 mt-10">
+    <button class="w-9 h-9 rounded-xl bg-white border border-slate-200 text-slate-400 hover:border-[#F0A8CC] transition-colors flex items-center justify-center text-sm">‹</button>
+    <button class="w-9 h-9 rounded-xl text-white text-sm font-bold" style="background:linear-gradient(135deg,#C4175A,#891AAE);">1</button>
+    <button class="w-9 h-9 rounded-xl bg-white border border-slate-200 text-slate-600 hover:border-[#F0A8CC] transition-colors text-sm">2</button>
+    <button class="w-9 h-9 rounded-xl bg-white border border-slate-200 text-slate-600 hover:border-[#F0A8CC] transition-colors text-sm">3</button>
+    <button class="w-9 h-9 rounded-xl bg-white border border-slate-200 text-slate-400 hover:border-[#F0A8CC] transition-colors flex items-center justify-center text-sm">›</button>
+  </div>
+</main>
+
+<!-- FOOTER -->
+<style>
+.epft{background:#0f172a;color:#94a3b8;padding:64px 0 32px}
+.epft-inner{max-width:1120px;margin:0 auto;padding:0 24px}
+@media(min-width:640px){.epft-inner{padding:0 32px}}
+.epft-grid{display:grid;grid-template-columns:1.5fr 1fr 1fr 1fr;gap:40px;margin-bottom:40px}
+.epft-brand{display:flex;flex-direction:column;align-items:flex-start;gap:2px;margin-bottom:16px}
+.epft-brand span:first-child{font-weight:800;font-size:20px;color:#fff}
+.epft-brand .dt{color:#DFA020}
+.epft-brand span:last-child{font-size:9px;font-weight:500;opacity:.7;letter-spacing:.5px;text-transform:uppercase}
+.epft p.tl{font-size:14px;margin-bottom:16px}
+.epft-soc{display:flex;gap:6px}
+.epft-soc a{width:36px;height:36px;border-radius:10px;background:#1e293b;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:600;color:#94a3b8;text-decoration:none;transition:background .15s,color .15s}
+.epft-soc a:hover{background:#334155;color:#fff}
+.epft-col h5{color:#fff;font-size:13px;font-weight:600;margin-bottom:14px}
+.epft-col ul{list-style:none;padding:0;margin:0}
+.epft-col li{margin-bottom:10px}
+.epft-col a{font-size:14px;color:#94a3b8;text-decoration:none;transition:color .15s}
+.epft-col a:hover{color:#fff}
+.epft-bot{border-top:1px solid #1e293b;padding-top:24px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px}
+.epft-bot p{font-size:12px;color:#64748b;margin:0}
+.epft-badges{display:flex;gap:16px}
+.epft-badges span{display:flex;align-items:center;gap:6px;font-size:12px;color:#64748b}
+.epft-badges .dg{width:6px;height:6px;border-radius:50%;background:#22c55e}
+@media(max-width:768px){.epft-grid{grid-template-columns:1fr 1fr}}
+@media(max-width:540px){.epft-grid{grid-template-columns:1fr}.epft-bot{flex-direction:column;text-align:center}}
+.epft-nl{background:linear-gradient(135deg,rgba(139,92,246,.08),rgba(236,72,153,.08));border:1px solid rgba(139,92,246,.15);border-radius:16px;padding:28px 32px;margin-bottom:32px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:16px}
+.epft-nl-text h5{margin:0 0 4px;font-size:15px;font-weight:600;color:#e2e8f0}
+.epft-nl-text p{margin:0;font-size:13px;color:#94a3b8}
+.epft-nl-form{display:flex;gap:8px}
+.epft-nl-form input{padding:10px 16px;border-radius:10px;border:1px solid #334155;background:#0f172a;color:#e2e8f0;font-size:13px;width:260px;outline:none;transition:border-color .2s}
+.epft-nl-form input:focus{border-color:#8b5cf6}
+.epft-nl-form input::placeholder{color:#64748b}
+.epft-nl-form button{padding:10px 22px;border-radius:10px;border:none;background:linear-gradient(135deg,#8b5cf6,#ec4899);color:#fff;font-size:13px;font-weight:600;cursor:pointer;transition:opacity .2s,transform .2s;white-space:nowrap}
+.epft-nl-form button:hover{opacity:.9;transform:translateY(-1px)}
+.epft-nl-form button:disabled{opacity:.6;cursor:not-allowed;transform:none}
+@media(max-width:640px){.epft-nl{flex-direction:column;text-align:center}.epft-nl-form{flex-direction:column;width:100%}.epft-nl-form input{width:100%}}
+</style>
+<footer class="epft">
+  <div class="epft-inner">
+        <div class="epft-nl">
+      <div class="epft-nl-text"><h5>📬 Bültene Abone Ol</h5><p>Kampanya haberleri ve özel fırsatlardan ilk sen haberdar ol.</p></div>
+      <form class="epft-nl-form" onsubmit="subscribeNL(event)">
+        <input type="email" id="nlEmail" placeholder="E-posta adresiniz" required/>
+        <button type="submit" id="nlBtn">Abone Ol</button>
+      </form>
+      <p id="nlOk" style="display:none;color:#4ade80;font-size:12px;margin-top:8px">✅ Bültene abone oldunuz!</p>
+      <p id="nlErr" style="display:none;color:#f87171;font-size:12px;margin-top:8px">❌ Bir hata oluştu.</p>
+    </div>
+    <div class="epft-grid">
+      <div>
+        <div class="epft-brand">
+          <span>e<span class="dt">.</span>paylaşım</span>
+          <span>Türkiye'nin Sosyal Hediyeleşme Altyapısı</span>
+        </div>
+        <p class="tl">Sevdiklerin için birlikte hediyeleş.</p>
+        <div class="epft-soc"><a href="#">X</a><a href="#">in</a><a href="#">ig</a></div>
+      </div>
+      <div class="epft-col"><h5>Platform</h5><ul><li><a href="index.html#nasil-calisir">Nasıl Çalışır</a></li><li><a href="index.html#kampanyalar">Kampanyalar</a></li><li><a href="fiyatlar.html">Fiyatlar</a></li><li><a href="blog.html">Blog</a></li></ul></div>
+      <div class="epft-col"><h5>Şirket</h5><ul><li><a href="hakkimizda.html">Hakkımızda</a></li><li><a href="iletisim.html">İletişim</a></li><li><a href="kariyer.html">Kariyer</a></li><li><a href="basin.html">Basın</a></li></ul></div>
+      <div class="epft-col"><h5>Yasal</h5><ul><li><a href="kvkk.html">KVKK</a></li><li><a href="gizlilik.html">Gizlilik</a></li><li><a href="kullanim-sartlari.html">Kullanım Şartları</a></li><li><a href="cerez-politikasi.html">Çerez Politikası</a></li></ul></div>
+    </div>
+    <div class="epft-bot">
+      <p>&copy; 2026 e.paylaşım. Tüm hakları saklıdır.</p>
+      <div class="epft-badges"><span><span class="dg"></span>SSL</span><span><span class="dg"></span>KVKK</span><span><span class="dg"></span>PCI DSS</span></div>
+    </div>
+  </div>
+</footer>
+
+<script>
+const API_BASE = 'http://localhost:3001/api/v1';
+async function subscribeNL(e) {
+  e.preventDefault();
+  var btn = document.getElementById('nlBtn');
+  var okEl = document.getElementById('nlOk');
+  var errEl = document.getElementById('nlErr');
+  var emailInput = document.getElementById('nlEmail');
+  okEl.style.display = 'none';
+  errEl.style.display = 'none';
+  btn.disabled = true;
+  btn.textContent = 'Gönderiliyor...';
+  try {
+    var res = await fetch(API_BASE + '/newsletter/subscribe', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email: emailInput.value.trim() })
+    });
+    if (!res.ok) throw new Error();
+    okEl.style.display = 'block';
+    emailInput.value = '';
+  } catch(err) {
+    errEl.style.display = 'block';
+  } finally {
+    btn.disabled = false;
+    btn.textContent = 'Abone Ol';
+  }
+}
+
+// Category filter
+let activeCat='all';
+document.querySelectorAll('.cat-pill').forEach(p=>{
+  p.addEventListener('click',()=>{
+    document.querySelectorAll('.cat-pill').forEach(x=>x.classList.remove('active'));
+    p.classList.add('active');
+    activeCat=p.dataset.cat;
+    filterCards();
+  });
+});
+
+function filterCards(){
+  const q=document.getElementById('listSearch').value.trim().toLowerCase();
+  const cards=document.querySelectorAll('#cardGrid .card');
+  let vis=0;
+  cards.forEach(c=>{
+    const catOk=activeCat==='all'||c.dataset.cat===activeCat;
+    const txtOk=!q||c.innerText.toLowerCase().includes(q);
+    const show=catOk&&txtOk;
+    c.style.display=show?'':'none';
+    if(show)vis++;
+  });
+  document.getElementById('emptyState').classList.toggle('hidden',vis>0);
+  document.getElementById('resultCount').textContent=vis>0?vis+' kampanya bulundu':'';
+}
+
+function sortCards(){
+  const val=document.getElementById('sortSelect').value;
+  const grid=document.getElementById('cardGrid');
+  const cards=Array.from(grid.querySelectorAll('.card'));
+  cards.sort((a,b)=>{
+    if(val==='pop')    return parseInt(b.dataset.contrib)-parseInt(a.dataset.contrib);
+    if(val==='new')    return parseInt(a.dataset.days)-parseInt(b.dataset.days);
+    if(val==='ending') return parseInt(a.dataset.days)-parseInt(b.dataset.days);
+    if(val==='most')   return parseInt(b.dataset.pct)-parseInt(a.dataset.pct);
+    return 0;
+  });
+  const cta=document.getElementById('ctaCard');
+  cards.forEach(c=>grid.insertBefore(c,cta));
+}
+</script>
+<script src="chat-widget.js"></script>
+</body>
+</html>

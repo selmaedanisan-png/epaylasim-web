@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Kampanyalar — e.paylaşım</title>
+  <meta name="description" content="e.paylaşım'da aktif kampanyalar. Birlikte hediyeleşin, hayallere katkıda bulunun."/>
+  <link rel="icon" type="image/png" href="logo.png"/>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet"/>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --brand: #C4175A; --brand-dark: #9E1248; --brand-light: #FCE8F0;
+      --accent: #891AAE; --gold: #DFA020;
+      --text: #1a1a2e; --text-soft: #64748b; --text-muted: #94a3b8;
+      --bg: #fafafa; --card: #ffffff; --border: #f1f5f9;
+      --radius: 12px; --radius-lg: 20px;
+      --shadow-sm: 0 1px 3px rgba(0,0,0,.04); --shadow-md: 0 4px 20px rgba(0,0,0,.06);
+      --shadow-brand: 0 4px 16px rgba(196,23,90,.18);
+    }
+    body { font-family:'Inter',system-ui,-apple-system,sans-serif; color:var(--text); background:var(--bg); line-height:1.6; -webkit-font-smoothing:antialiased; }
+    a { color:inherit; text-decoration:none; }
+    .container { max-width:1120px; margin:0 auto; padding:0 24px; }
+    @media(min-width:640px){.container{padding:0 32px}}
+    .btn { display:inline-flex; align-items:center; gap:8px; font-weight:600; font-size:15px; border:none; cursor:pointer; border-radius:var(--radius); transition:all .2s ease; text-decoration:none; }
+    .btn-primary { background:var(--brand); color:#fff; padding:14px 28px; box-shadow:var(--shadow-brand); }
+    .btn-primary:hover { background:var(--brand-dark); transform:translateY(-1px); }
+    .btn-outline { background:var(--card); color:var(--text); padding:14px 28px; border:1.5px solid var(--border); }
+    .btn-outline:hover { border-color:var(--brand); color:var(--brand); }
+    .btn-sm { padding:10px 20px; font-size:13px; }
+    .arrow-icon { width:18px; height:18px; }
+
+    .nav { position:sticky; top:0; z-index:100; background:rgba(255,255,255,.92); backdrop-filter:blur(16px); border-bottom:1px solid var(--border); }
+    .nav-inner { display:flex; align-items:center; justify-content:space-between; height:72px; }
+    .nav-logo { white-space:nowrap; }
+    .nav-logo .brand-name { font-weight:900; font-size:26px; color:var(--text); letter-spacing:-0.5px; }
+    .nav-logo .dot { color:var(--gold); }
+    .nav-logo .brand-tagline { font-size:9px; font-weight:500; opacity:.7; letter-spacing:0.5px; text-transform:uppercase; display:block; }
+    .nav-links { display:flex; align-items:center; gap:32px; }
+    .nav-links a { font-size:14px; font-weight:500; color:var(--text-soft); transition:color .15s; }
+    .nav-links a:hover, .nav-links a.active { color:var(--brand); }
+    .nav-actions { display:flex; align-items:center; gap:12px; }
+    .nav-actions .login-link { font-size:14px; font-weight:600; color:var(--text-soft); padding:8px 12px; }
+    .nav-actions .login-link:hover { color:var(--brand); }
+    .mobile-toggle { display:none; background:none; border:none; cursor:pointer; width:40px; height:40px; border-radius:10px; color:var(--text-soft); }
+    .mobile-menu { display:none; padding:16px 0; border-top:1px solid var(--border); }
+    .mobile-menu a { display:block; padding:10px 0; font-size:15px; font-weight:500; color:var(--text-soft); }
+    .mobile-menu .mobile-btns { display:flex; gap:8px; margin-top:12px; }
+    .mobile-menu .mobile-btns a { flex:1; text-align:center; }
+    @media(max-width:768px){ .nav-links,.nav-actions .login-link{display:none} .mobile-toggle{display:flex;align-items:center;justify-content:center} .mobile-menu.open{display:block} }
+
+    .page-hero { padding:60px 0 40px; background:linear-gradient(165deg,#fff 0%,#f3e8ff 50%,#ede9fe 100%); text-align:center; }
+    .page-hero h1 { font-size:clamp(32px,5vw,48px); font-weight:800; line-height:1.15; margin-bottom:16px; }
+    .page-hero h1 em { font-style:normal; background:linear-gradient(135deg,var(--brand),var(--accent)); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; }
+    .page-hero p { color:var(--text-soft); font-size:17px; max-width:520px; margin:0 auto; }
+
+    .section { padding:80px 0; }
+
+    /* Filter tabs */
+    .filter-bar { display:flex; gap:8px; justify-content:center; flex-wrap:wrap; margin-bottom:40px; }
+    .filter-bar button { background:var(--card); border:1.5px solid var(--border); border-radius:100px; padding:8px 20px; font-size:13px; font-weight:600; color:var(--text-soft); cursor:pointer; transition:all .15s; font-family:inherit; }
+    .filter-bar button:hover, .filter-bar button.active { border-color:var(--brand); color:var(--brand); background:var(--brand-light); }
+
+    /* Campaign cards */
+    .campaigns-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:20px; }
+    .campaign-card { background:var(--card); border:1px solid var(--border); border-radius:var(--radius-lg); padding:24px; transition:border-color .2s,box-shadow .2s; cursor:pointer; }
+    .campaign-card:hover { border-color:#f0a8cc; box-shadow:0 8px 24px rgba(196,23,90,.06); }
+    .campaign-card .top { display:flex; align-items:start; gap:12px; margin-bottom:16px; }
+    .campaign-card .emoji-box { width:44px; height:44px; border-radius:12px; display:flex; align-items:center; justify-content:center; font-size:22px; flex-shrink:0; }
+    .campaign-card .meta { flex:1; min-width:0; }
+    .campaign-card .meta h4 { font-size:15px; font-weight:700; transition:color .15s; }
+    .campaign-card:hover .meta h4 { color:var(--brand); }
+    .campaign-card .meta span { font-size:12px; color:var(--text-muted); }
+    .campaign-card .status { font-size:10px; font-weight:700; padding:3px 10px; border-radius:100px; flex-shrink:0; }
+    .progress-wrap { margin-bottom:16px; }
+    .progress-labels { display:flex; justify-content:space-between; font-size:13px; color:var(--text-muted); margin-bottom:6px; }
+    .progress-labels strong { color:var(--brand); font-weight:700; }
+    .progress-bar { height:6px; background:var(--brand-light); border-radius:6px; overflow:hidden; }
+    .progress-fill { height:100%; border-radius:6px; background:linear-gradient(90deg,var(--brand),var(--accent)); }
+    .campaign-card .bottom { display:flex; align-items:center; justify-content:space-between; margin-top:16px; }
+    .campaign-card .contributors { font-size:12px; color:var(--text-muted); display:flex; align-items:center; gap:6px; }
+    .campaign-card .contributors svg { width:14px; height:14px; }
+    @media(max-width:960px){.campaigns-grid{grid-template-columns:1fr 1fr}}
+    @media(max-width:540px){.campaigns-grid{grid-template-columns:1fr}}
+
+    .campaign-banner { margin-top:48px; border-radius:var(--radius-lg); background:linear-gradient(135deg,var(--brand),var(--accent),var(--gold)); padding:40px 48px; display:flex; align-items:center; justify-content:space-between; gap:24px; }
+    .campaign-banner h3 { font-size:22px; font-weight:800; color:#fff; margin-bottom:6px; }
+    .campaign-banner p { font-size:14px; color:rgba(255,255,255,.8); }
+    .campaign-banner .btn { background:#fff; color:var(--brand); font-weight:700; padding:14px 28px; border-radius:var(--radius); flex-shrink:0; }
+    .campaign-banner .btn:hover { box-shadow:0 8px 24px rgba(0,0,0,.15); }
+    @media(max-width:540px){ .campaign-banner{flex-direction:column;text-align:center;padding:32px} }
+
+    .footer { background:#0f172a; color:#94a3b8; padding:64px 0 32px; }
+    .footer-grid { display:grid; grid-template-columns:1.5fr 1fr 1fr 1fr; gap:40px; margin-bottom:40px; }
+    .footer-brand { display:flex; align-items:center; gap:10px; font-weight:800; font-size:18px; color:#fff; margin-bottom:16px; }
+    .footer p.tagline { font-size:14px; margin-bottom:16px; }
+    .footer-socials { display:flex; gap:6px; }
+    .footer-socials a { width:36px; height:36px; border-radius:10px; background:#1e293b; display:flex; align-items:center; justify-content:center; font-size:12px; font-weight:600; color:#94a3b8; transition:background .15s,color .15s; }
+    .footer-socials a:hover { background:#334155; color:#fff; }
+    .footer-col h5 { color:#fff; font-size:15px; font-weight:700; margin-bottom:16px; }
+    .footer-col ul { list-style:none; }
+    .footer-col li { margin-bottom:12px; }
+    .footer-col a { font-size:15px; transition:color .15s; }
+    .footer-col a:hover { color:#fff; }
+    .footer-bottom { border-top:1px solid #1e293b; padding-top:24px; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px; }
+    .footer-bottom p { font-size:14px; color:#64748b; }
+    .footer-badges { display:flex; gap:16px; }
+    .footer-badges span { display:flex; align-items:center; gap:6px; font-size:14px; color:#64748b; }
+    .footer-badges .dot-green { width:6px; height:6px; border-radius:50%; background:#22c55e; }
+    @media(max-width:768px){.footer-grid{grid-template-columns:1fr 1fr}}
+    @media(max-width:540px){.footer-grid{grid-template-columns:1fr} .footer-bottom{flex-direction:column;text-align:center}}
+  </style>
+</head>
+<body>
+
+<header class="nav">
+  <div class="container">
+    <div class="nav-inner">
+      <a href="index.html" class="nav-logo">
+        <span class="brand-name">e<span class="dot">.</span>paylaşım</span>
+        <span class="brand-tagline">Türkiye'nin Sosyal Hediyeleşme Altyapısı</span>
+      </a>
+      <nav class="nav-links">
+        <a href="nasil-calisir.html">Nasıl Çalışır</a>
+        <a href="kampanyalar.html" class="active">Kampanyalar</a>
+        <a href="guvenlik.html">Güvenlik</a>
+        <a href="yorumlar.html">Yorumlar</a>
+      </nav>
+      <div class="nav-actions">
+        <a href="login.html" class="login-link">Giriş</a>
+        <a href="register.html" class="btn btn-primary btn-sm">Hemen Başla
+          <svg class="arrow-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M13 7l5 5m0 0l-5 5m5-5H6"/></svg>
+        </a>
+        <button class="mobile-toggle" onclick="document.getElementById('mMenu').classList.toggle('open')" aria-label="Menu">
+          <svg width="22" height="22" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" d="M4 6h16M4 12h16M4 18h16"/></svg>
+        </button>
+      </div>
+    </div>
+    <div id="mMenu" class="mobile-menu">
+      <a href="nasil-calisir.html">Nasıl Çalışır</a>
+      <a href="kampanyalar.html">Kampanyalar</a>
+      <a href="guvenlik.html">Güvenlik</a>
+      <a href="yorumlar.html">Yorumlar</a>
+      <div class="mobile-btns">
+        <a href="login.html" class="btn btn-outline btn-sm">Giriş</a>
+        <a href="register.html" class="btn btn-primary btn-sm">Hemen Başla</a>
+      </div>
+    </div>
+  </div>
+</header>
+
+<section class="page-hero">
+  <div class="container">
+    <h1>Birlikte <em>Gerçekleşen Hayaller</em></h1>
+    <p>Binlerce kişi birlikte hediyeleşiyor. Sen de kampanya oluştur veya bir hayale katkıda bulun.</p>
+  </div>
+</section>
+
+<section class="section">
+  <div class="container">
+
+    <div class="filter-bar">
+      <button class="active" onclick="filterCampaigns(this,'all')">Tümü</button>
+      <button onclick="filterCampaigns(this,'dogumgunu')">Doğum Günü</button>
+      <button onclick="filterCampaigns(this,'dugun')">Düğün</button>
+      <button onclick="filterCampaigns(this,'bebek')">Bebek</button>
+      <button onclick="filterCampaigns(this,'mezuniyet')">Mezuniyet</button>
+      <button onclick="filterCampaigns(this,'diger')">Diğer</button>
+    </div>
+
+    <div class="campaigns-grid" id="campaignsGrid"></div>
+
+    <!-- Kampanya yoksa -->
+    <div id="emptyState" style="display:none;text-align:center;padding:60px 20px">
+      <div style="font-size:64px;margin-bottom:16px">🎁</div>
+      <h3 style="font-size:22px;font-weight:800;margin-bottom:8px">Henüz Kampanya Yok</h3>
+      <p style="color:var(--text-soft);font-size:15px;margin-bottom:24px;max-width:400px;margin-left:auto;margin-right:auto">İlk kampanyayı sen oluştur! Hediye hedefini belirle, linki paylaş ve katkıları topla.</p>
+      <a href="kampanya-olustur.html" class="btn btn-primary" style="font-size:16px;padding:16px 32px">
+        Kampanya Oluştur
+        <svg style="width:18px;height:18px" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"/></svg>
+      </a>
+    </div>
+
+    <div class="campaign-banner">
+      <div>
+        <h3>Senin Hayalin Ne?</h3>
+        <p>Hemen kampanyanı oluştur, sevdiklerinle birlikte gerçekleştir.</p>
+      </div>
+      <a href="kampanya-olustur.html" class="btn">Kampanya Oluştur
+        <svg class="arrow-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M13 7l5 5m0 0l-5 5m5-5H6"/></svg>
+      </a>
+    </div>
+
+  </div>
+</section>
+
+<footer class="footer">
+  <div class="container">
+    <div class="footer-grid">
+      <div>
+        <div class="footer-brand" style="flex-direction:column;align-items:flex-start;gap:2px;">
+          <span style="font-weight:800;font-size:24px;">e<span style="color:var(--gold);">.</span>paylaşım</span>
+          <span style="font-size:11px;font-weight:500;opacity:.7;letter-spacing:0.5px;text-transform:uppercase;">Türkiye'nin Sosyal Hediyeleşme Altyapısı</span>
+        </div>
+        <p class="tagline">Sevdiklerin için birlikte hediyeleş.</p>
+        <div class="footer-socials"><a href="#">X</a><a href="#">in</a><a href="#">ig</a></div>
+      </div>
+      <div class="footer-col"><h5>Platform</h5><ul><li><a href="nasil-calisir.html">Nasıl Çalışır</a></li><li><a href="kampanyalar.html">Kampanyalar</a></li><li><a href="fiyatlar.html">Fiyatlar</a></li><li><a href="blog.html">Blog</a></li><li><a href="hediye-donusum.html">Hediye Dönüşüm</a></li><li><a href="is-ortaklari.html">İş Ortakları</a></li><li><a href="gizlilik-kontrolu.html">Gizlilik Kontrolü</a></li></ul></div>
+      <div class="footer-col"><h5>Şirket</h5><ul><li><a href="hakkimizda.html">Hakkımızda</a></li><li><a href="iletisim.html">İletişim</a></li><li><a href="kariyer.html">Kariyer</a></li></ul></div>
+      <div class="footer-col"><h5>Yasal</h5><ul><li><a href="kvkk.html">KVKK</a></li><li><a href="gizlilik.html">Gizlilik</a></li><li><a href="kullanim-sartlari.html">Kullanım Şartları</a></li><li><a href="cerez-politikasi.html">Çerez Politikası</a></li></ul></div>
+    </div>
+    <div class="footer-bottom">
+      <p>&copy; 2026 e.paylaşım. Tüm hakları saklıdır.</p>
+      <div class="footer-badges"><span><span class="dot-green"></span>SSL</span><span><span class="dot-green"></span>KVKK</span><span><span class="dot-green"></span>PCI DSS</span></div>
+    </div>
+  </div>
+</footer>
+
+<script>
+const catLabels = {
+  dogumgunu:'Doğum Günü', dugun:'Düğün / Nişan', bebek:'Bebek',
+  mezuniyet:'Mezuniyet', yilbasi:'Yılbaşı', sevgililer:'Sevgililer Günü',
+  anneler:'Anneler / Babalar Günü', ev:'Ev / Taşınma', diger:'Diğer'
+};
+const catColors = {
+  dogumgunu:'#fef3c7', dugun:'#fce7f3', bebek:'#ede9fe',
+  mezuniyet:'#dbeafe', yilbasi:'#dcfce7', sevgililer:'#fce7f3',
+  anneler:'#fef3c7', ev:'#dcfce7', diger:'#f1f5f9'
+};
+const catMap = {
+  dogumgunu:'dogumgunu', dugun:'dugun', bebek:'bebek',
+  mezuniyet:'mezuniyet', yilbasi:'diger', sevgililer:'diger',
+  anneler:'diger', ev:'diger', diger:'diger'
+};
+
+function encodecamp(obj) {
+  try { return btoa(unescape(encodeURIComponent(JSON.stringify(obj)))); } catch(e) { return ''; }
+}
+
+function escHTML(s) {
+  const d = document.createElement('div');
+  d.textContent = s || '';
+  return d.innerHTML;
+}
+
+function getCampLink(c) {
+  const shareData = {
+    id:c.id, name:c.name, emoji:c.emoji, category:c.category,
+    description:c.description, owner:c.owner, amount:c.amount,
+    duration:c.duration, minContrib:c.minContrib, visibility:c.visibility,
+    slug:c.slug, created:c.created, collected:c.collected||0, contributors:c.contributors||0
+  };
+  return 'kampanya.html?d=' + encodeURIComponent(encodecamp(shareData));
+}
+
+function renderCampaigns() {
+  const grid = document.getElementById('campaignsGrid');
+  const empty = document.getElementById('emptyState');
+  let campaigns = [];
+
+  try {
+    campaigns = JSON.parse(localStorage.getItem('ep_campaigns') || '[]');
+  } catch(e) {}
+
+  // En yeni en üstte
+  campaigns = campaigns.slice().reverse();
+
+  if (campaigns.length === 0) {
+    grid.innerHTML = '';
+    empty.style.display = 'block';
+    return;
+  }
+
+  empty.style.display = 'none';
+  grid.innerHTML = '';
+
+  campaigns.forEach(c => {
+    const pct = c.amount > 0 ? Math.min(100, Math.round(((c.collected||0) / c.amount) * 100)) : 0;
+    const contribs = JSON.parse(localStorage.getItem('ep_contribs_' + c.id) || '[]');
+    const contribCount = contribs.length || c.contributors || 0;
+
+    const createdDate = new Date(c.created);
+    const endDate = new Date(createdDate);
+    endDate.setDate(endDate.getDate() + Number(c.duration || 30));
+    const now = new Date();
+    const daysLeft = Math.max(0, Math.ceil((endDate - now) / (1000*60*60*24)));
+
+    const filterCat = catMap[c.category] || 'diger';
+    const bgColor = catColors[c.category] || '#f1f5f9';
+    const collected = (c.collected || 0).toLocaleString('tr-TR');
+    const target = Number(c.amount).toLocaleString('tr-TR');
+
+    let statusHTML = '';
+    if (daysLeft <= 0) {
+      statusHTML = '<span class="status" style="background:#fee2e2;color:#dc2626">Bitti</span>';
+    } else if (pct >= 100) {
+      statusHTML = '<span class="status" style="background:#dcfce7;color:#16a34a">Tamamlandı</span>';
+    } else if (daysLeft <= 3) {
+      statusHTML = '<span class="status" style="background:#fef3c7;color:#d97706">' + daysLeft + ' gün</span>';
+    } else if (contribCount >= 20) {
+      statusHTML = '<span class="status" style="background:#f3e8ff;color:#7c3aed">Popüler</span>';
+    } else {
+      statusHTML = '<span class="status" style="background:#dcfce7;color:#16a34a">Aktif</span>';
+    }
+
+    let barStyle = 'width:' + pct + '%';
+    if (pct >= 80) barStyle += ';background:linear-gradient(90deg,#22c55e,#16a34a)';
+    else if (contribCount >= 20) barStyle += ';background:linear-gradient(90deg,#a855f7,#7c3aed)';
+
+    const link = getCampLink(c);
+
+    const card = document.createElement('div');
+    card.className = 'campaign-card';
+    card.dataset.cat = filterCat;
+    card.innerHTML = `
+      <div class="top">
+        <div class="emoji-box" style="background:${bgColor}">${c.emoji || '🎁'}</div>
+        <div class="meta"><h4>${escHTML(c.name)}</h4><span>${escHTML(c.owner)}</span></div>
+        ${statusHTML}
+      </div>
+      <div class="progress-wrap">
+        <div class="progress-labels"><span>₺${collected} / ₺${target}</span><strong>%${pct}</strong></div>
+        <div class="progress-bar"><div class="progress-fill" style="${barStyle}"></div></div>
+      </div>
+      <div class="bottom">
+        <span class="contributors">
+          <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"/></svg>
+          ${contribCount} katkıcı
+        </span>
+        <a href="${link}" class="btn btn-primary btn-sm">Katkı Yap</a>
+      </div>`;
+    grid.appendChild(card);
+  });
+}
+
+function filterCampaigns(btn, cat) {
+  document.querySelectorAll('.filter-bar button').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  document.querySelectorAll('.campaign-card').forEach(c => {
+    c.style.display = (cat === 'all' || c.dataset.cat === cat) ? '' : 'none';
+  });
+}
+
+renderCampaigns();
+</script>
+
+<script src="chat-widget.js"></script>
+</body>
+</html>

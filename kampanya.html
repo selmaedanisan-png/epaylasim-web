@@ -1,0 +1,483 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Kampanya — e.paylaşım</title>
+  <link rel="icon" type="image/png" href="logo.png"/>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet"/>
+  <style>
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+    :root{--brand:#C4175A;--brand-dark:#9E1248;--brand-light:#FCE8F0;--accent:#891AAE;--gold:#DFA020;--text:#1a1a2e;--text-soft:#64748b;--text-muted:#94a3b8;--bg:#fafafa;--card:#ffffff;--border:#f1f5f9;--radius:12px;--radius-lg:20px;--shadow-sm:0 1px 3px rgba(0,0,0,.04);--shadow-md:0 4px 20px rgba(0,0,0,.06);--shadow-brand:0 4px 16px rgba(196,23,90,.18)}
+    body{font-family:'Inter',system-ui,sans-serif;color:var(--text);background:var(--bg);line-height:1.6;-webkit-font-smoothing:antialiased}
+    a{color:inherit;text-decoration:none}
+    .container{max-width:1120px;margin:0 auto;padding:0 24px}
+
+    .btn{display:inline-flex;align-items:center;gap:8px;font-weight:600;font-size:15px;border:none;cursor:pointer;border-radius:var(--radius);transition:all .2s;text-decoration:none}
+    .btn-primary{background:var(--brand);color:#fff;padding:14px 28px;box-shadow:var(--shadow-brand)}
+    .btn-primary:hover{background:var(--brand-dark);transform:translateY(-1px)}
+    .btn-outline{background:var(--card);color:var(--text);padding:14px 28px;border:1.5px solid var(--border)}
+    .btn-outline:hover{border-color:var(--brand);color:var(--brand)}
+    .btn-sm{padding:10px 20px;font-size:13px}
+    .btn-green{background:#22c55e;color:#fff;padding:14px 28px;box-shadow:0 4px 16px rgba(34,197,94,.25)}
+    .btn-green:hover{background:#16a34a;transform:translateY(-1px)}
+
+    /* Nav */
+    .nav{position:sticky;top:0;z-index:100;background:rgba(255,255,255,.92);backdrop-filter:blur(16px);border-bottom:1px solid var(--border)}
+    .nav-inner{display:flex;align-items:center;justify-content:space-between;height:72px}
+    .nav-logo .brand-name{font-weight:900;font-size:26px;color:var(--text);letter-spacing:-.5px}
+    .nav-logo .dot{color:var(--gold)}
+    .nav-logo .brand-tagline{font-size:9px;font-weight:500;opacity:.7;letter-spacing:.5px;text-transform:uppercase;display:block}
+    .nav-links{display:flex;align-items:center;gap:32px}
+    .nav-links a{font-size:14px;font-weight:500;color:var(--text-soft);transition:color .15s}
+    .nav-links a:hover{color:var(--brand)}
+    .nav-actions{display:flex;align-items:center;gap:12px}
+    .nav-actions .login-link{font-size:14px;font-weight:600;color:var(--text-soft);padding:8px 12px}
+    .mobile-toggle{display:none;background:none;border:none;cursor:pointer;width:40px;height:40px;border-radius:10px;color:var(--text-soft)}
+    .mobile-menu{display:none;padding:16px 0;border-top:1px solid var(--border)}
+    .mobile-menu a{display:block;padding:10px 0;font-size:15px;font-weight:500;color:var(--text-soft)}
+    .mobile-menu .mobile-btns{display:flex;gap:8px;margin-top:12px}
+    .mobile-menu .mobile-btns a{flex:1;text-align:center}
+    @media(max-width:768px){.nav-links,.nav-actions .login-link{display:none}.mobile-toggle{display:flex;align-items:center;justify-content:center}.mobile-menu.open{display:block}}
+
+    /* Campaign Page */
+    .camp-hero{padding:48px 0 0;background:linear-gradient(165deg,#fff 0%,var(--brand-light) 50%,#f5e6f0 100%)}
+    .camp-layout{display:grid;grid-template-columns:1fr 380px;gap:40px;padding:48px 0 80px}
+    @media(max-width:860px){.camp-layout{grid-template-columns:1fr;gap:24px}}
+
+    .camp-main .camp-emoji{width:64px;height:64px;border-radius:18px;background:var(--brand-light);display:flex;align-items:center;justify-content:center;font-size:32px;margin-bottom:16px}
+    .camp-main .camp-cat{display:inline-block;background:var(--brand-light);color:var(--brand);font-size:12px;font-weight:700;padding:4px 12px;border-radius:100px;margin-bottom:12px}
+    .camp-main h1{font-size:clamp(24px,4vw,36px);font-weight:800;line-height:1.2;margin-bottom:12px}
+    .camp-main .camp-owner{display:flex;align-items:center;gap:10px;margin-bottom:20px}
+    .camp-main .camp-avatar{width:36px;height:36px;border-radius:50%;background:var(--brand);color:#fff;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:700}
+    .camp-main .camp-owner-info span{display:block}
+    .camp-main .camp-owner-info .owner-name{font-size:14px;font-weight:600}
+    .camp-main .camp-owner-info .owner-date{font-size:12px;color:var(--text-muted)}
+    .camp-main .camp-desc{font-size:15px;color:var(--text-soft);line-height:1.8;margin-bottom:24px;white-space:pre-wrap}
+
+    .camp-sidebar{position:sticky;top:96px;align-self:start}
+    .camp-card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius-lg);padding:28px;box-shadow:var(--shadow-md)}
+    .camp-card .progress-section{margin-bottom:20px}
+    .camp-card .amount-row{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:8px}
+    .camp-card .collected{font-size:28px;font-weight:800;color:var(--brand)}
+    .camp-card .target{font-size:14px;color:var(--text-muted)}
+    .camp-card .bar-bg{height:10px;background:var(--brand-light);border-radius:5px;overflow:hidden;margin-bottom:8px}
+    .camp-card .bar-fill{height:100%;border-radius:5px;background:linear-gradient(90deg,var(--brand),var(--accent));transition:width .8s ease}
+    .camp-card .stats-row{display:flex;justify-content:space-between;font-size:12px;color:var(--text-muted)}
+    .camp-card .stats-row strong{color:var(--text);font-weight:700}
+
+    .contrib-form{margin-top:20px;padding-top:20px;border-top:1px solid var(--border)}
+    .contrib-form label{display:block;font-size:13px;font-weight:600;margin-bottom:6px}
+    .contrib-form .presets{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:12px}
+    .contrib-form .presets button{padding:8px 16px;border-radius:100px;border:1.5px solid var(--border);background:var(--card);font-size:13px;font-weight:600;cursor:pointer;transition:all .15s;font-family:inherit;color:var(--text)}
+    .contrib-form .presets button:hover,.contrib-form .presets button.sel{border-color:var(--brand);color:var(--brand);background:var(--brand-light)}
+    .contrib-form input[type=number]{width:100%;border:1.5px solid var(--border);border-radius:var(--radius);padding:12px 14px;font-size:14px;font-family:inherit;outline:none;background:var(--bg);margin-bottom:12px;transition:border-color .2s}
+    .contrib-form input:focus{border-color:var(--brand);box-shadow:0 0 0 3px rgba(196,23,90,.08);background:#fff}
+    .contrib-form input[type=text]{width:100%;border:1.5px solid var(--border);border-radius:var(--radius);padding:12px 14px;font-size:14px;font-family:inherit;outline:none;background:var(--bg);margin-bottom:12px;transition:border-color .2s}
+    .contrib-form input[type=text]:focus{border-color:var(--brand);box-shadow:0 0 0 3px rgba(196,23,90,.08);background:#fff}
+
+    .share-section{margin-top:16px;padding-top:16px;border-top:1px solid var(--border)}
+    .share-section h4{font-size:13px;font-weight:600;margin-bottom:8px}
+    .share-row{display:flex;gap:6px}
+    .share-row a{flex:1;display:flex;align-items:center;justify-content:center;gap:6px;padding:10px;border-radius:var(--radius);font-size:12px;font-weight:600;color:#fff;transition:opacity .15s}
+    .share-row a:hover{opacity:.85}
+
+    .contributors-section{margin-top:32px}
+    .contributors-section h3{font-size:16px;font-weight:700;margin-bottom:16px}
+    .contrib-list{display:flex;flex-direction:column;gap:12px}
+    .contrib-item{display:flex;align-items:center;gap:12px;padding:12px 16px;background:var(--card);border:1px solid var(--border);border-radius:var(--radius)}
+    .contrib-item .ci-avatar{width:36px;height:36px;border-radius:50%;background:var(--brand-light);color:var(--brand);display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:700}
+    .contrib-item .ci-info{flex:1}
+    .contrib-item .ci-name{font-size:14px;font-weight:600}
+    .contrib-item .ci-date{font-size:11px;color:var(--text-muted)}
+    .contrib-item .ci-amount{font-size:15px;font-weight:700;color:var(--brand)}
+    .contrib-item .ci-msg{font-size:12px;color:var(--text-soft);margin-top:2px}
+
+    /* Not found */
+    .not-found{text-align:center;padding:100px 20px}
+    .not-found h1{font-size:48px;margin-bottom:12px}
+    .not-found p{font-size:16px;color:var(--text-soft);margin-bottom:24px}
+
+    /* Success toast */
+    .toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(100px);background:#1a1a2e;color:#fff;padding:14px 24px;border-radius:var(--radius);font-size:14px;font-weight:600;z-index:999;transition:transform .3s ease;box-shadow:0 8px 32px rgba(0,0,0,.2)}
+    .toast.show{transform:translateX(-50%) translateY(0)}
+
+    /* Footer */
+    .footer{background:#0f172a;color:#94a3b8;padding:64px 0 32px}
+    .footer-grid{display:grid;grid-template-columns:1.5fr 1fr 1fr 1fr;gap:40px;margin-bottom:40px}
+    .footer-brand{font-weight:800;font-size:18px;color:#fff;margin-bottom:16px}
+    .footer p.tagline{font-size:14px;margin-bottom:16px}
+    .footer-socials{display:flex;gap:6px}
+    .footer-socials a{width:36px;height:36px;border-radius:10px;background:#1e293b;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:600;color:#94a3b8;transition:background .15s,color .15s}
+    .footer-socials a:hover{background:#334155;color:#fff}
+    .footer-col h5{color:#fff;font-size:15px;font-weight:700;margin-bottom:16px}
+    .footer-col ul{list-style:none}
+    .footer-col li{margin-bottom:12px}
+    .footer-col a{font-size:15px;transition:color .15s}
+    .footer-col a:hover{color:#fff}
+    .footer-bottom{border-top:1px solid #1e293b;padding-top:24px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px}
+    .footer-bottom p{font-size:14px;color:#64748b}
+    .footer-badges{display:flex;gap:16px}
+    .footer-badges span{display:flex;align-items:center;gap:6px;font-size:14px;color:#64748b}
+    .footer-badges .dot-green{width:6px;height:6px;border-radius:50%;background:#22c55e}
+    @media(max-width:768px){.footer-grid{grid-template-columns:1fr 1fr}}
+    @media(max-width:540px){.footer-grid{grid-template-columns:1fr}.footer-bottom{flex-direction:column;text-align:center}}
+  </style>
+</head>
+<body>
+
+<!-- NAV -->
+<header class="nav">
+  <div class="container">
+    <div class="nav-inner">
+      <a href="index.html" class="nav-logo">
+        <span class="brand-name">e<span class="dot">.</span>paylaşım</span>
+        <span class="brand-tagline">Türkiye'nin Sosyal Hediyeleşme Altyapısı</span>
+      </a>
+      <nav class="nav-links">
+        <a href="nasil-calisir.html">Nasıl Çalışır</a>
+        <a href="kampanyalar.html">Kampanyalar</a>
+        <a href="guvenlik.html">Güvenlik</a>
+        <a href="yorumlar.html">Yorumlar</a>
+      </nav>
+      <div class="nav-actions">
+        <a href="login.html" class="login-link">Giriş</a>
+        <a href="register.html" class="btn btn-primary btn-sm">Hemen Başla</a>
+        <button class="mobile-toggle" onclick="document.getElementById('mMenu').classList.toggle('open')" aria-label="Menu">
+          <svg width="22" height="22" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" d="M4 6h16M4 12h16M4 18h16"/></svg>
+        </button>
+      </div>
+    </div>
+    <div id="mMenu" class="mobile-menu">
+      <a href="nasil-calisir.html">Nasıl Çalışır</a>
+      <a href="kampanyalar.html">Kampanyalar</a>
+      <a href="guvenlik.html">Güvenlik</a>
+      <a href="yorumlar.html">Yorumlar</a>
+      <div class="mobile-btns">
+        <a href="login.html" class="btn btn-outline btn-sm">Giriş</a>
+        <a href="register.html" class="btn btn-primary btn-sm">Hemen Başla</a>
+      </div>
+    </div>
+  </div>
+</header>
+
+<!-- CONTENT (JS renders) -->
+<div id="pageContent"></div>
+
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
+
+<!-- FOOTER -->
+<footer class="footer">
+  <div class="container">
+    <div class="footer-grid">
+      <div>
+        <div class="footer-brand">e<span style="color:var(--gold)">.</span>paylaşım</div>
+        <p class="tagline">Sevdiklerin için birlikte hediyeleş.</p>
+        <div class="footer-socials"><a href="#">X</a><a href="#">in</a><a href="#">ig</a></div>
+      </div>
+      <div class="footer-col"><h5>Platform</h5><ul><li><a href="nasil-calisir.html">Nasıl Çalışır</a></li><li><a href="kampanyalar.html">Kampanyalar</a></li><li><a href="guvenlik.html">Güvenlik</a></li></ul></div>
+      <div class="footer-col"><h5>Şirket</h5><ul><li><a href="hakkimizda.html">Hakkımızda</a></li><li><a href="iletisim.html">İletişim</a></li></ul></div>
+      <div class="footer-col"><h5>Yasal</h5><ul><li><a href="kvkk.html">KVKK</a></li><li><a href="gizlilik.html">Gizlilik</a></li><li><a href="kullanim-sartlari.html">Kullanım Şartları</a></li></ul></div>
+    </div>
+    <div class="footer-bottom">
+      <p>&copy; 2026 e.paylaşım. Tüm hakları saklıdır.</p>
+      <div class="footer-badges"><span><span class="dot-green"></span>SSL</span><span><span class="dot-green"></span>KVKK</span></div>
+    </div>
+  </div>
+</footer>
+
+<script>
+const params = new URLSearchParams(window.location.search);
+const slug = params.get('slug');
+const campId = params.get('id');
+const encodedData = params.get('d');
+
+function decodecamp(str) {
+  try {
+    const json = decodeURIComponent(escape(atob(str)));
+    return JSON.parse(json);
+  } catch(e) { return null; }
+}
+
+let campaign = null;
+
+// 1) URL'deki encoded data (paylaşılan linkler)
+if (encodedData) {
+  campaign = decodecamp(encodedData);
+  if (campaign && campaign.id) {
+    try {
+      const camps = JSON.parse(localStorage.getItem('ep_campaigns') || '[]');
+      if (!camps.find(c => c.id === campaign.id)) {
+        camps.push(campaign);
+        localStorage.setItem('ep_campaigns', JSON.stringify(camps));
+      }
+    } catch(e) {}
+  }
+}
+
+// 2) localStorage (slug veya id ile)
+if (!campaign) {
+  try {
+    const camps = JSON.parse(localStorage.getItem('ep_campaigns') || '[]');
+    if (slug) campaign = camps.find(c => c.slug === slug);
+    else if (campId) campaign = camps.find(c => c.id === campId);
+    else if (camps.length > 0) campaign = camps[camps.length - 1];
+  } catch(e) {}
+}
+
+const catLabels = {
+  dogumgunu: 'Doğum Günü', dugun: 'Düğün / Nişan', bebek: 'Bebek',
+  mezuniyet: 'Mezuniyet', yilbasi: 'Yılbaşı', sevgililer: 'Sevgililer Günü',
+  anneler: 'Anneler / Babalar Günü', ev: 'Ev / Taşınma', diger: 'Diğer'
+};
+
+const pc = document.getElementById('pageContent');
+
+if (!campaign) {
+  pc.innerHTML = `
+    <div class="not-found">
+      <h1>😕</h1>
+      <h2 style="font-size:24px;font-weight:800;margin-bottom:8px">Kampanya Bulunamadı</h2>
+      <p>Bu kampanya mevcut değil veya süresi dolmuş olabilir.</p>
+      <a href="kampanyalar.html" class="btn btn-primary">Kampanyalara Git</a>
+      <br/><br/>
+      <a href="kampanya-olustur.html" class="btn btn-outline">Yeni Kampanya Oluştur</a>
+    </div>`;
+  document.title = 'Kampanya Bulunamadı — e.paylaşım';
+} else {
+  document.title = campaign.name + ' — e.paylaşım';
+
+  const pct = campaign.amount > 0 ? Math.min(100, Math.round((campaign.collected / campaign.amount) * 100)) : 0;
+  const contribs = JSON.parse(localStorage.getItem('ep_contribs_' + campaign.id) || '[]');
+  const createdDate = new Date(campaign.created);
+  const endDate = new Date(createdDate);
+  endDate.setDate(endDate.getDate() + Number(campaign.duration || 30));
+  const now = new Date();
+  const daysLeft = Math.max(0, Math.ceil((endDate - now) / (1000*60*60*24)));
+  const shareUrl = window.location.href;
+  const initials = (campaign.owner || 'K').split(' ').map(w => w[0]).join('').toUpperCase().slice(0,2);
+
+  let contribHTML = '';
+  if (contribs.length > 0) {
+    contribHTML = `<div class="contributors-section"><h3>Katkıda Bulunanlar (${contribs.length})</h3><div class="contrib-list">`;
+    contribs.slice().reverse().forEach(c => {
+      const ci = (c.name || 'A').split(' ').map(w => w[0]).join('').toUpperCase().slice(0,2);
+      const d = new Date(c.date);
+      const dateStr = d.toLocaleDateString('tr-TR', {day:'numeric',month:'short',year:'numeric',hour:'2-digit',minute:'2-digit'});
+      contribHTML += `
+        <div class="contrib-item">
+          <div class="ci-avatar">${ci}</div>
+          <div class="ci-info">
+            <div class="ci-name">${escHTML(c.name)}</div>
+            <div class="ci-date">${dateStr}</div>
+            ${c.message ? '<div class="ci-msg">"' + escHTML(c.message) + '"</div>' : ''}
+          </div>
+          <div class="ci-amount">₺${Number(c.amount).toLocaleString('tr-TR')}</div>
+        </div>`;
+    });
+    contribHTML += '</div></div>';
+  }
+
+  pc.innerHTML = `
+    <section class="camp-hero">
+      <div class="container" style="padding-bottom:8px">
+        <a href="kampanyalar.html" style="font-size:13px;color:var(--text-soft);display:inline-flex;align-items:center;gap:4px;margin-bottom:16px">
+          <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7"/></svg>
+          Kampanyalara Dön
+        </a>
+      </div>
+    </section>
+
+    <section style="padding:0 0 80px">
+      <div class="container">
+        <div class="camp-layout">
+
+          <div class="camp-main">
+            <div class="camp-emoji">${campaign.emoji || '🎁'}</div>
+            <span class="camp-cat">${catLabels[campaign.category] || campaign.category || 'Kampanya'}</span>
+            <h1>${escHTML(campaign.name)}</h1>
+            <div class="camp-owner">
+              <div class="camp-avatar">${initials}</div>
+              <div class="camp-owner-info">
+                <span class="owner-name">${escHTML(campaign.owner)}</span>
+                <span class="owner-date">${createdDate.toLocaleDateString('tr-TR',{day:'numeric',month:'long',year:'numeric'})} tarihinde oluşturuldu</span>
+              </div>
+            </div>
+            <div class="camp-desc">${escHTML(campaign.description)}</div>
+            ${contribHTML}
+          </div>
+
+          <div class="camp-sidebar">
+            <div class="camp-card">
+              <div class="progress-section">
+                <div class="amount-row">
+                  <span class="collected">₺${(campaign.collected || 0).toLocaleString('tr-TR')}</span>
+                  <span class="target">/ ₺${Number(campaign.amount).toLocaleString('tr-TR')}</span>
+                </div>
+                <div class="bar-bg"><div class="bar-fill" style="width:${pct}%"></div></div>
+                <div class="stats-row">
+                  <span><strong>${contribs.length}</strong> katkıcı</span>
+                  <span><strong>${daysLeft}</strong> gün kaldı</span>
+                </div>
+              </div>
+
+              <div class="contrib-form">
+                <label>Katkı Tutarı (₺)</label>
+                <div class="presets">
+                  <button type="button" onclick="setAmt(this,25)">₺25</button>
+                  <button type="button" onclick="setAmt(this,50)">₺50</button>
+                  <button type="button" onclick="setAmt(this,100)" class="sel">₺100</button>
+                  <button type="button" onclick="setAmt(this,250)">₺250</button>
+                  <button type="button" onclick="setAmt(this,500)">₺500</button>
+                </div>
+                <input type="number" id="contribAmt" placeholder="Özel tutar..." min="${campaign.minContrib || 1}" value="100">
+
+                <label style="margin-top:8px">Adınız</label>
+                <input type="text" id="contribName" placeholder="ör: Mehmet Y.">
+
+                <label style="margin-top:8px">Mesajınız (opsiyonel)</label>
+                <input type="text" id="contribMsg" placeholder="İyi ki doğdun! 🎉" maxlength="120">
+
+                <button class="btn btn-green" style="width:100%;justify-content:center;margin-top:12px;font-size:16px;padding:16px" onclick="contribute()">
+                  💝 Katkıda Bulun
+                </button>
+                <p style="font-size:11px;color:var(--text-muted);text-align:center;margin-top:8px">Minimum katkı: ₺${campaign.minContrib || 1}</p>
+              </div>
+
+              <div class="share-section">
+                <h4>Bu kampanyayı paylaş</h4>
+                <div class="share-row">
+                  <a href="#" style="background:#25D366" onclick="shareWA(event)">WhatsApp</a>
+                  <a href="#" style="background:#1DA1F2" onclick="shareTW(event)">Twitter</a>
+                  <a href="#" style="background:#6366f1" onclick="shareSMS(event)">SMS</a>
+                  <a href="#" style="background:var(--brand)" onclick="copyUrl(event)">Kopyala</a>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>`;
+}
+
+function escHTML(s) {
+  const d = document.createElement('div');
+  d.textContent = s || '';
+  return d.innerHTML;
+}
+
+function setAmt(btn, val) {
+  document.querySelectorAll('.presets button').forEach(b => b.classList.remove('sel'));
+  btn.classList.add('sel');
+  document.getElementById('contribAmt').value = val;
+}
+
+function contribute() {
+  if (!campaign) return;
+  const amt = Number(document.getElementById('contribAmt').value);
+  const name = document.getElementById('contribName').value.trim();
+  const msg = document.getElementById('contribMsg').value.trim();
+  const minC = Number(campaign.minContrib || 1);
+
+  if (!name) { showToast('Lütfen adınızı girin'); document.getElementById('contribName').focus(); return; }
+  if (!amt || amt < minC) { showToast('Minimum katkı: ₺' + minC); document.getElementById('contribAmt').focus(); return; }
+
+  const contrib = { name, amount: amt, message: msg, date: new Date().toISOString() };
+  const contribs = JSON.parse(localStorage.getItem('ep_contribs_' + campaign.id) || '[]');
+  contribs.push(contrib);
+  localStorage.setItem('ep_contribs_' + campaign.id, JSON.stringify(contribs));
+
+  campaign.collected = (campaign.collected || 0) + amt;
+  campaign.contributors = contribs.length;
+  try {
+    const camps = JSON.parse(localStorage.getItem('ep_campaigns') || '[]');
+    const idx = camps.findIndex(c => c.id === campaign.id);
+    if (idx !== -1) { camps[idx] = campaign; localStorage.setItem('ep_campaigns', JSON.stringify(camps)); }
+  } catch(e) {}
+
+  showToast('Katkınız için teşekkürler! 💝 ₺' + amt.toLocaleString('tr-TR'));
+
+  setTimeout(() => { window.location.reload(); }, 1200);
+}
+
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 3000);
+}
+
+function encodecamp(obj) {
+  try {
+    const json = JSON.stringify(obj);
+    return btoa(unescape(encodeURIComponent(json)));
+  } catch(e) { return ''; }
+}
+
+function getCampShareUrl() {
+  if (!campaign) return '';
+  const shareData = {
+    id: campaign.id, name: campaign.name, emoji: campaign.emoji,
+    category: campaign.category, description: campaign.description,
+    owner: campaign.owner, amount: campaign.amount, duration: campaign.duration,
+    minContrib: campaign.minContrib, visibility: campaign.visibility,
+    slug: campaign.slug, created: campaign.created,
+    collected: campaign.collected || 0, contributors: campaign.contributors || 0
+  };
+  const base = window.location.href.split('?')[0];
+  return base + '?d=' + encodeURIComponent(encodecamp(shareData));
+}
+
+function getCampShareText() {
+  const amt = '₺' + Number(campaign.amount).toLocaleString('tr-TR');
+  return (campaign.emoji || '🎁') + ' ' + campaign.name + '\n\n' +
+    'e.paylaşım üzerinde ' + amt + ' hedefli bir kampanya! Sen de katkıda bulun!\n\n' +
+    getCampShareUrl();
+}
+
+function shareWA(e) {
+  e.preventDefault();
+  const text = encodeURIComponent(getCampShareText());
+  window.open('https://api.whatsapp.com/send?text=' + text, '_blank');
+}
+function shareTW(e) {
+  e.preventDefault();
+  const text = encodeURIComponent((campaign.emoji || '🎁') + ' ' + campaign.name + ' kampanyasına katkıda bulun! #epaylasim');
+  const url = encodeURIComponent(getCampShareUrl());
+  window.open('https://twitter.com/intent/tweet?text=' + text + '&url=' + url, '_blank');
+}
+function copyUrl(e) {
+  e.preventDefault();
+  const url = getCampShareUrl();
+  if (navigator.clipboard && navigator.clipboard.writeText) {
+    navigator.clipboard.writeText(url).then(() => showToast('Link kopyalandı! 📋')).catch(() => {
+      fallbackCopyUrl(url);
+    });
+  } else {
+    fallbackCopyUrl(url);
+  }
+}
+function shareSMS(e) {
+  e.preventDefault();
+  const body = encodeURIComponent(campaign.name + ' kampanyasına katkıda bulun! ' + getCampShareUrl());
+  const ua = navigator.userAgent.toLowerCase();
+  const sep = ua.includes('iphone') || ua.includes('ipad') ? '&' : '?';
+  window.open('sms:' + sep + 'body=' + body);
+}
+function fallbackCopyUrl(url) {
+  const tmp = document.createElement('input');
+  tmp.value = url;
+  document.body.appendChild(tmp);
+  tmp.select();
+  document.execCommand('copy');
+  document.body.removeChild(tmp);
+  showToast('Link kopyalandı! 📋');
+}
+</script>
+
+<script src="chat-widget.js"></script>
+</body>
+</html>

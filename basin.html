@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="tr" class="scroll-smooth">
+<head>
+<meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>Basın – E-Paylaşım</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet"/>
+<style>
+*{font-family:'Inter',sans-serif;box-sizing:border-box;}
+.grad-tri{background:linear-gradient(135deg,#C4175A 0%,#891AAE 50%,#DFA020 100%);}
+.text-tri{background:linear-gradient(135deg,#C4175A,#891AAE,#DFA020);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+.btn-tri{background:linear-gradient(135deg,#C4175A 0%,#891AAE 50%,#DFA020 100%);transition:all .2s;box-shadow:0 4px 20px rgba(196,23,90,.25);}
+.btn-tri:hover{opacity:.92;transform:translateY(-1px);}
+.btn-out{border:1.5px solid #E2E8F0;background:#fff;transition:all .2s;}
+.btn-out:hover{border-color:#C4175A;color:#C4175A;}
+.card{background:#fff;border:1px solid #E2E8F0;border-radius:20px;transition:all .25s;}
+.card:hover{border-color:#F0A8CC;box-shadow:0 8px 32px rgba(196,23,90,.10);transform:translateY(-3px);}
+</style>
+</head>
+<body class="bg-[#FDF5F9] text-[#0F172A] antialiased">
+
+<style>
+.epnav{position:sticky;top:0;z-index:100;background:rgba(255,255,255,.92);backdrop-filter:blur(16px);border-bottom:1px solid #f1f5f9}
+.epnav-inner{max-width:1120px;margin:0 auto;padding:0 24px;display:flex;align-items:center;justify-content:space-between;height:72px}
+@media(min-width:640px){.epnav-inner{padding:0 32px}}
+.epnav-logo{white-space:nowrap;text-decoration:none;color:#1a1a2e}
+.epnav-logo .bn{font-weight:900;font-size:26px;letter-spacing:-.5px}
+.epnav-logo .dt{color:#DFA020}
+.epnav-logo .bt{display:block;font-size:10.5px;font-weight:500;color:#64748b;letter-spacing:.2px;margin-top:1px}
+.epnav-links{display:flex;align-items:center;gap:32px}
+.epnav-links a{font-size:14px;font-weight:500;color:#64748b;text-decoration:none;transition:color .15s}
+.epnav-links a:hover{color:#1a1a2e}
+.epnav-acts{display:flex;align-items:center;gap:12px}
+.epnav-acts .gl{font-size:14px;font-weight:600;color:#64748b;padding:8px 12px;text-decoration:none}
+.epnav-acts .gl:hover{color:#C4175A}
+.epnav-acts .hb{display:inline-flex;align-items:center;gap:8px;background:#C4175A;color:#fff;padding:10px 20px;font-size:13px;font-weight:600;border-radius:12px;text-decoration:none;border:none;cursor:pointer;box-shadow:0 4px 16px rgba(196,23,90,.18);transition:all .2s}
+.epnav-acts .hb:hover{background:#9E1248;transform:translateY(-1px)}.epnav-acts .hb svg{width:18px;height:18px}
+.epnav-mt{display:none;background:none;border:none;cursor:pointer;width:40px;height:40px;border-radius:10px;color:#64748b;align-items:center;justify-content:center}
+.epnav-mm{display:none;padding:16px 0;border-top:1px solid #f1f5f9}
+.epnav-mm a{display:block;padding:10px 0;font-size:15px;font-weight:500;color:#64748b;text-decoration:none}
+.epnav-mm .mb{display:flex;gap:8px;margin-top:12px}
+.epnav-mm .mb a{flex:1;text-align:center;padding:10px 20px;font-size:13px;font-weight:600;border-radius:12px}
+.epnav-mm .mb .ob{background:#fff;color:#1a1a2e;border:1.5px solid #f1f5f9}
+.epnav-mm .mb .pb{background:#C4175A;color:#fff}
+@media(max-width:768px){.epnav-links,.epnav-acts .gl{display:none}.epnav-mt{display:flex}.epnav-mm.open{display:block}}
+</style>
+<header class="epnav">
+  <div class="epnav-inner">
+    <a href="index.html" class="epnav-logo">
+      <span class="bn">e<span class="dt">.</span>paylaşım</span>
+      <span class="bt">Türkiye'nin Sosyal Hediyeleşme Altyapısı</span>
+    </a>
+    <nav class="epnav-links">
+      <a href="index.html#nasil-calisir">Nasıl Çalışır</a>
+      <a href="index.html#kampanyalar">Kampanyalar</a>
+      <a href="katkida-bulun.html">Katkıda Bulun</a>
+      <a href="index.html#guven">Güvenlik</a>
+      <a href="index.html#yorumlar">Yorumlar</a>
+    </nav>
+    <div class="epnav-acts">
+      <a href="login.html" class="gl">Giriş</a>
+      <a href="register.html" class="hb">Hemen Başla <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M13 7l5 5m0 0l-5 5m5-5H6"/></svg></a>
+      <button class="epnav-mt" onclick="document.getElementById('epMM').classList.toggle('open')" aria-label="Menu">
+        <svg width="22" height="22" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" d="M4 6h16M4 12h16M4 18h16"/></svg>
+      </button>
+    </div>
+  </div>
+  <div id="epMM" class="epnav-mm" style="max-width:1120px;margin:0 auto;padding-left:24px;padding-right:24px">
+    <a href="index.html#nasil-calisir">Nasıl Çalışır</a>
+    <a href="index.html#kampanyalar">Kampanyalar</a>
+    <a href="katkida-bulun.html">Katkıda Bulun</a>
+    <a href="index.html#guven">Güvenlik</a>
+    <a href="index.html#yorumlar">Yorumlar</a>
+    <div class="mb">
+      <a href="login.html" class="ob">Giriş</a>
+      <a href="register.html" class="pb">Hemen Başla</a>
+    </div>
+  </div>
+</header>
+
+<!-- HERO -->
+<section class="py-16 px-4 sm:px-6 text-center max-w-3xl mx-auto">
+  <div class="inline-flex items-center gap-2 bg-pink-50 border border-[#F5D0E8] rounded-full px-4 py-1.5 mb-5">
+    <span class="text-xs font-bold text-[#C4175A]">📰 Basın Merkezi</span>
+  </div>
+  <h1 class="text-4xl font-black mb-4">E-Paylaşım <span class="text-tri">Basın Odası</span></h1>
+  <p class="text-slate-500 text-lg leading-relaxed">Medya haberleri, basın bültenleri ve marka kaynakları. Haber çalışmalarınız için ihtiyacınız olan her şey burada.</p>
+</section>
+
+<!-- Rakamlar -->
+<section class="py-8 bg-white border-y border-slate-100">
+  <div class="max-w-4xl mx-auto px-4 grid grid-cols-2 sm:grid-cols-4 gap-6 text-center">
+    <div><p class="text-3xl font-black text-tri">2022</p><p class="text-slate-400 text-xs mt-1">Kuruluş Yılı</p></div>
+    <div><p class="text-3xl font-black text-tri">120K+</p><p class="text-slate-400 text-xs mt-1">Kayıtlı Kullanıcı</p></div>
+    <div><p class="text-3xl font-black text-tri">₺48M+</p><p class="text-slate-400 text-xs mt-1">Toplanan Hediye</p></div>
+    <div><p class="text-3xl font-black text-tri">İstanbul</p><p class="text-slate-400 text-xs mt-1">Merkez</p></div>
+  </div>
+</section>
+
+<!-- Hakkında Kısa -->
+<section class="py-12 px-4 sm:px-6 max-w-4xl mx-auto">
+  <div class="grad-tri rounded-3xl p-10 text-white relative overflow-hidden">
+    <div class="absolute inset-0 opacity-10 text-9xl flex items-center justify-center">📰</div>
+    <div class="relative z-10 max-w-2xl">
+      <p class="text-white/70 text-sm font-bold mb-2 uppercase tracking-widest">Hakkımızda</p>
+      <p class="text-lg font-semibold leading-relaxed">2022 yılında İstanbul'da kurulan E-Paylaşım, dijital dünyada hediyeleşme anlayışını yeniden tanımlamak amacıyla doğmuştur. Aidiyet, topluluk, fayda, kazanç, kültür ve birliktelik kavramları üzerine inşa edilmiş kolektif hediyeleşme platformudur.</p>
+      <p class="text-white/60 text-sm mt-4">— Selma M. Şahin, Kurucu</p>
+    </div>
+  </div>
+</section>
+
+<!-- Basın Bültenleri -->
+<section class="py-12 px-4 sm:px-6 max-w-5xl mx-auto">
+  <h2 class="text-2xl font-black text-center mb-8">Basın Bültenleri</h2>
+  <div class="space-y-4">
+
+    <div class="card p-6 flex flex-col sm:flex-row sm:items-center gap-4">
+      <div class="flex-shrink-0 w-20 h-20 rounded-2xl grad-tri flex items-center justify-center text-white text-3xl">🚀</div>
+      <div class="flex-1">
+        <h3 class="font-bold text-lg">14 Haziran 2026</h3>
+      </div>
+      <span class="text-xs font-semibold text-slate-300 whitespace-nowrap">Basın Bülteni</span>
+    </div>
+
+    <div class="card p-6 flex flex-col sm:flex-row sm:items-center gap-4">
+      <div class="flex-shrink-0 w-20 h-20 rounded-2xl flex items-center justify-center text-3xl" style="background:linear-gradient(135deg,#891AAE,#6B1289);color:#fff;">🤝</div>
+      <div class="flex-1">
+        <h3 class="font-bold text-lg">10 Mayıs 2026</h3>
+      </div>
+      <span class="text-xs font-semibold text-slate-300 whitespace-nowrap">Basın Bülteni</span>
+    </div>
+
+    <div class="card p-6 flex flex-col sm:flex-row sm:items-center gap-4">
+      <div class="flex-shrink-0 w-20 h-20 rounded-2xl flex items-center justify-center text-3xl" style="background:linear-gradient(135deg,#DFA020,#B8821A);color:#fff;">📈</div>
+      <div class="flex-1">
+        <h3 class="font-bold text-lg">15 Mart 2026</h3>
+      </div>
+      <span class="text-xs font-semibold text-slate-300 whitespace-nowrap">Basın Bülteni</span>
+    </div>
+
+    <div class="card p-6 flex flex-col sm:flex-row sm:items-center gap-4">
+      <div class="flex-shrink-0 w-20 h-20 rounded-2xl flex items-center justify-center text-3xl" style="background:linear-gradient(135deg,#C4175A,#A01250);color:#fff;">🎁</div>
+      <div class="flex-1">
+        <h3 class="font-bold text-lg">1 Ocak 2026</h3>
+      </div>
+      <span class="text-xs font-semibold text-slate-300 whitespace-nowrap">Basın Bülteni</span>
+    </div>
+
+    <div class="card p-6 flex flex-col sm:flex-row sm:items-center gap-4">
+      <div class="flex-shrink-0 w-20 h-20 rounded-2xl flex items-center justify-center text-3xl" style="background:linear-gradient(135deg,#22c55e,#16a34a);color:#fff;">🏆</div>
+      <div class="flex-1">
+        <h3 class="font-bold text-lg">15 Ekim 2022</h3>
+      </div>
+      <span class="text-xs font-semibold text-slate-300 whitespace-nowrap">Duyuru</span>
+    </div>
+
+  </div>
+</section>
+
+<!-- Medyada Biz -->
+<section class="py-12 px-4 sm:px-6 max-w-5xl mx-auto">
+  <h2 class="text-2xl font-black text-center mb-8">Medyada E-Paylaşım</h2>
+  <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
+
+    <div class="card p-6">
+      <h3 class="font-bold text-sm mb-2">"Türkiye'nin kolektif hediyeleşme platformu E-Paylaşım hızla büyüyor"</h3>
+      <p class="text-slate-400 text-xs">Platform, bireysel hediyeleşme anlayışını topluluk modeline dönüştürerek dikkat çekiyor.</p>
+      <p class="text-slate-300 text-xs mt-3">Haziran 2026</p>
+    </div>
+
+    <div class="card p-6">
+      <h3 class="font-bold text-sm mb-2">"E-Paylaşım ile hediyeleşme sosyal bir deneyime dönüşüyor"</h3>
+      <p class="text-slate-400 text-xs">Küçük katkılarla büyük hediyeler alma imkanı sunan platform, kullanıcılardan tam not alıyor.</p>
+      <p class="text-slate-300 text-xs mt-3">Mayıs 2026</p>
+    </div>
+
+    <div class="card p-6">
+      <h3 class="font-bold text-sm mb-2">"İstanbul çıkışlı E-Paylaşım, hediye sektörünü dijitalleştiriyor"</h3>
+      <p class="text-slate-400 text-xs">2022'de kurulan platform, 120.000+ kullanıcıya ulaşarak sektörde fark yaratıyor.</p>
+      <p class="text-slate-300 text-xs mt-3">Mart 2026</p>
+    </div>
+
+  </div>
+</section>
+
+<!-- İletişim -->
+<section class="py-14 px-4 sm:px-6 max-w-2xl mx-auto text-center">
+  <h2 class="text-2xl font-black mb-3">Basın İletişim</h2>
+  <p class="text-slate-400 text-sm mb-6">Haber ve röportaj talepleri için bize ulaşın.</p>
+
+  <div class="card p-8 text-left space-y-4">
+    <div class="flex items-start gap-4">
+      <div class="w-10 h-10 rounded-xl bg-pink-50 flex items-center justify-center text-lg flex-shrink-0">📧</div>
+      <div>
+        <p class="font-bold text-sm">E-posta</p>
+        <p class="text-slate-400 text-sm">basin@epaylasim.com</p>
+      </div>
+    </div>
+    <div class="flex items-start gap-4">
+      <div class="w-10 h-10 rounded-xl bg-purple-50 flex items-center justify-center text-lg flex-shrink-0">📱</div>
+      <div>
+        <p class="font-bold text-sm">Telefon</p>
+        <p class="text-slate-400 text-sm">+90 (212) 000 00 00</p>
+      </div>
+    </div>
+    <div class="flex items-start gap-4">
+      <div class="w-10 h-10 rounded-xl bg-amber-50 flex items-center justify-center text-lg flex-shrink-0">📍</div>
+      <div>
+        <p class="font-bold text-sm">Adres</p>
+        <p class="text-slate-400 text-sm">Fulya Mahallesi Yeşilçimen Sokak Polat Tower Bağımsız Bölüm No:12/430, 34394 Şişli/İstanbul</p>
+        <a href="https://www.google.com/maps/search/Fulya+Mahallesi+Ye%C5%9Fil%C3%A7imen+Sokak+Polat+Tower+%C5%9Ei%C5%9Fli+%C4%B0stanbul" target="_blank" rel="noopener" class="text-[#C4175A] text-xs font-semibold mt-1 inline-block hover:underline">📌 Google Haritalar'da Görüntüle →</a>
+      </div>
+    </div>
+  </div>
+
+  <div class="mt-8 rounded-2xl overflow-hidden border border-slate-700" style="height:280px">
+    <iframe src="https://www.google.com/maps?q=Fulya+Mahallesi+Ye%C5%9Fil%C3%A7imen+Sokak+Polat+Tower+%C5%9Ei%C5%9Fli+%C4%B0stanbul&output=embed" width="100%" height="100%" style="border:0" allowfullscreen loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+  </div>
+
+  <p class="text-slate-300 text-xs mt-6">Basın bültenleri ve marka materyalleri ile ilgili taleplerinizi e-posta ile iletebilirsiniz.</p>
+</section>
+
+<style>
+.epft{background:#0f172a;color:#94a3b8;padding:64px 0 32px}
+.epft-inner{max-width:1120px;margin:0 auto;padding:0 24px}
+@media(min-width:640px){.epft-inner{padding:0 32px}}
+.epft-grid{display:grid;grid-template-columns:1.5fr 1fr 1fr 1fr;gap:40px;margin-bottom:40px}
+.epft-brand{display:flex;flex-direction:column;align-items:flex-start;gap:2px;margin-bottom:16px}
+.epft-brand span:first-child{font-weight:800;font-size:20px;color:#fff}
+.epft-brand .dt{color:#DFA020}
+.epft-brand span:last-child{font-size:9px;font-weight:500;opacity:.7;letter-spacing:.5px;text-transform:uppercase}
+.epft p.tl{font-size:14px;margin-bottom:16px}
+.epft-soc{display:flex;gap:6px}
+.epft-soc a{width:36px;height:36px;border-radius:10px;background:#1e293b;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:600;color:#94a3b8;text-decoration:none;transition:background .15s,color .15s}
+.epft-soc a:hover{background:#334155;color:#fff}
+.epft-col h5{color:#fff;font-size:13px;font-weight:600;margin-bottom:14px}
+.epft-col ul{list-style:none;padding:0;margin:0}
+.epft-col li{margin-bottom:10px}
+.epft-col a{font-size:14px;color:#94a3b8;text-decoration:none;transition:color .15s}
+.epft-col a:hover{color:#fff}
+.epft-bot{border-top:1px solid #1e293b;padding-top:24px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px}
+.epft-bot p{font-size:12px;color:#64748b;margin:0}
+.epft-badges{display:flex;gap:16px}
+.epft-badges span{display:flex;align-items:center;gap:6px;font-size:12px;color:#64748b}
+.epft-badges .dg{width:6px;height:6px;border-radius:50%;background:#22c55e}
+@media(max-width:768px){.epft-grid{grid-template-columns:1fr 1fr}}
+@media(max-width:540px){.epft-grid{grid-template-columns:1fr}.epft-bot{flex-direction:column;text-align:center}}
+.epft-nl{background:linear-gradient(135deg,rgba(139,92,246,.08),rgba(236,72,153,.08));border:1px solid rgba(139,92,246,.15);border-radius:16px;padding:28px 32px;margin-bottom:32px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:16px}
+.epft-nl-text h5{margin:0 0 4px;font-size:15px;font-weight:600;color:#e2e8f0}
+.epft-nl-text p{margin:0;font-size:13px;color:#94a3b8}
+.epft-nl-form{display:flex;gap:8px}
+.epft-nl-form input{padding:10px 16px;border-radius:10px;border:1px solid #334155;background:#0f172a;color:#e2e8f0;font-size:13px;width:260px;outline:none;transition:border-color .2s}
+.epft-nl-form input:focus{border-color:#8b5cf6}
+.epft-nl-form input::placeholder{color:#64748b}
+.epft-nl-form button{padding:10px 22px;border-radius:10px;border:none;background:linear-gradient(135deg,#8b5cf6,#ec4899);color:#fff;font-size:13px;font-weight:600;cursor:pointer;transition:opacity .2s,transform .2s;white-space:nowrap}
+.epft-nl-form button:hover{opacity:.9;transform:translateY(-1px)}
+.epft-nl-form button:disabled{opacity:.6;cursor:not-allowed;transform:none}
+@media(max-width:640px){.epft-nl{flex-direction:column;text-align:center}.epft-nl-form{flex-direction:column;width:100%}.epft-nl-form input{width:100%}}
+</style>
+<footer class="epft">
+  <div class="epft-inner">
+        <div class="epft-nl">
+      <div class="epft-nl-text"><h5>📬 Bültene Abone Ol</h5><p>Kampanya haberleri ve özel fırsatlardan ilk sen haberdar ol.</p></div>
+      <form class="epft-nl-form" onsubmit="subscribeNL(event)">
+        <input type="email" id="nlEmail" placeholder="E-posta adresiniz" required/>
+        <button type="submit" id="nlBtn">Abone Ol</button>
+      </form>
+      <p id="nlOk" style="display:none;color:#4ade80;font-size:12px;margin-top:8px">✅ Bültene abone oldunuz!</p>
+      <p id="nlErr" style="display:none;color:#f87171;font-size:12px;margin-top:8px">❌ Bir hata oluştu.</p>
+    </div>
+    <div class="epft-grid">
+      <div>
+        <div class="epft-brand"><span>e<span class="dt">.</span>paylaşım</span><span>Türkiye'nin Sosyal Hediyeleşme Altyapısı</span></div>
+        <p class="tl">Sevdiklerin için birlikte hediyeleş.</p>
+        <div class="epft-soc"><a href="#">X</a><a href="#">in</a><a href="#">ig</a></div>
+      </div>
+      <div class="epft-col"><h5>Platform</h5><ul><li><a href="index.html#nasil-calisir">Nasıl Çalışır</a></li><li><a href="index.html#kampanyalar">Kampanyalar</a></li><li><a href="fiyatlar.html">Fiyatlar</a></li><li><a href="blog.html">Blog</a></li></ul></div>
+      <div class="epft-col"><h5>Şirket</h5><ul><li><a href="hakkimizda.html">Hakkımızda</a></li><li><a href="iletisim.html">İletişim</a></li><li><a href="kariyer.html">Kariyer</a></li><li><a href="basin.html">Basın</a></li></ul></div>
+      <div class="epft-col"><h5>Yasal</h5><ul><li><a href="kvkk.html">KVKK</a></li><li><a href="gizlilik.html">Gizlilik</a></li><li><a href="kullanim-sartlari.html">Kullanım Şartları</a></li><li><a href="cerez-politikasi.html">Çerez Politikası</a></li></ul></div>
+    </div>
+    <div class="epft-bot">
+      <p>&copy; 2026 e.paylaşım. Tüm hakları saklıdır.</p>
+      <div class="epft-badges"><span><span class="dg"></span>SSL</span><span><span class="dg"></span>KVKK</span><span><span class="dg"></span>PCI DSS</span></div>
+    </div>
+  </div>
+</footer>
+
+<script>
+const API_BASE = 'http://localhost:3001/api/v1';
+async function subscribeNL(e) {
+  e.preventDefault();
+  var btn = document.getElementById('nlBtn');
+  var okEl = document.getElementById('nlOk');
+  var errEl = document.getElementById('nlErr');
+  var emailInput = document.getElementById('nlEmail');
+  okEl.style.display = 'none';
+  errEl.style.display = 'none';
+  btn.disabled = true;
+  btn.textContent = 'Gönderiliyor...';
+  try {
+    var res = await fetch(API_BASE + '/newsletter/subscribe', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email: emailInput.value.trim() })
+    });
+    if (!res.ok) throw new Error();
+    okEl.style.display = 'block';
+    emailInput.value = '';
+  } catch(err) {
+    errEl.style.display = 'block';
+  } finally {
+    btn.disabled = false;
+    btn.textContent = 'Abone Ol';
+  }
+}
+</script>
+<script src="chat-widget.js"></script>
+</body>
+</html>

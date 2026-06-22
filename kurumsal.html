@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="tr" class="scroll-smooth">
+<head>
+<meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>Kurumsal – E-Paylaşım</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet"/>
+<style>
+*{font-family:'Inter',sans-serif;box-sizing:border-box;}
+.grad-tri{background:linear-gradient(135deg,#C4175A 0%,#891AAE 50%,#DFA020 100%);}
+.text-tri{background:linear-gradient(135deg,#C4175A,#891AAE,#DFA020);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+.btn-tri{background:linear-gradient(135deg,#C4175A 0%,#891AAE 50%,#DFA020 100%);transition:all .2s;box-shadow:0 4px 20px rgba(196,23,90,.25);}
+.btn-tri:hover{opacity:.92;transform:translateY(-1px);}
+.btn-coral{background:#DFA020;transition:all .2s;}
+.btn-coral:hover{background:#B8821A;transform:translateY(-1px);}
+.btn-out{border:1.5px solid #E2E8F0;background:#fff;transition:all .2s;}
+.btn-out:hover{border-color:#C4175A;color:#C4175A;}
+.inp{border:1.5px solid #E2E8F0;border-radius:12px;padding:11px 14px;width:100%;outline:none;transition:all .2s;font-size:14px;background:#FAFAFA;color:#0F172A;}
+.inp:focus{border-color:#C4175A;box-shadow:0 0 0 3px rgba(196,23,90,.09);background:#fff;}
+.card{background:#fff;border:1px solid #E2E8F0;border-radius:20px;transition:all .25s;}
+.card:hover{border-color:#F0A8CC;box-shadow:0 8px 32px rgba(196,23,90,.10);transform:translateY(-3px);}
+.nl{position:relative;}
+.nl::after{content:'';position:absolute;bottom:-2px;left:0;width:0;height:2px;background:linear-gradient(90deg,#C4175A,#891AAE);border-radius:2px;transition:width .25s;}
+.nl:hover::after{width:100%;}
+
+::-webkit-scrollbar{width:5px;}
+::-webkit-scrollbar-thumb{background:#CBD5E1;border-radius:6px;}
+</style>
+</head>
+<body class="bg-[#FDF5F9] text-[#0F172A] antialiased">
+
+<style>
+.epnav{position:sticky;top:0;z-index:100;background:rgba(255,255,255,.92);backdrop-filter:blur(16px);border-bottom:1px solid #f1f5f9}
+.epnav-inner{max-width:1120px;margin:0 auto;padding:0 24px;display:flex;align-items:center;justify-content:space-between;height:72px}
+@media(min-width:640px){.epnav-inner{padding:0 32px}}
+.epnav-logo{white-space:nowrap;text-decoration:none;color:#1a1a2e}
+.epnav-logo .bn{font-weight:900;font-size:26px;letter-spacing:-.5px}
+.epnav-logo .dt{color:#DFA020}
+.epnav-logo .bt{display:block;font-size:10.5px;font-weight:500;color:#64748b;letter-spacing:.2px;margin-top:1px}
+.epnav-links{display:flex;align-items:center;gap:32px}
+.epnav-links a{font-size:14px;font-weight:500;color:#64748b;text-decoration:none;transition:color .15s}
+.epnav-links a:hover{color:#1a1a2e}
+.epnav-acts{display:flex;align-items:center;gap:12px}
+.epnav-acts .gl{font-size:14px;font-weight:600;color:#64748b;padding:8px 12px;text-decoration:none}
+.epnav-acts .gl:hover{color:#C4175A}
+.epnav-acts .hb{display:inline-flex;align-items:center;gap:8px;background:#C4175A;color:#fff;padding:10px 20px;font-size:13px;font-weight:600;border-radius:12px;text-decoration:none;border:none;cursor:pointer;box-shadow:0 4px 16px rgba(196,23,90,.18);transition:all .2s}
+.epnav-acts .hb:hover{background:#9E1248;transform:translateY(-1px)}.epnav-acts .hb svg{width:18px;height:18px}
+.epnav-mt{display:none;background:none;border:none;cursor:pointer;width:40px;height:40px;border-radius:10px;color:#64748b;align-items:center;justify-content:center}
+.epnav-mm{display:none;padding:16px 0;border-top:1px solid #f1f5f9}
+.epnav-mm a{display:block;padding:10px 0;font-size:15px;font-weight:500;color:#64748b;text-decoration:none}
+.epnav-mm .mb{display:flex;gap:8px;margin-top:12px}
+.epnav-mm .mb a{flex:1;text-align:center;padding:10px 20px;font-size:13px;font-weight:600;border-radius:12px}
+.epnav-mm .mb .ob{background:#fff;color:#1a1a2e;border:1.5px solid #f1f5f9}
+.epnav-mm .mb .pb{background:#C4175A;color:#fff}
+@media(max-width:768px){.epnav-links,.epnav-acts .gl{display:none}.epnav-mt{display:flex}.epnav-mm.open{display:block}}
+</style>
+<header class="epnav">
+  <div class="epnav-inner">
+    <a href="index.html" class="epnav-logo">
+      <span class="bn">e<span class="dt">.</span>paylaşım</span>
+      <span class="bt">Türkiye'nin Sosyal Hediyeleşme Altyapısı</span>
+    </a>
+    <nav class="epnav-links">
+      <a href="index.html#nasil-calisir">Nasıl Çalışır</a>
+      <a href="index.html#kampanyalar">Kampanyalar</a>
+      <a href="katkida-bulun.html">Katkıda Bulun</a>
+      <a href="index.html#guven">Güvenlik</a>
+      <a href="index.html#yorumlar">Yorumlar</a>
+    </nav>
+    <div class="epnav-acts">
+      <a href="login.html" class="gl">Giriş</a>
+      <a href="register.html" class="hb">Hemen Başla <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M13 7l5 5m0 0l-5 5m5-5H6"/></svg></a>
+      <button class="epnav-mt" onclick="document.getElementById('epMM').classList.toggle('open')" aria-label="Menu">
+        <svg width="22" height="22" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" d="M4 6h16M4 12h16M4 18h16"/></svg>
+      </button>
+    </div>
+  </div>
+  <div id="epMM" class="epnav-mm" style="max-width:1120px;margin:0 auto;padding-left:24px;padding-right:24px">
+    <a href="index.html#nasil-calisir">Nasıl Çalışır</a>
+    <a href="index.html#kampanyalar">Kampanyalar</a>
+    <a href="katkida-bulun.html">Katkıda Bulun</a>
+    <a href="index.html#guven">Güvenlik</a>
+    <a href="index.html#yorumlar">Yorumlar</a>
+    <div class="mb">
+      <a href="login.html" class="ob">Giriş</a>
+      <a href="register.html" class="pb">Hemen Başla</a>
+    </div>
+  </div>
+</header>
+
+<section class="relative overflow-hidden py-16 px-4 sm:px-6">
+  <div class="absolute inset-0 opacity-[.04] pointer-events-none" style="background:radial-gradient(ellipse 80% 60% at 60% 30%,#891AAE,transparent),radial-gradient(ellipse 60% 60% at 20% 70%,#C4175A,transparent);"></div>
+  <div class="max-w-5xl mx-auto text-center relative z-10">
+    <div class="inline-flex items-center gap-2 bg-purple-50 border border-purple-200 rounded-full px-4 py-1.5 mb-5">
+      <span class="w-1.5 h-1.5 rounded-full bg-[#891AAE] inline-block"></span>
+      <span class="text-xs font-bold text-[#891AAE]">Kurumsal Çözümler</span>
+    </div>
+    <h1 class="text-4xl sm:text-5xl font-black mb-4 leading-tight">Şirketiniz için <span class="text-tri">Hediye Platformu</span></h1>
+    <p class="text-slate-500 text-lg max-w-2xl mx-auto mb-8">Çalışan motivasyonu, müşteri sadakat programı ve kurumsal etkinlik hediyelerini tek platformda yönetin.</p>
+    <div class="flex flex-col sm:flex-row items-center justify-center gap-3">
+      <a href="iletisim.html" class="btn-tri text-white font-bold px-7 py-3.5 rounded-2xl text-sm">Demo Talep Et →</a>
+      <a href="fiyatlar.html" class="btn-out text-slate-700 font-bold px-7 py-3.5 rounded-2xl text-sm">Fiyatları Gör</a>
+    </div>
+  </div>
+</section>
+
+<section class="py-6 bg-white border-y border-slate-100">
+  <div class="max-w-4xl mx-auto px-4 grid grid-cols-2 sm:grid-cols-4 gap-6 text-center">
+    <div><p class="text-3xl font-black text-tri mb-0.5">500+</p><p class="text-slate-500 text-xs">Kurumsal Müşteri</p></div>
+    <div><p class="text-3xl font-black text-tri mb-0.5">₺48M</p><p class="text-slate-500 text-xs">İşlem Hacmi</p></div>
+    <div><p class="text-3xl font-black text-tri mb-0.5">%98</p><p class="text-slate-500 text-xs">Müşteri Memnuniyeti</p></div>
+    <div><p class="text-3xl font-black text-tri mb-0.5">7/24</p><p class="text-slate-500 text-xs">Öncelikli Destek</p></div>
+  </div>
+</section>
+
+<section class="py-14 px-4 sm:px-6 max-w-6xl mx-auto">
+  <h2 class="text-2xl font-black text-center mb-2">Kullanım Senaryoları</h2>
+  <p class="text-slate-400 text-sm text-center mb-8">Her ölçekteki şirket için tasarlandı.</p>
+  <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
+    <div class="card p-6"><div class="w-12 h-12 rounded-2xl mb-4 flex items-center justify-center text-2xl bg-pink-50">🎖️</div><h3 class="font-bold mb-2">Çalışan Motivasyonu</h3><p class="text-slate-500 text-sm leading-relaxed">Yıldönümü, başarı veya özel günlerde çalışanlarınıza kolektif hediye organize edin.</p></div>
+    <div class="card p-6"><div class="w-12 h-12 rounded-2xl mb-4 flex items-center justify-center text-2xl bg-purple-50">🤝</div><h3 class="font-bold mb-2">Müşteri Sadakat Programı</h3><p class="text-slate-500 text-sm leading-relaxed">Müşterilerinize özel hediye listeleri oluşturun, sadakat puanlarını gerçek hediyeye dönüştürün.</p></div>
+    <div class="card p-6"><div class="w-12 h-12 rounded-2xl mb-4 flex items-center justify-center text-2xl bg-yellow-50">🎉</div><h3 class="font-bold mb-2">Kurumsal Etkinlikler</h3><p class="text-slate-500 text-sm leading-relaxed">Yılsonu, lansman ve team building etkinliklerinde toplu hediye organizasyonunu dijitalleştirin.</p></div>
+    <div class="card p-6"><div class="w-12 h-12 rounded-2xl mb-4 flex items-center justify-center text-2xl bg-green-50">📊</div><h3 class="font-bold mb-2">Raporlama &amp; Analytics</h3><p class="text-slate-500 text-sm leading-relaxed">Tüm hediye aktivitelerini tek panelden izleyin. Bütçe takibi, harcama analizi ve raporlar.</p></div>
+    <div class="card p-6"><div class="w-12 h-12 rounded-2xl mb-4 flex items-center justify-center text-2xl bg-blue-50">🔗</div><h3 class="font-bold mb-2">API Entegrasyonu</h3><p class="text-slate-500 text-sm leading-relaxed">HRMS, CRM ve ERP sistemlerinize REST API ile entegre edin. Webhook desteği dahil.</p></div>
+    <div class="card p-6"><div class="w-12 h-12 rounded-2xl mb-4 flex items-center justify-center text-2xl bg-pink-50">🏷️</div><h3 class="font-bold mb-2">White Label</h3><p class="text-slate-500 text-sm leading-relaxed">Kendi markanızla özelleştirilmiş hediye platformu. Logo, renkler ve alan adı tamamen sizin.</p></div>
+  </div>
+</section>
+
+<section class="py-14 px-4 sm:px-6 max-w-2xl mx-auto">
+  <div class="card p-8">
+    <h2 class="text-xl font-black mb-1">Demo Talep Edin</h2>
+    <p class="text-slate-400 text-sm mb-6">Ekibimiz 24 saat içinde sizinle iletişime geçer.</p>
+    <form onsubmit="submitDemo(event)" class="space-y-4">
+      <div class="grid sm:grid-cols-2 gap-4">
+        <div><label class="text-xs font-semibold text-slate-500 mb-1.5 block">Ad Soyad</label><input type="text" class="inp" placeholder="Ahmet Yılmaz" required/></div>
+        <div><label class="text-xs font-semibold text-slate-500 mb-1.5 block">Şirket</label><input type="text" class="inp" placeholder="Şirket A.Ş." required/></div>
+      </div>
+      <div><label class="text-xs font-semibold text-slate-500 mb-1.5 block">İş E-postası</label><input type="email" class="inp" placeholder="ahmet@sirket.com" required/></div>
+      <div><label class="text-xs font-semibold text-slate-500 mb-1.5 block">Çalışan Sayısı</label><select class="inp"><option>1–50</option><option>51–200</option><option>201–1000</option><option>1000+</option></select></div>
+      <button type="submit" class="btn-tri text-white font-bold w-full py-3.5 rounded-2xl text-sm">Demo Talep Et →</button>
+    </form>
+    <div id="demoSuccess" class="hidden mt-4 p-3 rounded-xl text-sm font-semibold text-center" style="background:#F0FDF4;color:#166534;">✅ Talebiniz alındı! En kısa sürede ulaşacağız.</div>
+  </div>
+</section>
+
+<style>
+.epft{background:#0f172a;color:#94a3b8;padding:64px 0 32px}
+.epft-inner{max-width:1120px;margin:0 auto;padding:0 24px}
+@media(min-width:640px){.epft-inner{padding:0 32px}}
+.epft-grid{display:grid;grid-template-columns:1.5fr 1fr 1fr 1fr;gap:40px;margin-bottom:40px}
+.epft-brand{display:flex;flex-direction:column;align-items:flex-start;gap:2px;margin-bottom:16px}
+.epft-brand span:first-child{font-weight:800;font-size:20px;color:#fff}
+.epft-brand .dt{color:#DFA020}
+.epft-brand span:last-child{font-size:9px;font-weight:500;opacity:.7;letter-spacing:.5px;text-transform:uppercase}
+.epft p.tl{font-size:14px;margin-bottom:16px}
+.epft-soc{display:flex;gap:6px}
+.epft-soc a{width:36px;height:36px;border-radius:10px;background:#1e293b;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:600;color:#94a3b8;text-decoration:none;transition:background .15s,color .15s}
+.epft-soc a:hover{background:#334155;color:#fff}
+.epft-col h5{color:#fff;font-size:13px;font-weight:600;margin-bottom:14px}
+.epft-col ul{list-style:none;padding:0;margin:0}
+.epft-col li{margin-bottom:10px}
+.epft-col a{font-size:14px;color:#94a3b8;text-decoration:none;transition:color .15s}
+.epft-col a:hover{color:#fff}
+.epft-bot{border-top:1px solid #1e293b;padding-top:24px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px}
+.epft-bot p{font-size:12px;color:#64748b;margin:0}
+.epft-badges{display:flex;gap:16px}
+.epft-badges span{display:flex;align-items:center;gap:6px;font-size:12px;color:#64748b}
+.epft-badges .dg{width:6px;height:6px;border-radius:50%;background:#22c55e}
+@media(max-width:768px){.epft-grid{grid-template-columns:1fr 1fr}}
+@media(max-width:540px){.epft-grid{grid-template-columns:1fr}.epft-bot{flex-direction:column;text-align:center}}
+.epft-nl{background:linear-gradient(135deg,rgba(139,92,246,.08),rgba(236,72,153,.08));border:1px solid rgba(139,92,246,.15);border-radius:16px;padding:28px 32px;margin-bottom:32px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:16px}
+.epft-nl-text h5{margin:0 0 4px;font-size:15px;font-weight:600;color:#e2e8f0}
+.epft-nl-text p{margin:0;font-size:13px;color:#94a3b8}
+.epft-nl-form{display:flex;gap:8px}
+.epft-nl-form input{padding:10px 16px;border-radius:10px;border:1px solid #334155;background:#0f172a;color:#e2e8f0;font-size:13px;width:260px;outline:none;transition:border-color .2s}
+.epft-nl-form input:focus{border-color:#8b5cf6}
+.epft-nl-form input::placeholder{color:#64748b}
+.epft-nl-form button{padding:10px 22px;border-radius:10px;border:none;background:linear-gradient(135deg,#8b5cf6,#ec4899);color:#fff;font-size:13px;font-weight:600;cursor:pointer;transition:opacity .2s,transform .2s;white-space:nowrap}
+.epft-nl-form button:hover{opacity:.9;transform:translateY(-1px)}
+.epft-nl-form button:disabled{opacity:.6;cursor:not-allowed;transform:none}
+@media(max-width:640px){.epft-nl{flex-direction:column;text-align:center}.epft-nl-form{flex-direction:column;width:100%}.epft-nl-form input{width:100%}}
+</style>
+<footer class="epft">
+  <div class="epft-inner">
+        <div class="epft-nl">
+      <div class="epft-nl-text"><h5>📬 Bültene Abone Ol</h5><p>Kampanya haberleri ve özel fırsatlardan ilk sen haberdar ol.</p></div>
+      <form class="epft-nl-form" onsubmit="subscribeNL(event)">
+        <input type="email" id="nlEmail" placeholder="E-posta adresiniz" required/>
+        <button type="submit" id="nlBtn">Abone Ol</button>
+      </form>
+      <p id="nlOk" style="display:none;color:#4ade80;font-size:12px;margin-top:8px">✅ Bültene abone oldunuz!</p>
+      <p id="nlErr" style="display:none;color:#f87171;font-size:12px;margin-top:8px">❌ Bir hata oluştu.</p>
+    </div>
+    <div class="epft-grid">
+      <div>
+        <div class="epft-brand">
+          <span>e<span class="dt">.</span>paylaşım</span>
+          <span>Türkiye'nin Sosyal Hediyeleşme Altyapısı</span>
+        </div>
+        <p class="tl">Sevdiklerin için birlikte hediyeleş.</p>
+        <div class="epft-soc"><a href="#">X</a><a href="#">in</a><a href="#">ig</a></div>
+      </div>
+      <div class="epft-col"><h5>Platform</h5><ul><li><a href="index.html#nasil-calisir">Nasıl Çalışır</a></li><li><a href="index.html#kampanyalar">Kampanyalar</a></li><li><a href="fiyatlar.html">Fiyatlar</a></li><li><a href="blog.html">Blog</a></li></ul></div>
+      <div class="epft-col"><h5>Şirket</h5><ul><li><a href="hakkimizda.html">Hakkımızda</a></li><li><a href="iletisim.html">İletişim</a></li><li><a href="kariyer.html">Kariyer</a></li><li><a href="basin.html">Basın</a></li></ul></div>
+      <div class="epft-col"><h5>Yasal</h5><ul><li><a href="kvkk.html">KVKK</a></li><li><a href="gizlilik.html">Gizlilik</a></li><li><a href="kullanim-sartlari.html">Kullanım Şartları</a></li><li><a href="cerez-politikasi.html">Çerez Politikası</a></li></ul></div>
+    </div>
+    <div class="epft-bot">
+      <p>&copy; 2026 e.paylaşım. Tüm hakları saklıdır.</p>
+      <div class="epft-badges"><span><span class="dg"></span>SSL</span><span><span class="dg"></span>KVKK</span><span><span class="dg"></span>PCI DSS</span></div>
+    </div>
+  </div>
+</footer>
+<script>
+const API_BASE = 'http://localhost:3001/api/v1';
+async function subscribeNL(e) {
+  e.preventDefault();
+  var btn = document.getElementById('nlBtn');
+  var okEl = document.getElementById('nlOk');
+  var errEl = document.getElementById('nlErr');
+  var emailInput = document.getElementById('nlEmail');
+  okEl.style.display = 'none';
+  errEl.style.display = 'none';
+  btn.disabled = true;
+  btn.textContent = 'Gönderiliyor...';
+  try {
+    var res = await fetch(API_BASE + '/newsletter/subscribe', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email: emailInput.value.trim() })
+    });
+    if (!res.ok) throw new Error();
+    okEl.style.display = 'block';
+    emailInput.value = '';
+  } catch(err) {
+    errEl.style.display = 'block';
+  } finally {
+    btn.disabled = false;
+    btn.textContent = 'Abone Ol';
+  }
+}
+function submitDemo(e){e.preventDefault();document.getElementById('demoSuccess').classList.remove('hidden');}
+</script>
+<script src="chat-widget.js"></script>
+</body>
+</html>
