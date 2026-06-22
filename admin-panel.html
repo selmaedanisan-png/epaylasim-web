@@ -267,12 +267,12 @@ input,select,textarea{font-family:inherit}
 
   <div id="loginStep1">
     <div class="l-group">
-      <label>Kullanici Adi</label>
+      <label>E-posta</label>
       <div class="l-input-wrap">
-        <input type="password" id="inpUser" placeholder="Kullanici adiniz" autocomplete="off"/>
+        <input type="email" id="inpUser" placeholder="admin@epaylasim.com" autocomplete="email"/>
         <button type="button" class="l-toggle" onclick="togVis('inpUser',this)"><svg width="18" height="18" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M2.036 12.322a1.012 1.012 0 010-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178z"/><path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/></svg></button>
       </div>
-      <div class="l-error" id="errUser">Gecersiz kullanici adi</div>
+      <div class="l-error" id="errUser">Gecersiz e-posta</div>
     </div>
     <div class="l-group">
       <label>Sifre</label>
@@ -285,19 +285,7 @@ input,select,textarea{font-family:inherit}
     <button class="l-btn" onclick="doLogin()">Giris Yap</button>
   </div>
 
-  <div class="otp-wrap" id="loginStep2">
-    <div class="otp-badge">
-      <p id="otpStatusMsg">6 haneli dogrulama kodu gonderiliyor...</p>
-      <div class="phone">selma.s*****@gmail.com</div>
-    </div>
-    <div class="otp-boxes" id="otpBoxes"></div>
-    <div class="l-error" id="errOtp" style="text-align:center;margin-bottom:12px">Gecersiz kod</div>
-    <button class="l-btn" onclick="verifyOtp()">Dogrula</button>
-    <div class="otp-footer" style="margin-top:16px">
-      <span id="otpTimer"></span><br/>
-      <button id="resendBtn" onclick="sendOtp()" disabled>Tekrar Gonder</button>
-    </div>
-  </div>
+  <div id="loginStep2" style="display:none"></div>
 
   <div class="lock-screen" id="lockScreen">
     <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M16.5 10.5V6.75a4.5 4.5 0 10-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 002.25-2.25v-6.75a2.25 2.25 0 00-2.25-2.25H6.75a2.25 2.25 0 00-2.25 2.25v6.75a2.25 2.25 0 002.25 2.25z"/></svg>
@@ -346,6 +334,57 @@ input,select,textarea{font-family:inherit}
 </div>
 
 <script>
+// ============ API CONFIG ============
+const API_BASE = 'https://epaylasim-api.onrender.com/api/v1';
+
+function getToken() { return localStorage.getItem('ep_access_token'); }
+function getRefreshToken() { return localStorage.getItem('ep_refresh_token'); }
+function setTokens(access, refresh) {
+  localStorage.setItem('ep_access_token', access);
+  localStorage.setItem('ep_refresh_token', refresh);
+}
+function clearTokens() {
+  localStorage.removeItem('ep_access_token');
+  localStorage.removeItem('ep_refresh_token');
+  localStorage.removeItem('ep_user');
+}
+function getUser() { try { return JSON.parse(localStorage.getItem('ep_user')); } catch { return null; } }
+
+async function apiCall(endpoint, options = {}) {
+  const token = getToken();
+  const headers = { 'Content-Type': 'application/json', ...options.headers };
+  if (token) headers['Authorization'] = 'Bearer ' + token;
+
+  let res = await fetch(API_BASE + endpoint, { ...options, headers });
+
+  if (res.status === 401 && getRefreshToken()) {
+    const refreshRes = await fetch(API_BASE + '/auth/refresh', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ refreshToken: getRefreshToken() })
+    });
+    if (refreshRes.ok) {
+      const data = await refreshRes.json();
+      const d = data.data || data;
+      setTokens(d.accessToken, d.refreshToken);
+      headers['Authorization'] = 'Bearer ' + d.accessToken;
+      res = await fetch(API_BASE + endpoint, { ...options, headers });
+    } else {
+      clearTokens();
+      location.reload();
+      return null;
+    }
+  }
+
+  if (!res.ok) {
+    const err = await res.json().catch(() => ({}));
+    throw new Error(err.message || 'API Hatası: ' + res.status);
+  }
+
+  const json = await res.json();
+  return json.data !== undefined ? json.data : json;
+}
+
 // ============ CONFIG ============
 const MENU = [
   {section:'Ana Menü'},
@@ -457,111 +496,100 @@ const AUDIT_DATA = [
   {action:'API anahtari olusturuldu',user:'Admin',ip:'192.168.1.45',date:'2026-06-10 09:00',type:'api'},
 ];
 
-// ============ EMAIL DOGRULAMA CONFIG ============
-const WEB3FORMS_KEY = 'YOUR_ACCESS_KEY';
-const VERIFY_EMAIL = 'selma.sahinmolla@gmail.com';
-
 // ============ AUTH ============
-const PASS_KEY='ep_ap';const LOCK_KEY='ep_lk';const ATT_KEY='ep_at';const AUTH_KEY='ep_auth';
-let currentOtp='';let otpExp=0;
-
-async function sha256(s){const b=await crypto.subtle.digest('SHA-256',new TextEncoder().encode(s));return Array.from(new Uint8Array(b)).map(x=>x.toString(16).padStart(2,'0')).join('')}
+const LOCK_KEY='ep_lk';const ATT_KEY='ep_at';
 
 function togVis(id,btn){const i=document.getElementById(id);const h=i.type==='password';i.type=h?'text':'password';btn.style.opacity=h?'1':'.6'}
 
 function isLocked(){const l=localStorage.getItem(LOCK_KEY);if(l&&Date.now()<+l)return true;if(l)localStorage.removeItem(LOCK_KEY);return false}
 
-function checkAuth(){if(sessionStorage.getItem(AUTH_KEY)==='1'){showAdmin();return}if(isLocked())showLock()}
+function checkAuth(){
+  if(getToken() && getUser()){
+    const user = getUser();
+    if(user.role === 'ADMIN' || user.role === 'SUPER_ADMIN'){
+      showAdmin();
+      return;
+    }
+  }
+  if(isLocked()) showLock();
+}
 
 async function doLogin(){
   if(isLocked()){showLock();return}
-  const u=document.getElementById('inpUser').value.trim().toLowerCase();
+  const email=document.getElementById('inpUser').value.trim();
   const p=document.getElementById('inpPass').value;
   document.getElementById('errUser').style.display='none';
   document.getElementById('errPass').style.display='none';
 
-  if(u!=='selmasabin'){document.getElementById('errUser').style.display='block';incAtt();return}
+  if(!email){document.getElementById('errUser').textContent='E-posta giriniz';document.getElementById('errUser').style.display='block';return}
+  if(!p){document.getElementById('errPass').textContent='Sifre giriniz';document.getElementById('errPass').style.display='block';return}
 
-  const stored=localStorage.getItem(PASS_KEY);
-  const h=await sha256(p);
-  const def=await sha256('selma2468.');
-  if(stored?h!==stored:h!==def){document.getElementById('errPass').style.display='block';incAtt();return}
-  if(!stored)localStorage.setItem(PASS_KEY,def);
-  localStorage.setItem(ATT_KEY,'0');
+  const loginBtn = document.querySelector('#loginStep1 .l-btn');
+  loginBtn.disabled = true;
+  loginBtn.textContent = 'Giris yapiliyor...';
 
-  document.getElementById('loginStep1').style.display='none';
-  document.getElementById('loginStep2').style.display='block';
-  sendOtp();
-  buildOtpInputs();
+  try {
+    const res = await fetch(API_BASE + '/auth/login', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email, password: p })
+    });
+    const json = await res.json();
+    const data = json.data || json;
+
+    if (!res.ok) {
+      throw new Error(data.message || 'Giris basarisiz');
+    }
+
+    const user = data.user;
+    if (user.role !== 'ADMIN' && user.role !== 'SUPER_ADMIN') {
+      throw new Error('Yetkiniz yok. Sadece admin giris yapabilir.');
+    }
+
+    setTokens(data.accessToken, data.refreshToken);
+    localStorage.setItem('ep_user', JSON.stringify(user));
+    localStorage.setItem(ATT_KEY, '0');
+    showAdmin();
+  } catch (err) {
+    document.getElementById('errPass').textContent = err.message;
+    document.getElementById('errPass').style.display = 'block';
+    incAtt();
+  } finally {
+    loginBtn.disabled = false;
+    loginBtn.textContent = 'Giris Yap';
+  }
 }
 
 function incAtt(){let a=(+localStorage.getItem(ATT_KEY)||0)+1;localStorage.setItem(ATT_KEY,''+a);if(a>=5){localStorage.setItem(LOCK_KEY,''+(Date.now()+9e5));showLock()}}
 
-function showLock(){document.getElementById('loginStep1').style.display='none';document.getElementById('loginStep2').style.display='none';document.getElementById('lockScreen').style.display='block';tickLock()}
+function showLock(){document.getElementById('loginStep1').style.display='none';document.getElementById('lockScreen').style.display='block';tickLock()}
 function tickLock(){const l=+localStorage.getItem(LOCK_KEY);if(!l)return;const r=l-Date.now();if(r<=0){doUnlock();return}const m=Math.floor(r/6e4),s=Math.floor(r%6e4/1e3);document.getElementById('lockTimer').textContent=m+':'+(''+s).padStart(2,'0');setTimeout(tickLock,1e3)}
 function doUnlock(){localStorage.removeItem(LOCK_KEY);localStorage.setItem(ATT_KEY,'0');document.getElementById('lockScreen').style.display='none';document.getElementById('loginStep1').style.display='block';document.getElementById('inpUser').value='';document.getElementById('inpPass').value=''}
 
-async function sendOtp(){
-  currentOtp=''+Math.floor(1e5+Math.random()*9e5);
-  otpExp=Date.now()+3e5;
-  const statusEl=document.getElementById('otpStatusMsg');
-  statusEl.textContent='Dogrulama kodu gonderiliyor...';
-  statusEl.style.color='rgba(255,255,255,.7)';
-  document.getElementById('resendBtn').disabled=true;
-
-  try{
-    const res = await fetch('https://api.web3forms.com/submit', {
-      method:'POST',
-      headers:{'Content-Type':'application/json'},
-      body: JSON.stringify({
-        access_key: WEB3FORMS_KEY,
-        subject: 'e.paylasim Admin Dogrulama Kodu: ' + currentOtp,
-        from_name: 'e.paylasim Guvenlik',
-        name: 'Admin Giris Dogrulama',
-        message: 'Dogrulama Kodunuz: ' + currentOtp + '\n\nGiris zamani: ' + new Date().toLocaleString('tr-TR') + '\nSure: 5 dakika\n\nBu kodu siz talep etmediyseniz, lutfen dikkate almayin.'
-      })
-    });
-    const data = await res.json();
-    if(data.success){
-      statusEl.textContent='6 haneli dogrulama kodu gonderildi ✓';
-      statusEl.style.color='#4ade80';
-    } else {
-      throw new Error(data.message||'Gonderilemedi');
-    }
-  }catch(err){
-    console.error('Email error:', err);
-    statusEl.textContent='E-posta gonderilemedi! Tekrar deneyin.';
-    statusEl.style.color='#f87171';
-    document.getElementById('resendBtn').disabled=false;
-    return;
+function showAdmin(){
+  document.getElementById('loginWrap').style.display='none';
+  document.getElementById('adminApp').style.display='block';
+  const user = getUser();
+  if(user) {
+    const avatarEl = document.querySelector('.tb-avatar');
+    if(avatarEl) avatarEl.textContent = (user.displayName||user.email||'A').substring(0,2).toUpperCase();
   }
-
-  let sec=90;
-  const iv=setInterval(()=>{sec--;document.getElementById('otpTimer').textContent=sec>0?sec+'s':'';if(sec<=0){clearInterval(iv);document.getElementById('resendBtn').disabled=false}},1e3);
+  buildSidebar();
+  navigate('dashboard');
 }
 
-function buildOtpInputs(){
-  const c=document.getElementById('otpBoxes');c.innerHTML='';
-  for(let i=0;i<6;i++){const inp=document.createElement('input');inp.type='text';inp.maxLength=1;inp.inputMode='numeric';
-    inp.oninput=function(){this.value=this.value.replace(/\D/g,'');if(this.value&&i<5)c.children[i+1].focus();if(getOtp().length===6)verifyOtp()};
-    inp.onkeydown=function(e){if(e.key==='Backspace'&&!this.value&&i>0)c.children[i-1].focus()};
-    inp.onpaste=function(e){e.preventDefault();const t=(e.clipboardData||window.clipboardData).getData('text').replace(/\D/g,'').slice(0,6);for(let j=0;j<t.length;j++)c.children[j].value=t[j];if(t.length===6)verifyOtp()};
-    c.appendChild(inp)}
-  c.children[0].focus();
+async function doLogout(){
+  try {
+    const rt = getRefreshToken();
+    if(rt) await fetch(API_BASE + '/auth/logout', {
+      method:'POST',
+      headers:{'Content-Type':'application/json','Authorization':'Bearer '+getToken()},
+      body: JSON.stringify({refreshToken:rt})
+    });
+  } catch(e){}
+  clearTokens();
+  location.reload();
 }
-
-function getOtp(){return Array.from(document.getElementById('otpBoxes').children).map(i=>i.value).join('')}
-
-function verifyOtp(){
-  const v=getOtp();if(v.length<6)return;
-  document.getElementById('errOtp').style.display='none';
-  if(Date.now()>otpExp){document.getElementById('errOtp').textContent='Kodun suresi doldu';document.getElementById('errOtp').style.display='block';return}
-  if(v!==currentOtp){document.getElementById('errOtp').textContent='Gecersiz kod';document.getElementById('errOtp').style.display='block';Array.from(document.getElementById('otpBoxes').children).forEach(i=>i.value='');document.getElementById('otpBoxes').children[0].focus();return}
-  sessionStorage.setItem(AUTH_KEY,'1');showAdmin();
-}
-
-function showAdmin(){document.getElementById('loginWrap').style.display='none';document.getElementById('adminApp').style.display='block';buildSidebar();navigate('dashboard')}
-function doLogout(){sessionStorage.removeItem(AUTH_KEY);location.reload()}
 
 // ============ THEME ============
 function toggleTheme(){const t=document.documentElement.getAttribute('data-theme')==='dark'?'':'dark';document.documentElement.setAttribute('data-theme',t);localStorage.setItem('ep_theme',t);destroyCharts()}
@@ -610,41 +638,36 @@ const afterRender={};
 
 // ----- DASHBOARD -----
 pages.dashboard=()=>`
-<div class="ph"><div><h1>Dashboard</h1><div class="ph-sub">Genel bakis ve istatistikler</div></div><div class="ph-actions"><span style="font-size:12px;color:var(--text-muted)">Son guncelleme: ${new Date().toLocaleTimeString('tr-TR')}</span></div></div>
+<div class="ph"><div><h1>Dashboard</h1><div class="ph-sub">Genel bakis ve istatistikler</div></div><div class="ph-actions"><span style="font-size:12px;color:var(--text-muted)">Son guncelleme: ${new Date().toLocaleTimeString('tr-TR')}</span><button class="btn btn-sm btn-outline" onclick="navigate('dashboard')" style="margin-left:8px">Yenile</button></div></div>
 
-<div class="stats-row">
-  <div class="sc"><div class="sc-head"><div class="sc-icon" style="background:var(--brand-light);color:var(--brand)">${svgIcon('users')}</div><div class="sc-trend up">+12.5%</div></div><div class="sc-val">${fmt(D.users)}</div><div class="sc-label">Toplam Kullanici</div></div>
-  <div class="sc"><div class="sc-head"><div class="sc-icon" style="background:var(--success-bg);color:var(--success)">${svgIcon('gift')}</div><div class="sc-trend up">+8.3%</div></div><div class="sc-val">${fmt(D.campaigns)}</div><div class="sc-label">Toplam Kampanya</div></div>
-  <div class="sc"><div class="sc-head"><div class="sc-icon" style="background:#ede9fe;color:#7c3aed">${svgIcon('credit-card')}</div><div class="sc-trend up">+15.2%</div></div><div class="sc-val">${fmtM(D.monthRevenue)}</div><div class="sc-label">Bu Ay Gelir</div></div>
-  <div class="sc"><div class="sc-head"><div class="sc-icon" style="background:var(--warning-bg);color:var(--warning)">${svgIcon('trending-up')}</div><div class="sc-trend up">+5.7%</div></div><div class="sc-val">${fmtM(D.commission)}</div><div class="sc-label">Komisyon Geliri</div></div>
-</div>
-
-<div class="stats-row">
-  <div class="sc"><div class="sc-val" style="font-size:20px">${fmt(D.activeUsers)}</div><div class="sc-label">Aktif Kullanici</div></div>
-  <div class="sc"><div class="sc-val" style="font-size:20px">${D.activeCamp}</div><div class="sc-label">Aktif Kampanya</div></div>
-  <div class="sc"><div class="sc-val" style="font-size:20px">${fmt(D.dailyTx)}</div><div class="sc-label">Gunluk Islem</div></div>
-  <div class="sc"><div class="sc-val" style="font-size:20px">${fmtM(D.avgContrib)}</div><div class="sc-label">Ort. Katki</div></div>
-  <div class="sc"><div class="sc-val" style="font-size:20px">${fmtM(D.pendingPay)}</div><div class="sc-label">Bekleyen Odeme</div></div>
-  <div class="sc"><div class="sc-val" style="font-size:20px;color:var(--danger)">${fmtM(D.pendingRefund)}</div><div class="sc-label">Bekleyen Iade</div></div>
-  <div class="sc"><div class="sc-val" style="font-size:20px">${D.completedCamp}</div><div class="sc-label">Tamamlanan</div></div>
-  <div class="sc"><div class="sc-val" style="font-size:20px;color:var(--danger)">${D.failedCamp}</div><div class="sc-label">Basarisiz</div></div>
-</div>
+<div id="dashStats"><div style="text-align:center;padding:40px"><div class="spinner" style="margin:0 auto"></div><p style="margin-top:12px;color:var(--text-muted);font-size:13px">Veriler yukleniyor...</p></div></div>
 
 <div class="grid-2">
   <div class="panel"><div class="panel-h"><h2>Aylik Gelir</h2></div><div class="chart-wrap"><canvas id="chRevenue"></canvas></div></div>
   <div class="panel"><div class="panel-h"><h2>Kullanici Buyumesi</h2></div><div class="chart-wrap"><canvas id="chUsers"></canvas></div></div>
 </div>
-<div class="grid-2">
-  <div class="panel"><div class="panel-h"><h2>Gunluk Islem</h2></div><div class="chart-wrap"><canvas id="chDaily"></canvas></div></div>
-  <div class="panel"><div class="panel-h"><h2>Kampanya Basari Orani (%)</h2></div><div class="chart-wrap"><canvas id="chSuccess"></canvas></div></div>
-</div>
+`;
 
-<div class="panel"><div class="panel-h"><h2>Son Islemler</h2><span class="badge badge-s badge-brand">${PAYMENTS_DATA.length}</span></div>
-<table class="tbl"><thead><tr><th>ID</th><th>Kullanici</th><th>Kampanya</th><th>Tutar</th><th>Durum</th><th>Tarih</th></tr></thead><tbody>
-${PAYMENTS_DATA.slice(0,5).map(p=>`<tr><td style="font-family:monospace;font-size:11px">${p.id}</td><td>${p.user}</td><td>${p.campaign}</td><td><strong>${fmtM(p.amount)}</strong></td><td>${statusBadge(p.status)}</td><td style="font-size:12px;color:var(--text-muted)">${p.date}</td></tr>`).join('')}
-</tbody></table></div>`;
+afterRender.dashboard=async()=>{
+  const el=document.getElementById('dashStats');
+  try {
+    const stats = await apiCall('/admin/dashboard');
+    el.innerHTML=`
+    <div class="stats-row">
+      <div class="sc"><div class="sc-head"><div class="sc-icon" style="background:var(--brand-light);color:var(--brand)">${svgIcon('users')}</div></div><div class="sc-val">${fmt(stats.totalUsers)}</div><div class="sc-label">Toplam Kullanici</div></div>
+      <div class="sc"><div class="sc-head"><div class="sc-icon" style="background:var(--success-bg);color:var(--success)">${svgIcon('users')}</div></div><div class="sc-val">${fmt(stats.activeUsers)}</div><div class="sc-label">Aktif Kullanici</div></div>
+      <div class="sc"><div class="sc-head"><div class="sc-icon" style="background:var(--info-bg);color:var(--info)">${svgIcon('trending-up')}</div></div><div class="sc-val">${fmt(stats.newUsersThisWeek)}</div><div class="sc-label">Bu Hafta Yeni</div></div>
+      <div class="sc"><div class="sc-head"><div class="sc-icon" style="background:var(--warning-bg);color:var(--warning)">${svgIcon('gift')}</div></div><div class="sc-val">${fmt(stats.totalCampaigns)}</div><div class="sc-label">Toplam Kampanya</div></div>
+    </div>
+    <div class="stats-row">
+      <div class="sc"><div class="sc-val" style="font-size:20px;color:var(--success)">${stats.activeCampaigns}</div><div class="sc-label">Aktif Kampanya</div></div>
+      <div class="sc"><div class="sc-val" style="font-size:20px;color:var(--warning)">${stats.pendingCampaigns}</div><div class="sc-label">Bekleyen Kampanya</div></div>
+      <div class="sc"><div class="sc-val" style="font-size:20px">${stats.totalCoupons}</div><div class="sc-label">Toplam Kupon</div></div>
+    </div>`;
+  } catch(err) {
+    el.innerHTML='<div class="empty"><h3>Veri yuklenemedi</h3><p>'+err.message+'</p><button class="btn btn-sm btn-brand" onclick="navigate(\'dashboard\')" style="margin-top:12px">Tekrar Dene</button></div>';
+  }
 
-afterRender.dashboard=()=>{
   const months=['Oca','Sub','Mar','Nis','May','Haz','Tem','Agu','Eyl','Eki','Kas','Ara'];
   const dark=document.documentElement.getAttribute('data-theme')==='dark';
   const gridC=dark?'rgba(255,255,255,.06)':'rgba(0,0,0,.06)';
@@ -653,48 +676,134 @@ afterRender.dashboard=()=>{
 
   charts.rev=new Chart(document.getElementById('chRevenue'),{type:'bar',data:{labels:months,datasets:[{data:D.monthlyRev,backgroundColor:'rgba(196,23,90,.7)',borderRadius:6,borderSkipped:false}]},options:opt});
   charts.usr=new Chart(document.getElementById('chUsers'),{type:'line',data:{labels:months,datasets:[{data:D.userGrowth,borderColor:'#891AAE',backgroundColor:'rgba(137,26,174,.1)',fill:true,tension:.4,pointRadius:3}]},options:opt});
-  charts.daily=new Chart(document.getElementById('chDaily'),{type:'bar',data:{labels:Array.from({length:14},(_,i)=>'Gun '+(i+1)),datasets:[{data:D.dailyRev,backgroundColor:'rgba(37,99,235,.6)',borderRadius:4,borderSkipped:false}]},options:opt});
-  charts.succ=new Chart(document.getElementById('chSuccess'),{type:'line',data:{labels:months,datasets:[{data:D.campSuccess,borderColor:'#16a34a',backgroundColor:'rgba(22,163,74,.1)',fill:true,tension:.3,pointRadius:3}]},options:{...opt,scales:{...opt.scales,y:{...opt.scales.y,min:50,max:100}}}});
 };
 
 // ----- USERS -----
 pages.users=()=>`
-<div class="ph"><div><h1>Kullanici Yonetimi</h1><div class="ph-sub">${fmt(D.users)} kayitli kullanici</div></div><div class="ph-actions"><button class="btn btn-brand">${svgIcon('users')} Kullanici Ekle</button></div></div>
+<div class="ph"><div><h1>Kullanici Yonetimi</h1><div class="ph-sub">Kayitli kullanicilar</div></div></div>
 <div class="panel">
-<div class="filter-bar"><input type="text" placeholder="Isim, e-posta ara..." style="flex:1;max-width:300px"/><select><option>Tum Durumlar</option><option>Aktif</option><option>Askida</option><option>Pasif</option></select><select><option>Dogrulama</option><option>Dogrulanmis</option><option>Dogrulanmamis</option></select></div>
-<div style="overflow-x:auto"><table class="tbl"><thead><tr><th>Kullanici</th><th>E-posta</th><th>Telefon</th><th>Durum</th><th>Dogrulama</th><th>Kampanya</th><th>Toplam</th><th>Katilim</th><th>Islem</th></tr></thead><tbody>
-${USERS_DATA.map(u=>`<tr>
-<td><div style="display:flex;align-items:center;gap:10px"><div class="avatar-sm" style="background:${randColor()}">${u.name.split(' ').map(w=>w[0]).join('')}</div><strong>${u.name}</strong></div></td>
-<td>${u.email}</td><td style="font-size:12px">${u.phone}</td>
-<td>${statusBadge(u.status)}</td>
-<td>${u.verified?'<span class="badge-s badge-success">Dogrulandi</span>':'<span class="badge-s badge-warning">Bekliyor</span>'}</td>
-<td>${u.campaigns}</td><td>${fmtM(u.total)}</td><td style="font-size:12px;color:var(--text-muted)">${u.joined}</td>
-<td><button class="btn btn-sm btn-ghost">Detay</button></td>
-</tr>`).join('')}
-</tbody></table></div></div>`;
+<div class="filter-bar">
+  <input type="text" id="userSearch" placeholder="Isim, e-posta ara..." style="flex:1;max-width:300px" onkeydown="if(event.key==='Enter')loadUsers()"/>
+  <select id="userStatusFilter" onchange="loadUsers()"><option value="">Tum Durumlar</option><option value="ACTIVE">Aktif</option><option value="SUSPENDED">Askida</option></select>
+  <button class="btn btn-sm btn-brand" onclick="loadUsers()">Ara</button>
+</div>
+<div id="usersTableWrap"><div style="text-align:center;padding:40px"><div class="spinner" style="margin:0 auto"></div></div></div>
+<div id="usersPagination" style="padding:12px 20px;display:flex;justify-content:space-between;align-items:center"></div>
+</div>`;
+
+let usersPage=1;
+async function loadUsers(page){
+  if(page) usersPage=page;
+  const wrap=document.getElementById('usersTableWrap');
+  const search=document.getElementById('userSearch')?.value||'';
+  const status=document.getElementById('userStatusFilter')?.value||'';
+  wrap.innerHTML='<div style="text-align:center;padding:40px"><div class="spinner" style="margin:0 auto"></div></div>';
+  try {
+    let url='/admin/users?page='+usersPage+'&limit=20';
+    if(search) url+='&search='+encodeURIComponent(search);
+    if(status) url+='&status='+status;
+    const res = await apiCall(url);
+    const users=res.data||[];
+    const total=res.total||0;
+    if(!users.length){wrap.innerHTML='<div class="empty"><h3>Kullanici bulunamadi</h3></div>';document.getElementById('usersPagination').innerHTML='';return}
+    wrap.innerHTML='<div style="overflow-x:auto"><table class="tbl"><thead><tr><th>Kullanici</th><th>E-posta</th><th>Rol</th><th>Durum</th><th>Dogrulama</th><th>Kayit Tarihi</th><th>Islem</th></tr></thead><tbody>'+
+    users.map(u=>{
+      const name=u.displayName||u.username||u.email;
+      const initials=name.split(' ').map(w=>w[0]).join('').substring(0,2).toUpperCase();
+      const statusMap={ACTIVE:'aktif',SUSPENDED:'askida',BANNED:'pasif'};
+      const st=statusMap[u.status]||u.status;
+      return `<tr>
+      <td><div style="display:flex;align-items:center;gap:10px"><div class="avatar-sm" style="background:${randColor()}">${initials}</div><strong>${name}</strong></div></td>
+      <td>${u.email}</td>
+      <td><span class="badge-s badge-${u.role==='SUPER_ADMIN'?'danger':u.role==='ADMIN'?'brand':'muted'}">${u.role}</span></td>
+      <td>${statusBadge(st)}</td>
+      <td>${u.emailVerified?'<span class="badge-s badge-success">Dogrulandi</span>':'<span class="badge-s badge-warning">Bekliyor</span>'}</td>
+      <td style="font-size:12px;color:var(--text-muted)">${new Date(u.createdAt).toLocaleDateString('tr-TR')}</td>
+      <td>
+        ${u.status==='ACTIVE'?'<button class="btn btn-sm btn-danger" onclick="suspendUser(\''+u.id+'\')">Askiya Al</button>':''}
+        ${u.status==='SUSPENDED'?'<button class="btn btn-sm btn-success" onclick="activateUser(\''+u.id+'\')">Aktif Et</button>':''}
+      </td></tr>`}).join('')+'</tbody></table></div>';
+    const totalPages=Math.ceil(total/20);
+    document.getElementById('usersPagination').innerHTML=
+      '<span style="font-size:12px;color:var(--text-muted)">Toplam: '+total+' kullanici</span>'+
+      '<div style="display:flex;gap:4px">'+
+      (usersPage>1?'<button class="btn btn-sm btn-outline" onclick="loadUsers('+(usersPage-1)+')">Onceki</button>':'')+
+      '<span style="padding:6px 12px;font-size:12px">'+usersPage+'/'+totalPages+'</span>'+
+      (usersPage<totalPages?'<button class="btn btn-sm btn-outline" onclick="loadUsers('+(usersPage+1)+')">Sonraki</button>':'')+
+      '</div>';
+  } catch(err) {
+    wrap.innerHTML='<div class="empty"><h3>Yuklenemedi</h3><p>'+err.message+'</p></div>';
+  }
+}
+
+async function suspendUser(id){
+  if(!confirm('Bu kullaniciyi askiya almak istediginize emin misiniz?')) return;
+  try { await apiCall('/admin/users/'+id+'/suspend',{method:'PATCH'}); loadUsers(); } catch(e){ alert('Hata: '+e.message); }
+}
+async function activateUser(id){
+  try { await apiCall('/admin/users/'+id+'/activate',{method:'PATCH'}); loadUsers(); } catch(e){ alert('Hata: '+e.message); }
+}
+
+afterRender.users=()=>loadUsers(1);
 
 // ----- CAMPAIGNS -----
 pages.campaigns=()=>`
-<div class="ph"><div><h1>Kampanya Yonetimi</h1><div class="ph-sub">${fmt(D.campaigns)} kampanya</div></div></div>
-<div class="stats-row">
-  <div class="sc"><div class="sc-val" style="font-size:20px;color:var(--success)">${D.activeCamp}</div><div class="sc-label">Aktif</div></div>
-  <div class="sc"><div class="sc-val" style="font-size:20px">${D.completedCamp}</div><div class="sc-label">Tamamlanan</div></div>
-  <div class="sc"><div class="sc-val" style="font-size:20px;color:var(--danger)">${D.failedCamp}</div><div class="sc-label">Basarisiz</div></div>
-  <div class="sc"><div class="sc-val" style="font-size:20px;color:var(--warning)">${CAMPAIGNS_DATA.filter(c=>c.status==='taslak').length}</div><div class="sc-label">Taslak</div></div>
-</div>
+<div class="ph"><div><h1>Kampanya Yonetimi</h1><div class="ph-sub">Tum kampanyalar</div></div></div>
 <div class="panel">
-<div class="filter-bar"><input type="text" placeholder="Kampanya ara..." style="flex:1;max-width:300px"/><select><option>Tum Durumlar</option><option>Yayinda</option><option>Tamamlandi</option><option>Taslak</option><option>Suresi Doldu</option><option>Iptal</option></select></div>
-<div style="overflow-x:auto"><table class="tbl"><thead><tr><th>ID</th><th>Kampanya</th><th>Sahip</th><th>Hedef</th><th>Toplanan</th><th>Ilerleme</th><th>Durum</th><th>Tarih</th><th>Islem</th></tr></thead><tbody>
-${CAMPAIGNS_DATA.map(c=>{const p=pct(c.collected,c.target);return `<tr>
-<td style="font-family:monospace;font-size:11px">#${c.id}</td>
-<td><strong>${c.name}</strong></td><td>${c.owner}</td>
-<td>${fmtM(c.target)}</td><td>${fmtM(c.collected)}</td>
-<td><div style="display:flex;align-items:center;gap:8px"><div style="flex:1;height:6px;background:var(--border);border-radius:3px;overflow:hidden;min-width:60px"><div style="height:100%;width:${p}%;background:var(--brand);border-radius:3px"></div></div><span style="font-size:11px;font-weight:600;color:var(--text-muted)">%${p}</span></div></td>
-<td>${statusBadge(c.status)}</td>
-<td style="font-size:12px;color:var(--text-muted)">${c.date}</td>
-<td><button class="btn btn-sm btn-ghost">Duzenle</button></td>
-</tr>`}).join('')}
-</tbody></table></div></div>`;
+<div class="filter-bar">
+  <input type="text" id="campSearch" placeholder="Kampanya ara..." style="flex:1;max-width:300px" onkeydown="if(event.key==='Enter')loadCampaigns()"/>
+  <select id="campStatusFilter" onchange="loadCampaigns()"><option value="">Tum Durumlar</option><option value="ACTIVE">Aktif</option><option value="COMPLETED">Tamamlandi</option><option value="PENDING_REVIEW">Beklemede</option><option value="CANCELLED">Iptal</option><option value="DRAFT">Taslak</option></select>
+  <button class="btn btn-sm btn-brand" onclick="loadCampaigns()">Ara</button>
+</div>
+<div id="campTableWrap"><div style="text-align:center;padding:40px"><div class="spinner" style="margin:0 auto"></div></div></div>
+<div id="campPagination" style="padding:12px 20px;display:flex;justify-content:space-between;align-items:center"></div>
+</div>`;
+
+let campPage=1;
+async function loadCampaigns(page){
+  if(page) campPage=page;
+  const wrap=document.getElementById('campTableWrap');
+  const search=document.getElementById('campSearch')?.value||'';
+  const status=document.getElementById('campStatusFilter')?.value||'';
+  wrap.innerHTML='<div style="text-align:center;padding:40px"><div class="spinner" style="margin:0 auto"></div></div>';
+  try {
+    let url='/admin/campaigns?page='+campPage+'&limit=20';
+    if(search) url+='&search='+encodeURIComponent(search);
+    if(status) url+='&status='+status;
+    const res = await apiCall(url);
+    const camps=res.data||[];
+    const total=res.total||0;
+    if(!camps.length){wrap.innerHTML='<div class="empty"><h3>Kampanya bulunamadi</h3></div>';document.getElementById('campPagination').innerHTML='';return}
+    const statusMap={ACTIVE:'yayinda',COMPLETED:'tamamlandi',PENDING_REVIEW:'beklemede',CANCELLED:'iptal',DRAFT:'taslak',EXPIRED:'suresi_doldu'};
+    wrap.innerHTML='<div style="overflow-x:auto"><table class="tbl"><thead><tr><th>Kampanya</th><th>Sahip</th><th>Hedef</th><th>Toplanan</th><th>Ilerleme</th><th>Durum</th><th>Tarih</th></tr></thead><tbody>'+
+    camps.map(c=>{
+      const target=c.targetAmount||0;
+      const collected=c.currentAmount||0;
+      const p=pct(collected,target);
+      const st=statusMap[c.status]||c.status;
+      const owner=c.owner?(c.owner.displayName||c.owner.username):'—';
+      return `<tr>
+      <td><strong>${c.title||c.slug||'—'}</strong></td>
+      <td>${owner}</td>
+      <td>${fmtM(target)}</td><td>${fmtM(collected)}</td>
+      <td><div style="display:flex;align-items:center;gap:8px"><div style="flex:1;height:6px;background:var(--border);border-radius:3px;overflow:hidden;min-width:60px"><div style="height:100%;width:${Math.min(p,100)}%;background:var(--brand);border-radius:3px"></div></div><span style="font-size:11px;font-weight:600;color:var(--text-muted)">%${p}</span></div></td>
+      <td>${statusBadge(st)}</td>
+      <td style="font-size:12px;color:var(--text-muted)">${new Date(c.createdAt).toLocaleDateString('tr-TR')}</td>
+      </tr>`}).join('')+'</tbody></table></div>';
+    const totalPages=Math.ceil(total/20);
+    document.getElementById('campPagination').innerHTML=
+      '<span style="font-size:12px;color:var(--text-muted)">Toplam: '+total+' kampanya</span>'+
+      '<div style="display:flex;gap:4px">'+
+      (campPage>1?'<button class="btn btn-sm btn-outline" onclick="loadCampaigns('+(campPage-1)+')">Onceki</button>':'')+
+      '<span style="padding:6px 12px;font-size:12px">'+campPage+'/'+totalPages+'</span>'+
+      (campPage<totalPages?'<button class="btn btn-sm btn-outline" onclick="loadCampaigns('+(campPage+1)+')">Sonraki</button>':'')+
+      '</div>';
+  } catch(err) {
+    wrap.innerHTML='<div class="empty"><h3>Yuklenemedi</h3><p>'+err.message+'</p></div>';
+  }
+}
+
+afterRender.campaigns=()=>loadCampaigns(1);
 
 // ----- PAYMENTS -----
 pages.payments=()=>`
