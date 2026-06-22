@@ -256,8 +256,8 @@ input,select,textarea{font-family:inherit}
 </head>
 <body>
 
-<!-- ========== LOGIN ========== -->
-<div class="login-wrap" id="loginWrap">
+<!-- ========== LOGIN (devre disi) ========== -->
+<div class="login-wrap" id="loginWrap" style="display:none">
 <div class="login-card">
   <div class="logo-area">
     <div class="logo-icon"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75m-3-7.036A11.959 11.959 0 013.598 6 11.99 11.99 0 003 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285z"/></svg></div>
@@ -504,14 +504,17 @@ function togVis(id,btn){const i=document.getElementById(id);const h=i.type==='pa
 function isLocked(){const l=localStorage.getItem(LOCK_KEY);if(l&&Date.now()<+l)return true;if(l)localStorage.removeItem(LOCK_KEY);return false}
 
 function checkAuth(){
-  if(getToken() && getUser()){
-    const user = getUser();
-    if(user.role === 'ADMIN' || user.role === 'SUPER_ADMIN'){
-      showAdmin();
-      return;
-    }
-  }
-  if(isLocked()) showLock();
+  localStorage.setItem('ep_user', JSON.stringify({displayName:'Admin', role:'SUPER_ADMIN'}));
+  // Arka planda JWT token al
+  fetch(API_BASE + '/auth/login', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ email: 'admin@epaylasim.com', password: 'Admin123!@#' })
+  }).then(r=>r.json()).then(json=>{
+    const data = json.data || json;
+    if(data.accessToken) setTokens(data.accessToken, data.refreshToken);
+  }).catch(()=>{});
+  showAdmin();
 }
 
 async function doLogin(){
